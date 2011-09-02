@@ -1,0 +1,52 @@
+<?xml version="1.0" standalone="no"?>
+
+<graph>
+
+<description>
+math libraries
+
+Automatically Tuned Linear Algebra Package (ATLAS)
+http://math-atlas.sourceforge.net
+
+LAPACK (LINEAR ALGEBRA PACKAGE)
+http://www.netlib.org/lapack
+
+scalapack
+www.netlib.org/scalapack
+
+</description>
+
+<copyright>
+2011 R. Clint Whaley and the Atlas Developers
+
+Copyright (c) 1992-2010 The University of Tennessee and The University
+of Tennessee Research Foundation.  All rights reserved.
+Copyright (c) 2000-2010 The University of California Berkeley. All
+rights reserved.
+Copyright (c) 2006-2010 The University of Colorado Denver.  All rights
+reserved.
+
+</copyright>
+
+<changelog>
+</changelog>
+
+<edge from="compute">
+  <to>math-install</to>
+</edge>
+<order head="compute">
+  <tail>math-install</tail>
+</order>
+
+<edge from="envmodules-common">
+  <to>math-modules-common</to>
+</edge>
+<order head="envmodules-common">
+  <tail>math-modules-common</tail>
+</order>
+
+<order head="math-install">
+  <tail>math-modules-common</tail>
+</order>
+
+</graph>
