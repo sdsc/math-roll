@@ -1,0 +1,69 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+<description>
+math libraries
+
+Automatically Tuned Linear Algebra Package (ATLAS)
+http://math-atlas.sourceforge.net
+
+LAPACK (LINEAR ALGEBRA PACKAGE)
+http://www.netlib.org/lapack
+
+scalapack
+www.netlib.org/scalapack
+
+</description>
+
+<copyright>
+2011 R. Clint Whaley and the Atlas Developers
+
+Copyright (c) 1992-2010 The University of Tennessee and The University
+of Tennessee Research Foundation.  All rights reserved.
+Copyright (c) 2000-2010 The University of California Berkeley. All
+rights reserved.
+Copyright (c) 2006-2010 The University of Colorado Denver.  All rights
+reserved.
+
+</copyright>
+
+<changelog>
+</changelog>
+
+<package>atlas_ROLLCOMPILER</package>
+<package>lapack_ROLLCOMPILER</package>
+<package>scalapack_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+
+<post>
+
+<file name="/etc/profile.d/atlas.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/atlas/3.9.45/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/atlas/3.9.45/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/atlas.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/atlas/3.9.45/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=/opt/atlas/3.9.45/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+</file>
+
+
+<file name="/etc/profile.d/lapack.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/lapack/3.3.1/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/lapack/3.3.1/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/lapack.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/lapack/3.3.1/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=/opt/atlas/3.3.1/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+</file>
+
+
+<file name="/etc/profile.d/scalapack.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/scalapack/1.8.0/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/scalapack/1.8.0/ROLLCOMPILER/ROLLNETWORK/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+</post>
+
+</kickstart>
