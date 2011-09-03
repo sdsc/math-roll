@@ -13,6 +13,10 @@ http://www.netlib.org/lapack
 
 scalapack
 www.netlib.org/scalapack
+
+
+metis/parmetis
+http://glaros.dtc.umn.edu/gkhome/views/metis
 </description>
 
 <copyright>
@@ -24,6 +28,8 @@ Copyright (c) 2000-2010 The University of California Berkeley. All
 rights reserved.
 Copyright (c) 2006-2010 The University of Colorado Denver.  All rights
 reserved.
+
+Copyright Regents of the University of Minnesota
 </copyright>
 
 <changelog>
@@ -92,6 +98,7 @@ set ModulesVersion "3.9.45"
 
 fi
 
+<!-- LAPACK -->
 if test -f /etc/profile.d/lapack.sh; then
   /bin/rm -f /etc/profile.d/lapack.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/lapack
@@ -140,6 +147,7 @@ set ModulesVersion "3.3.1"
 
 fi
 
+<!-- SCALAPACK -->
 if test -f /etc/profile.d/scalapack.sh; then
   /bin/rm -f /etc/profile.d/scalapack.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/scalapack
@@ -148,43 +156,146 @@ if test -f /etc/profile.d/scalapack.sh; then
 
 <file name="/opt/modulefiles/applications/scalapack/.gnu/1.8.0" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/scalapack/1.8.0/openmpi/gnu/mx/gnu/lib
-prepend-path LIBPATH /opt/scalapack/1.8.0/openmpi/gnu/mx/lib
+prepend-path LD_LIBRARY_PATH /opt/scalapack/1.8.0/gnu/lib
+prepend-path LIBPATH /opt/scalapack/1.8.0/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/lapack/.intel/3.3.1" perms="0644">
+<file name="/opt/modulefiles/applications/scalapack/.intel/1.8.0" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/lapack/3.3.1/intel/lib
-prepend-path LIBPATH /opt/lapack/3.3.1/intel/lib
+prepend-path LD_LIBRARY_PATH /opt/scalapack/1.8.0/intel/lib
+prepend-path LIBPATH /opt/scalapack/1.8.0/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/lapack/.pgi/3.3.1" perms="0644">
+<file name="/opt/modulefiles/applications/scalapack/.pgi/1.8.0" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/lapack/3.3.1/pgi/lib
-prepend-path LIBPATH /opt/lapack/3.3.1/pgi/lib
+prepend-path LD_LIBRARY_PATH /opt/scalapack/1.8.0/pgi/lib
+prepend-path LIBPATH /opt/scalapack/1.8.0/pgi/lib
 </file>
 
-<file name="/opt/modulefiles/applications/.gnu/lapack/.version.3.3.1">
+<file name="/opt/modulefiles/applications/.gnu/scalapack/.version.1.8.0">
 #%Module1.0
-set ModulesVersion "3.3.1"
+set ModulesVersion "1.8.0"
 </file>
 
-<file name="/opt/modulefiles/applications/.intel/lapack/.version.3.3.1">
+<file name="/opt/modulefiles/applications/.intel/scalapack/.version.1.8.0">
 #%Module1.0
-set ModulesVersion "3.3.1"
+set ModulesVersion "1.8.0"
 </file>
 
-<file name="/opt/modulefiles/applications/.pgi/lapack/.version.3.3.1">
+<file name="/opt/modulefiles/applications/.pgi/scalapack/.version.1.8.0">
 #%Module1.0
-set ModulesVersion "3.3.1"
+set ModulesVersion "1.8.0"
 </file>
 
-  /bin/ln -s /opt/modulefiles/applications/.gnu/lapack/.version.3.3.1 \
-             /opt/modulefiles/applications/.gnu/lapack/.version
-  /bin/ln -s /opt/modulefiles/applications/.pgi/lapack/.version.3.3.1 \
-             /opt/modulefiles/applications/.pgi/lapack/.version
-  /bin/ln -s /opt/modulefiles/applications/.intel/lapack/.version.3.3.1 \
-             /opt/modulefiles/applications/.intel/lapack/.version
+  /bin/ln -s /opt/modulefiles/applications/.gnu/scalapack/.version.1.8.0 \
+             /opt/modulefiles/applications/.gnu/scalapack/.version
+  /bin/ln -s /opt/modulefiles/applications/.pgi/scalapack/.version.1.8.0 \
+             /opt/modulefiles/applications/.pgi/scalapack/.version
+  /bin/ln -s /opt/modulefiles/applications/.intel/scalapack/.version.1.8.0 \
+             /opt/modulefiles/applications/.intel/scalapack/.version
+
+fi
+
+<!-- METIS -->
+if test -f /etc/profile.d/metis.sh; then
+  /bin/rm -f /etc/profile.d/metis.*
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/metis
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/metis
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/metis
+
+<file name="/opt/modulefiles/applications/metis/.gnu/5.0.1" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/metis/5.0.1/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/metis/5.0.1/gnu/lib
+prepend-path LIBPATH /opt/metis/5.0.1/gnu/lib
+</file>
+
+<file name="/opt/modulefiles/applications/metis/.intel/5.0.1" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/metis/5.0.1/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/metis/5.0.1/intel/lib
+prepend-path LIBPATH /opt/metis/5.0.1/intel/lib
+</file>
+
+<file name="/opt/modulefiles/applications/metis/.pgi/5.0.1" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/metis/5.0.1/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/metis/5.0.1/pgi/lib
+prepend-path LIBPATH /opt/metis/5.0.1/pgi/lib
+</file>
+
+<file name="/opt/modulefiles/applications/.gnu/metis/.version.5.0.1">
+#%Module1.0
+set ModulesVersion "5.0.1"
+</file>
+
+<file name="/opt/modulefiles/applications/.intel/metis/.version.5.0.1">
+#%Module1.0
+set ModulesVersion "5.0.1"
+</file>
+
+<file name="/opt/modulefiles/applications/.pgi/metis/.version.5.0.1">
+#%Module1.0
+set ModulesVersion "5.0.1"
+</file>
+
+  /bin/ln -s /opt/modulefiles/applications/.gnu/metis/.version.5.0.1 \
+             /opt/modulefiles/applications/.gnu/metis/.version
+  /bin/ln -s /opt/modulefiles/applications/.pgi/metis/.version.5.0.1 \
+             /opt/modulefiles/applications/.pgi/metis/.version
+  /bin/ln -s /opt/modulefiles/applications/.intel/metis/.version.5.0.1 \
+             /opt/modulefiles/applications/.intel/metis/.version
+
+fi
+<!-- PARMETIS -->
+if test -f /etc/profile.d/parmetis.sh; then
+  /bin/rm -f /etc/profile.d/parmetis.*
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/parmetis
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/parmetis
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/parmetis
+
+<file name="/opt/modulefiles/applications/parmetis/.gnu/4.0" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/parmetis/4.0/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/4.0/gnu/lib
+prepend-path LIBPATH /opt/parmetis/4.0/gnu/lib
+</file>
+
+<file name="/opt/modulefiles/applications/parmetis/.intel/4.0" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/parmetis/4.0/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/4.0/intel/lib
+prepend-path LIBPATH /opt/parmetis/4.0/intel/lib
+</file>
+
+<file name="/opt/modulefiles/applications/parmetis/.pgi/4.0" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/parmetis/4.0/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/4.0/pgi/lib
+prepend-path LIBPATH /opt/parmetis/4.0/pgi/lib
+</file>
+
+<file name="/opt/modulefiles/applications/.gnu/parmetis/.version.4.0">
+#%Module1.0
+set ModulesVersion "4.0"
+</file>
+
+<file name="/opt/modulefiles/applications/.intel/parmetis/.version.4.0">
+#%Module1.0
+set ModulesVersion "4.0"
+</file>
+
+<file name="/opt/modulefiles/applications/.pgi/parmetis/.version.4.0">
+#%Module1.0
+set ModulesVersion "4.0"
+</file>
+
+  /bin/ln -s /opt/modulefiles/applications/.gnu/parmetis/.version.4.0 \
+             /opt/modulefiles/applications/.gnu/parmetis/.version
+  /bin/ln -s /opt/modulefiles/applications/.pgi/parmetis/.version.4.0 \
+             /opt/modulefiles/applications/.pgi/parmetis/.version
+  /bin/ln -s /opt/modulefiles/applications/.intel/parmetis/.version.4.0 \
+             /opt/modulefiles/applications/.intel/parmetis/.version
 
 fi
 </post>

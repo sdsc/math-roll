@@ -14,6 +14,8 @@ http://www.netlib.org/lapack
 scalapack
 www.netlib.org/scalapack
 
+metis/parmetis
+http://glaros.dtc.umn.edu/gkhome/views/metis
 </description>
 
 <copyright>
@@ -26,6 +28,7 @@ rights reserved.
 Copyright (c) 2006-2010 The University of Colorado Denver.  All rights
 reserved.
 
+Copyright Regents of the University of Minnesota
 </copyright>
 
 <changelog>
@@ -34,6 +37,8 @@ reserved.
 <package>atlas_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
 <package>scalapack_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>metis_ROLLCOMPILER</package>
+<package>parmetis_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 
 <post>
 
@@ -62,6 +67,33 @@ export LIBRARY_PATH=/opt/atlas/3.3.1/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 <file name="/etc/profile.d/scalapack.csh" perms="0644">
 setenv LD_LIBRARY_PATH /opt/scalapack/1.8.0/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 setenv LIBPATH /opt/scalapack/1.8.0/ROLLCOMPILER/ROLLNETWORK/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/scalapack.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/scalapack/1.8.0/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/scalapack/1.8.0/ROLLCOMPILER/ROLLNETWORK/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/metis.csh" perms="0644">
+setenv PATH /opt/metis/5.0.1/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/bin:$PATH
+setenv LD_LIBRARY_PATH /opt/metis/5.0.1/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/metis/5.0.1/ROLLCOMPILER/ROLLNETWORK/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/metis.sh" perms="0644">
+export PATH=/opt/metis/5.0.1/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/bin:$PATH
+export LD_LIBRARY_PATH=/opt/metis/5.0.1/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/metis/5.0.1/ROLLCOMPILER/ROLLNETWORK/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/parmetis.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/parmetis/4.0/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/metis/4.0/ROLLCOMPILER/ROLLNETWORK/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/parmetis.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/parmetis/4.0/ROLLMPI/ROLLNETWORK/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/metis/4.0/ROLLCOMPILER/ROLLNETWORK/ROLLCOMPILER/lib:$LIBPATH
 </file>
 
 </post>
