@@ -103,13 +103,6 @@ COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
     module load $(ROLLCOMPILER); \
-  fi; \
-  if test $(ROLLCOMPILER) = "intel"; then \
-      export ROLL_FORTRAN=ifort; \
-      export ROLL_CC=icc; \
-  elif test $(ROLLCOMPILER) = "pgi"; then \
-      export ROLL_FORTRAN=pgf90; \
-      export ROLL_CC=pgcc; \
   fi
 
 
@@ -122,12 +115,18 @@ build:
           cp patch-files/Bmake.inc BLACS/Bmake.inc; \
           cp patch-files/Makefile.root BLACS/SRC/MPI/Makefile; \
           cp patch-files/Makefile.testing BLACS/TESTING/Makefile; \
-          perl -pi -e "s!ROLL_DIR!$(REDHAT.ROOT)/src/scalapack!; s!ROLL_MPI!$${MPI_HOME}!; s!ROLL_TYPE!$${MPITYPE}!;\
-                   s!ROLL_FORTRAN!$${ROLL_FORTRAN}!; s!ROLL_CC!$${ROLL_CC}!"  BLACS/Bmake.inc; \
+          cp patch-files/SLmake.inc $(SOURCE); \
+          perl -pi -e "s!ROLL_DIR!$(REDHAT.ROOT)/src/scalapack!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/Bmake.inc; \
           perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/SRC/MPI/Makefile; \
           perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/TESTING/Makefile; \
+          perl -pi -e "s!ROLL_DIR!$(REDHAT.ROOT)/src/scalapack!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/SLmake.inc; \
+          perl -pi -e "s!ROLL_SCALAPACK!$(REDHAT.ROOT)/src/scalapack/$(SOURCE)!;s!ROLL_BLACS!$(REDHAT.ROOT)/src/scalapack/BLACS!" $(SOURCE)/SLmake.inc; \
           cd BLACS; \
-          make all \
+          mkdir bin; \
+          make all; \
+          cd ../$(SOURCE); \
+          make all; \
+          make example; \
         )
 
 install::

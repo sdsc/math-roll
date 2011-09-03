@@ -50,7 +50,9 @@
    MPIdir = ROLL_MPI
    MPILIBdir = $(MPIdir)/lib/
    MPIINCdir = $(MPIdir)/include
-   MPILIB = $(MPILIBdir)/libROLL_TYPE.a
+   MPILIB = 
+#  MPILIB = $(MPILIBdir)/libROLL_TYPE.a
+
 
 #  -------------------------------------
 #  All libraries required by the tester.
@@ -93,7 +95,7 @@
 #  setting for your platform, compile and run BLACS/INSTALL/xintface.
 #  Choices are: Add_, NoChange, UpCase, or f77IsF2C.
 #  ---------------------------------------------------------------------------
-   INTFACE = -Df77IsF2C
+   INTFACE = -DAdd_
 
 #  ------------------------------------------------------------------------
 #  Allows the user to vary the topologies that the BLACS default topologies
@@ -135,12 +137,12 @@
 #  define -DPOINTER_64_BITS=1.)  For help on setting TRANSCOMM, you can
 #  run BLACS/INSTALL/xtc_CsameF77 and BLACS/INSTALL/xtc_UseMpich as
 #  explained in BLACS/INSTALL/README.
-#   TRANSCOMM = -DUseMpich
+#   TRANSCOMM = -DUseMpi2
 #
 #  If you know that your MPI uses the same handles for fortran and C
 #  communicators, you can replace the empty macro definition below with
 #  the macro definition on the following line.
-  TRANSCOMM = -DCSameF77
+  TRANSCOMM =  -DUseMpich
 #  -----------------------------------------------------------------------
 #  TRANSCOMM =
 
@@ -195,12 +197,12 @@
 #  optimization.  This is the F77NO_OPTFLAG.  The usage of the remaining
 #  macros should be obvious from the names.
 #=============================================================================
-   F77            = ROLL_FORTRAN
+   F77            = mpif90
    F77NO_OPTFLAGS = 
-   F77FLAGS       = $(F77NO_OPTFLAGS) -O
+   F77FLAGS       = $(F77NO_OPTFLAGS) -O2
    F77LOADER      = $(F77)
    F77LOADFLAGS   = 
-   CC             = ROLL_CC
+   CC             = mpicc
    CCFLAGS        = -O2
    CCLOADER       = $(CC)
    CCLOADFLAGS    = 
