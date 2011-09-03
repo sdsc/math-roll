@@ -14,6 +14,9 @@ http://www.netlib.org/lapack
 scalapack
 www.netlib.org/scalapack
 
+metis/parmetis
+http://glaros.dtc.umn.edu/gkhome/views/metis
+
 </description>
 
 <copyright>
@@ -25,6 +28,8 @@ Copyright (c) 2000-2010 The University of California Berkeley. All
 rights reserved.
 Copyright (c) 2006-2010 The University of Colorado Denver.  All rights
 reserved.
+
+regents of the University of Minnesota
 
 </copyright>
 
