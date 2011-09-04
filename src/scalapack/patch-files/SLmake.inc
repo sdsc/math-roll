@@ -81,7 +81,7 @@ CCLOADFLAGS   =
 #  C preprocessor defs for compilation 
 #  (-DNoChange, -DAdd_, -DUpCase, or -Df77IsF2C)
 #
-CDEFS         = --DAdd_ -DNO_IEEE $(USEMPI)
+CDEFS         = -DAdd_ -DNO_IEEE $(USEMPI)
 #
 #  The archiver and the flag(s) to use when building archive (library)
 #  Also the ranlib routine.  If your system has no ranlib, set RANLIB = echo
