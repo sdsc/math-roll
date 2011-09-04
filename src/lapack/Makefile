@@ -95,12 +95,11 @@ build:
         )
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p $(ROOT)/$(PKGROOT)/lib
 	( \
+          cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
 	  cd $(SOURCE); \
 	  cp lapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
-	  cp eigsrc.a $(ROOT)/$(PKGROOT)/lib/libeigsrc.a; \
-          cp linsrc.a $(ROOT)/$(PKGROOT)/lib/liblinsrc.a; \
           cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	)
 
