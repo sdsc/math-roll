@@ -1,0 +1,3 @@
+NAME    = lapack_$(ROLLCOMPILER)
+VERSION = 5.0.1
+RELEASE = 1
