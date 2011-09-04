@@ -120,7 +120,7 @@ build:
           perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/SRC/MPI/Makefile; \
           perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/TESTING/Makefile; \
           perl -pi -e "s!ROLL_DIR!$(REDHAT.ROOT)/src/scalapack!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/SLmake.inc; \
-          perl -pi -e "s!ROLL_SCALAPACK!$(REDHAT.ROOT)/src/scalapack/$(SOURCE)!;s!ROLL_BLACS!$(REDHAT.ROOT)/src/scalapack/BLACS!" $(SOURCE)/SLmake.inc; \
+          perl -pi -e "s!ROLL_SCALAPACK!$(REDHAT.ROOT)/src/scalapack/$(SOURCE)!;s!ROLL_BLACS!$(REDHAT.ROOT)/src/scalapack/BLACS/LIB!;s!ROLL_LAPACK!/opt/lapack/3.3.1/$(ROLLCOMPILER)/lib!" $(SOURCE)/SLmake.inc; \
           cd BLACS; \
           mkdir bin; \
           make all; \
@@ -130,13 +130,13 @@ build:
         )
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p $(ROOT)/$(PKGROOT)/lib
 	( \
+	  cp BLACS/LIB/blacsF77init_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacsF77init_MPI-0.a; \
+	  cp BLACS/LIB/blacsCinit_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacsCinit_MPI-0.a; \
+	  cp BLACS/LIB/blacs_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacs_MPI-0.a; \
 	  cd $(SOURCE); \
-	  cp scalapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
-	  cp eigsrc.a $(ROOT)/$(PKGROOT)/lib/libeigsrc.a; \
-          cp linsrc.a $(ROOT)/$(PKGROOT)/lib/liblinsrc.a; \
-          cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
+	  cp libscalapack.a $(ROOT)/$(PKGROOT)/lib; \
 	)
 
 clean::
