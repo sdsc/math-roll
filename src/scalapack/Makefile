@@ -126,7 +126,7 @@ build:
           make all; \
           cd ../$(SOURCE); \
           make all; \
-          make example; \
+          make exe; \
         )
 
 install::
