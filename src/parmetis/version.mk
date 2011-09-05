@@ -1,0 +1,3 @@
+NAME    = parmetis_$(ROLLCOMPILER)
+VERSION = 4.0
+RELEASE = 1
