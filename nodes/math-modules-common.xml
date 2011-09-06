@@ -19,6 +19,8 @@ metis/parmetis
 http://glaros.dtc.umn.edu/gkhome/views/metis
 </description>
 
+superlu
+http://crd.lbl.gov/~xiaoye/SuperLU/
 <copyright>
 2011 R. Clint Whaley and the Atlas Developers
 
@@ -30,6 +32,11 @@ Copyright (c) 2006-2010 The University of Colorado Denver.  All rights
 reserved.
 
 Copyright Regents of the University of Minnesota
+
+
+Copyright (c) 2003, The Regents of the University of California, through
+Lawrence Berkeley National Laboratory (subject to receipt of any required
+approvals from U.S. Dept. of Energy)
 </copyright>
 
 <changelog>
@@ -254,48 +261,99 @@ if test -f /etc/profile.d/parmetis.sh; then
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/parmetis
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/parmetis
 
-<file name="/opt/modulefiles/applications/parmetis/.gnu/4.0" perms="0644">
+<file name="/opt/modulefiles/applications/parmetis/.gnu/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/parmetis/4.0/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/parmetis/4.0/gnu/lib
-prepend-path LIBPATH /opt/parmetis/4.0/gnu/lib
+prepend-path PATH /opt/parmetis/2.5/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/2.5/gnu/lib
+prepend-path LIBPATH /opt/parmetis/2.5/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/parmetis/.intel/4.0" perms="0644">
+<file name="/opt/modulefiles/applications/parmetis/.intel/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/parmetis/4.0/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/parmetis/4.0/intel/lib
-prepend-path LIBPATH /opt/parmetis/4.0/intel/lib
+prepend-path PATH /opt/parmetis/2.5/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/2.5/intel/lib
+prepend-path LIBPATH /opt/parmetis/2.5/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/parmetis/.pgi/4.0" perms="0644">
+<file name="/opt/modulefiles/applications/parmetis/.pgi/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/parmetis/4.0/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/parmetis/4.0/pgi/lib
-prepend-path LIBPATH /opt/parmetis/4.0/pgi/lib
+prepend-path PATH /opt/parmetis/2.5/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/2.5/pgi/lib
+prepend-path LIBPATH /opt/parmetis/2.5/pgi/lib
 </file>
 
-<file name="/opt/modulefiles/applications/.gnu/parmetis/.version.4.0">
+<file name="/opt/modulefiles/applications/.gnu/parmetis/.version.2.5">
 #%Module1.0
-set ModulesVersion "4.0"
+set ModulesVersion "2.5"
 </file>
 
-<file name="/opt/modulefiles/applications/.intel/parmetis/.version.4.0">
+<file name="/opt/modulefiles/applications/.intel/parmetis/.version.2.5">
 #%Module1.0
-set ModulesVersion "4.0"
+set ModulesVersion "2.5"
 </file>
 
-<file name="/opt/modulefiles/applications/.pgi/parmetis/.version.4.0">
+<file name="/opt/modulefiles/applications/.pgi/parmetis/.version.2.5">
 #%Module1.0
-set ModulesVersion "4.0"
+set ModulesVersion "2.5"
 </file>
 
-  /bin/ln -s /opt/modulefiles/applications/.gnu/parmetis/.version.4.0 \
+  /bin/ln -s /opt/modulefiles/applications/.gnu/parmetis/.version.2.5 \
              /opt/modulefiles/applications/.gnu/parmetis/.version
-  /bin/ln -s /opt/modulefiles/applications/.pgi/parmetis/.version.4.0 \
+  /bin/ln -s /opt/modulefiles/applications/.pgi/parmetis/.version.2.5 \
              /opt/modulefiles/applications/.pgi/parmetis/.version
-  /bin/ln -s /opt/modulefiles/applications/.intel/parmetis/.version.4.0 \
+  /bin/ln -s /opt/modulefiles/applications/.intel/parmetis/.version.2.5 \
              /opt/modulefiles/applications/.intel/parmetis/.version
+
+fi
+<!-- SUPERLU -->
+if test -f /etc/profile.d/superlu.sh; then
+  /bin/rm -f /etc/profile.d/superlu.*
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/superlu
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/superlu
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/superlu
+
+<file name="/opt/modulefiles/applications/superlu/.gnu/2.5" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/superlu/2.5/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/2.5/gnu/lib
+prepend-path LIBPATH /opt/superlu/2.5/gnu/lib
+</file>
+
+<file name="/opt/modulefiles/applications/superlu/.intel/2.5" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/superlu/2.5/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/2.5/intel/lib
+prepend-path LIBPATH /opt/superlu/2.5/intel/lib
+</file>
+
+<file name="/opt/modulefiles/applications/superlu/.pgi/2.5" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/superlu/2.5/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/2.5/pgi/lib
+prepend-path LIBPATH /opt/superlu/2.5/pgi/lib
+</file>
+
+<file name="/opt/modulefiles/applications/.gnu/superlu/.version.2.5">
+#%Module1.0
+set ModulesVersion "2.5"
+</file>
+
+<file name="/opt/modulefiles/applications/.intel/superlu/.version.2.5">
+#%Module1.0
+set ModulesVersion "2.5"
+</file>
+
+<file name="/opt/modulefiles/applications/.pgi/superlu/.version.2.5">
+#%Module1.0
+set ModulesVersion "2.5"
+</file>
+
+  /bin/ln -s /opt/modulefiles/applications/.gnu/superlu/.version.2.5 \
+             /opt/modulefiles/applications/.gnu/superlu/.version
+  /bin/ln -s /opt/modulefiles/applications/.pgi/superlu/.version.2.5 \
+             /opt/modulefiles/applications/.pgi/superlu/.version
+  /bin/ln -s /opt/modulefiles/applications/.intel/superlu/.version.2.5 \
+             /opt/modulefiles/applications/.intel/superlu/.version
 
 fi
 </post>

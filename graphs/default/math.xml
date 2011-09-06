@@ -17,6 +17,9 @@ www.netlib.org/scalapack
 metis/parmetis
 http://glaros.dtc.umn.edu/gkhome/views/metis
 
+SuperLU
+http://crd.lbl.gov/~xiaoye/SuperLU/
+
 </description>
 
 <copyright>
@@ -29,8 +32,11 @@ rights reserved.
 Copyright (c) 2006-2010 The University of Colorado Denver.  All rights
 reserved.
 
-regents of the University of Minnesota
+Copyright Regents of the University of Minnesota
 
+Copyright (c) 2003, The Regents of the University of California, through
+Lawrence Berkeley National Laboratory (subject to receipt of any required
+approvals from U.S. Dept. of Energy)
 </copyright>
 
 <changelog>
