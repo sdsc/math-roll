@@ -23,7 +23,7 @@ home          = ROLL_SCALAPACK
 #
 #  The platform identifier to suffix to the end of library names
 #
-PLAT          = LINUX
+PLAT          = 
 #
 #  BLACS setup.  All version need the debug level (0 or 1),
 #  and the directory where the BLACS libraries are
