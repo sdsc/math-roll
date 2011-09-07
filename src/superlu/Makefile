@@ -90,8 +90,8 @@ MPISETUP = \
       export ROLLCOMMENT=\#; \
   fi
 
-PKGROOT = /opt/scalapack/$(ROLLCOMPILER)
-SOURCE = scalapack-$(VERSION)
+PKGROOT = /opt/superlu/$(ROLLCOMPILER)
+SOURCE = superlu-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -108,24 +108,24 @@ COMPILERSETUP = \
 
 build:
 	tar zxvf $(SOURCE).tgz
-	tar zvxf mpiblacs.tgz
 	( \
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
-          cp patch-files/Bmake.inc BLACS/Bmake.inc; \
-          cp patch-files/Makefile.root BLACS/SRC/MPI/Makefile; \
-          cp patch-files/Makefile.testing BLACS/TESTING/Makefile; \
-          cp patch-files/SLmake.inc $(SOURCE); \
-          perl -pi -e "s!ROLL_DIR!$(PWD)!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/Bmake.inc; \
-          perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/SRC/MPI/Makefile; \
-          perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/TESTING/Makefile; \
-          perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_BLACS!$(PWD)/BLACS/LIB!;s!ROLL_LAPACK!$(PWD)/../lapack-$(ROLLCOMPILER)-3.3.1/lapack/lapack-3.3.1!;s!ROLL_BLAS!$(PWD)/../lapack-$(ROLLCOMPILER)-3.3.1/BLAS!" $(SOURCE)/SLmake.inc; \
-          cd BLACS; \
-          mkdir bin; \
-          make all; \
-          cd ../$(SOURCE); \
-          make all; \
-          make exe; \
+          cp patch-files/make.inc $(SOURCE)/make.inc; \
+#DSuperLUroot 	= ROLL_INSTALL
+#METISLIB    	= -LROLL_METIS -lmetis
+#PARMETISLIB   	= -LROLL_PARMETIS -lparmetis
+#          perl -pi -e "s!ROLL_INSTALL!$(REDHAT.ROOT)/src/superlu/$(SOURCE)!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/Bmake.inc; \
+#          perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/SRC/MPI/Makefile; \
+#          perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/TESTING/Makefile; \
+#          perl -pi -e "s!ROLL_DIR!$(REDHAT.ROOT)/src/scalapack!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/SLmake.inc; \
+#          perl -pi -e "s!ROLL_SCALAPACK!$(REDHAT.ROOT)/src/scalapack/$(SOURCE)!;s!ROLL_BLACS!$(REDHAT.ROOT)/src/scalapack/BLACS/LIB!;s!ROLL_LAPACK!/opt/lapack/3.3.1/$(ROLLCOMPILER)/lib!" $(SOURCE)/SLmake.inc; \
+#          cd BLACS; \
+#          mkdir bin; \
+#          make all; \
+#          cd ../$(SOURCE); \
+#          make all; \
+#          make exe; \
         )
 
 install::
@@ -139,4 +139,4 @@ install::
 	)
 
 clean::
-	rm -rf $(SOURCE) BLACS
+	rm -rf $(SOURCE)

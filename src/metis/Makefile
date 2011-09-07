@@ -58,7 +58,7 @@ ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
 
-PKGROOT = /opt/metis/$(VERSION)/$(ROLLCOMPILER)
+PKGROOT = /opt/metis/$(ROLLCOMPILER)
 SOURCE = metis-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
@@ -91,7 +91,7 @@ build:
 install::
 	( \
           cd $(SOURCE); \
-          make install; \
+          make install \
         )
 
 clean::

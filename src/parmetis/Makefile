@@ -58,7 +58,7 @@ ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
 
-PKGROOT = /opt/parmetis/$(VERSION)/$(ROLLCOMPILER)
+PKGROOT = /opt/parmetis/$(ROLLCOMPILER)
 SOURCE = parmetis-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress

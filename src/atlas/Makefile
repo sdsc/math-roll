@@ -58,7 +58,7 @@ ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
 
-PKGROOT = /opt/atlas/$(VERSION)/$(ROLLCOMPILER)
+PKGROOT = /opt/atlas/$(ROLLCOMPILER)
 SOURCE = atlas-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress

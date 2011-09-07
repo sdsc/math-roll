@@ -1,3 +1,3 @@
-NAME    = parmetis_$(ROLLCOMPILER)
+NAME    = parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION = 4.0
 RELEASE = 1

@@ -58,7 +58,7 @@ ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
 
-PKGROOT = /opt/lapack/$(VERSION)/$(ROLLCOMPILER)
+PKGROOT = /opt/lapack/$(ROLLCOMPILER)
 SOURCE = lapack-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
