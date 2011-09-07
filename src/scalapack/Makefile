@@ -119,7 +119,7 @@ build:
           perl -pi -e "s!ROLL_DIR!$(PWD)!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/Bmake.inc; \
           perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/SRC/MPI/Makefile; \
           perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/TESTING/Makefile; \
-          perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_BLACS!$(PWD)/BLACS/LIB!;s!ROLL_LAPACK!$(PWD)/../lapack-$(ROLLCOMPILER)-3.3.1/lapack/lapack-3.3.1!;s!ROLL_BLAS!$(PWD)/../lapack-$(ROLLCOMPILER)-3.3.1/BLAS!" $(SOURCE)/SLmake.inc; \
+          perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_BLACS!$(PWD)/BLACS/LIB!;s!ROLL_LAPACK!$(PWD)/../lapack-$(ROLLCOMPILER)/lapack/lapack-3.3.1!;s!ROLL_BLAS!$(PWD)/../lapack-$(ROLLCOMPILER)/BLAS!" $(SOURCE)/SLmake.inc; \
           cd BLACS; \
           mkdir bin; \
           make all; \
