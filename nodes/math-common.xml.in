@@ -48,7 +48,7 @@ approvals from U.S. Dept. of Energy)
 <package>metis_ROLLCOMPILER</package>
 <package>parmetis_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>superlu_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
-<package>sprng</package>
+<package>sprng_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 
 <post>
 
