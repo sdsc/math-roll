@@ -21,6 +21,9 @@ http://glaros.dtc.umn.edu/gkhome/views/metis
 
 superlu
 http://crd.lbl.gov/~xiaoye/SuperLU/
+
+sprng 
+http://http://sprng.cs.fsu.edu/
 <copyright>
 2011 R. Clint Whaley and the Atlas Developers
 
@@ -354,6 +357,58 @@ set ModulesVersion "2.5"
              /opt/modulefiles/applications/.pgi/superlu/.version
   /bin/ln -s /opt/modulefiles/applications/.intel/superlu/.version.2.5 \
              /opt/modulefiles/applications/.intel/superlu/.version
+
+fi
+
+<!-- SPRNG -->
+if test -f /etc/profile.d/sprng.sh; then
+  /bin/rm -f /etc/profile.d/superlu.*
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/sprng
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/sprng
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/sprng
+
+<file name="/opt/modulefiles/applications/sprng/.gnu/2.0b" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/sprng/2.0b/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/sprng/2.0b/gnu/lib
+prepend-path LIBPATH /opt/sprng/2.0b/gnu/lib
+</file>
+
+<file name="/opt/modulefiles/applications/sprng/.intel/2.0b" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/sprng/2.0b/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/sprng/2.0b/intel/lib
+prepend-path LIBPATH /opt/sprng/2.0b/intel/lib
+</file>
+
+<file name="/opt/modulefiles/applications/sprng/.pgi/2.0b" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/sprng/2.0b/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/sprng/2.0b/pgi/lib
+prepend-path LIBPATH /opt/sprng/2.0b/pgi/lib
+</file>
+
+<file name="/opt/modulefiles/applications/.gnu/sprng/.version.2.0b">
+#%Module1.0
+set ModulesVersion "2.0b"
+</file>
+
+<file name="/opt/modulefiles/applications/.intel/sprng/.version.2.0b">
+#%Module1.0
+set ModulesVersion "2.0b"
+</file>
+
+<file name="/opt/modulefiles/applications/.pgi/sprng/.version.2.0b">
+#%Module1.0
+set ModulesVersion "2.0b"
+</file>
+
+  /bin/ln -s /opt/modulefiles/applications/.gnu/sprng/.version.2.0b \
+             /opt/modulefiles/applications/.gnu/sprng/.version
+  /bin/ln -s /opt/modulefiles/applications/.pgi/sprng/.version.2.0b \
+             /opt/modulefiles/applications/.pgi/sprng/.version
+  /bin/ln -s /opt/modulefiles/applications/.intel/sprng/.version.2.0b \
+             /opt/modulefiles/applications/.intel/sprng/.version
 
 fi
 </post>
