@@ -93,8 +93,8 @@ RANLIB        = ranlib
 #  The name of the libraries to be created/linked to
 #
 SCALAPACKLIB  = $(home)/libscalapack.a
-BLASLIB       = ROLL_BLAS/blas.a
-LAPACKLIB     = ROLL_LAPACK/lapack.a
+BLASLIB       = ROLL_LAPACK/lib/libblas.a
+LAPACKLIB     = ROLL_LAPACK/lib/liblapack.a
 #
 PBLIBS        = $(SCALAPACKLIB) $(FBLACSLIB) $(LAPACKLIB) $(BLASLIB) $(SMPLIB)
 PRLIBS        = $(SCALAPACKLIB) $(CBLACSLIB) $(SMPLIB)
