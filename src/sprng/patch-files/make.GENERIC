@@ -26,10 +26,10 @@ MPILIB =
 # Try adding: -DGENERIC to CFLAGS. This can improve speed, but may give
 # incorrect values. Check with 'checksprng' to see if it works.
 
-CFLAGS = -O2 $(PMLCGDEF) $(MPIDEF)
-CLDFLAGS = -O2
-FFLAGS = -O2 $(PMLCGDEF) $(MPIDEF)
-F77LDFLAGS = -O2
+CFLAGS =  -O2 $(PMLCGDEF) $(MPIDEF)
+CLDFLAGS = 
+FFLAGS =  -O2 $(PMLCGDEF) $(MPIDEF)
+F77LDFLAGS =-O2  
 
 CPP = mpif90 -F
 

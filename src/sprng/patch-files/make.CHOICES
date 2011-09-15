@@ -62,8 +62,8 @@ MPIDEF = -DSPRNG_MPI
 # comment out if you want to exclude generator pmlcg which needs libgmp 
 #---------------------------------------------------------------------------
 
-#PMLCGDEF = -DUSE_PMLCG
-#GMPLIB = -lgmp
+PMLCGDEF = -DUSE_PMLCG
+GMPLIB =  /usr/lib64/libgmp.so.3
 
 ############################################################################
 
