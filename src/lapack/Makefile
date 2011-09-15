@@ -102,6 +102,7 @@ install::
 	  cp lapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
           cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	)
+	/bin/cp -r `find $(ROOT)/$(PKGROOT) -name site-packages` $(REDHAT.ROOT)/src/build-$(ROLLCOMPILER)
 
 clean::
 	rm -rf $(SOURCE) BLAS

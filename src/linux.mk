@@ -54,6 +54,10 @@
 # @Copyright@
 #
 
+# Note: it's important that matplotlib, scipy be built after numpy
 SRCDIRS = `find . -type d -maxdepth 1 \
 	-not -name CVS \
-	-not -name .`
+	-not -name lapack \
+	-not -name scalapack \
+	-not -name superlu \
+	-not -name .` lapack scalapack superlu
