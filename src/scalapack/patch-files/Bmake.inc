@@ -142,9 +142,9 @@
 #  If you know that your MPI uses the same handles for fortran and C
 #  communicators, you can replace the empty macro definition below with
 #  the macro definition on the following line.
-  TRANSCOMM =  -DUseMpich
+# TRANSCOMM =  -DUseMpi2
 #  -----------------------------------------------------------------------
-#  TRANSCOMM =
+   TRANSCOMM = -DUseMpi2
 
 #  --------------------------------------------------------------------------
 #  You may choose to have the BLACS internally call either the C or Fortran77
