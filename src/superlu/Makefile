@@ -115,15 +115,17 @@ build:
           perl -pi -e "s!ROLL_INSTALL!$(REDHAT.ROOT)/src/superlu/$(SOURCE)!" $(SOURCE)/make.inc; \
           perl -pi -e "s!ROLL_METIS!$(REDHAT.ROOT)/src/build-metis_$(ROLLCOMPILER)/lib!" $(SOURCE)/make.inc; \
           perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib!" $(SOURCE)/make.inc; \
+          perl -pi -e "s!ROLL_BLAS!$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib!" $(SOURCE)/make.inc; \
            cd $(SOURCE); \
            make \
         )
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p $(ROOT)/$(PKGROOT)/lib
 	( \
 	  cd $(SOURCE); \
-	  make install \
+	  make install; \
+          cp lib/*.a $(ROOT)$(PKGROOT)/lib/libsuperlu.a \
 	)
 
 clean::

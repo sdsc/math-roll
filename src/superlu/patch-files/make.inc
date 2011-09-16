@@ -25,12 +25,12 @@ DSuperLUroot 	= ROLL_INSTALL
 DSUPERLULIB   	= $(DSuperLUroot)/lib/libsuperlu_dist_2.5.a
 #
 BLASDEF	     	= 
-BLASLIB	        =
+BLASLIB	        = -LROLL_BLAS -lblas
 METISLIB    	= -LROLL_METIS -lmetis
 PARMETISLIB   	= -LROLL_PARMETIS -lparmetis
 
 # Define the required Fortran libraries, if you use C compiler to link
-FLIBS	 	= -lpgf90 -lpgf90_rpm1 -lpgf902 -lpgf90rtl -lpgftnrtl
+FLIBS	 	= 
 
 # Define all the libraries
 LIBS	     	= $(DSUPERLULIB) $(BLASLIB) $(PARMETISLIB) $(METISLIB) $(FLIBS)
