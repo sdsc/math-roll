@@ -112,14 +112,9 @@ build:
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
           cp patch-files/make.inc $(SOURCE)/make.inc; \
-#          perl -pi -e "s!ROLL_INSTALL!$(REDHAT.ROOT)/src/superlu/$(SOURCE)!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/Bmake.inc; \
-#          perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/SRC/MPI/Makefile; \
-#          perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/TESTING/Makefile; \
-#          perl -pi -e "s!ROLL_DIR!$(REDHAT.ROOT)/src/scalapack!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/SLmake.inc; \
-#          perl -pi -e "s!ROLL_SCALAPACK!$(REDHAT.ROOT)/src/scalapack/$(SOURCE)!;s!ROLL_BLACS!$(REDHAT.ROOT)/src/scalapack/BLACS/LIB!;s!ROLL_LAPACK!/opt/lapack/3.3.1/$(ROLLCOMPILER)/lib!" $(SOURCE)/SLmake.inc; \
-#          cd BLACS; \
-#          mkdir bin; \
-#          make all; \
+          perl -pi -e "s!ROLL_INSTALL!$(REDHAT.ROOT)/src/superlu/$(SOURCE)!" $(SOURCE)/make.inc; \
+          perl -pi -e "s!ROLL_METIS!$(REDHAT.ROOT)/src/build-metis_$(ROLLCOMPILER)/lib!" $(SOURCE)/make.inc; \
+          perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib!" $(SOURCE)/make.inc; \
 #          cd ../$(SOURCE); \
 #          make all; \
 #          make exe; \
