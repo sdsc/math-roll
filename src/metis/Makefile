@@ -63,7 +63,8 @@ SOURCE = metis-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
--include $(ROCKSROOT)/etc/Rules.mk
+#-include $(ROCKSROOT)/etc/Rules.mk
+-include version.mk
 
 export ROLL_C=gcc
 COMPILERSETUP = \
@@ -81,18 +82,20 @@ COMPILERSETUP = \
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
-          $(COMPILERSETUP); \
-          cp patch-files/metis.h $(SOURCE)/include;\
-          cd $(SOURCE); \
-          make config cc=$${ROLL_C} prefix=$(ROOT)/$(PKGROOT); \
-          make \
-        )
+           $(COMPILERSETUP); \
+           cp patch-files/metis.h $(SOURCE)/include;\
+           cd $(SOURCE); \
+           make config cc=$${ROLL_C} prefix=$(ROOT)/$(PKGROOT); \
+           make \
+         )
 
 install::
 	( \
           cd $(SOURCE); \
-          make install \
+          make install\
         )
+	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE) BLAS
+	rm -rf $(REDHAT.ROOT)/src/build-$(NAME)

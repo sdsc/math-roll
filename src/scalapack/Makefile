@@ -119,7 +119,7 @@ build:
           perl -pi -e "s!ROLL_DIR!$(PWD)!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/Bmake.inc; \
           perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/SRC/MPI/Makefile; \
           perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/TESTING/Makefile; \
-          perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_BLACS!$(PWD)/BLACS/LIB!;s!ROLL_LAPACK!$(PWD)/../lapack-$(ROLLCOMPILER)/lapack/lapack-3.3.1!;s!ROLL_BLAS!$(PWD)/../lapack-$(ROLLCOMPILER)/BLAS!" $(SOURCE)/SLmake.inc; \
+          perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_BLACS!$(PWD)/BLACS/LIB!;s!ROLL_LAPACK!$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)!" $(SOURCE)/SLmake.inc; \
           cd BLACS; \
           mkdir bin; \
           make all; \
@@ -137,6 +137,7 @@ install::
 	  cd $(SOURCE); \
 	  cp libscalapack.a $(ROOT)/$(PKGROOT)/lib; \
 	)
+	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE) BLACS

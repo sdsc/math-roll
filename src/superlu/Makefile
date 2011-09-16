@@ -112,9 +112,6 @@ build:
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
           cp patch-files/make.inc $(SOURCE)/make.inc; \
-#DSuperLUroot 	= ROLL_INSTALL
-#METISLIB    	= -LROLL_METIS -lmetis
-#PARMETISLIB   	= -LROLL_PARMETIS -lparmetis
 #          perl -pi -e "s!ROLL_INSTALL!$(REDHAT.ROOT)/src/superlu/$(SOURCE)!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/Bmake.inc; \
 #          perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/SRC/MPI/Makefile; \
 #          perl -pi -e "s!ROLLCOMMENT!$${ROLLCOMMENT}!"  BLACS/TESTING/Makefile; \

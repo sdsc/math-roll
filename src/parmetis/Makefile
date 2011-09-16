@@ -123,6 +123,7 @@ install::
           cd $(SOURCE); \
           make install; \
         )
+	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE) BLAS
