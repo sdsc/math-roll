@@ -21,6 +21,9 @@ http://crd.lbl.gov/~xiaoye/SuperLU/
 
 sprng 
 http://http://sprng.cs.fsu.edu/
+
+petsc
+http://www.mcs.anl.gov/petsc/petsc-2/index.html
 <copyright>
 2011 R. Clint Whaley and the Atlas Developers
 
@@ -37,6 +40,7 @@ Copyright (c) 2003, The Regents of the University of California, through
 Lawrence Berkeley National Laboratory (subject to receipt of any required
 approvals from U.S. Dept. of Energy)
 
+copyright by UChicago Argonne, LLC. Argonne National Laboratory
 </copyright>
 
 <changelog>
@@ -49,6 +53,7 @@ approvals from U.S. Dept. of Energy)
 <package>parmetis_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>superlu_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>sprng_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>petsc_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 
 <post>
 
@@ -86,14 +91,5 @@ export LD_LIBRARY_PATH=/opt/metis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 export LIBPATH=/opt/metis/ROLLCOMPILER/lib:$LIBPATH
 </file>
 
-<file name="/etc/profile.d/sprng.csh" perms="0644">
-setenv LD_LIBRARY_PATH /opt/sprng/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/sprng/ROLLCOMPILER/lib:$LIBPATH
-</file>
-
-<file name="/etc/profile.d/sprng.sh" perms="0644">
-export LD_LIBRARY_PATH=/opt/sprng/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-export LIBPATH=/opt/sprng/ROLLCOMPILER/lib:$LIBPATH
-</file>
 
 </kickstart>
