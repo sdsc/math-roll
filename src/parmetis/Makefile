@@ -129,3 +129,4 @@ install::
 
 clean::
 	rm -rf $(SOURCE) BLAS
+	rm -rf $(REDHAT.ROOT)/src/build-$(NAME)
