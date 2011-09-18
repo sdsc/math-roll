@@ -22,6 +22,12 @@ http://crd.lbl.gov/~xiaoye/SuperLU/
 
 sprng 
 http://http://sprng.cs.fsu.edu/
+
+petsc
+http://www.mcs.anl.gov/petsc/petsc-2/index.html
+
+octave
+http://www.gnu.org/software/octave
 </description>
 
 <copyright>
@@ -39,6 +45,12 @@ Copyright Regents of the University of Minnesota
 Copyright (c) 2003, The Regents of the University of California, through
 Lawrence Berkeley National Laboratory (subject to receipt of any required
 approvals from U.S. Dept. of Energy)
+
+
+copyright by UChicago Argonne, LLC. Argonne National Laboratory
+
+Copyright  2007 Free Software Foundation, Inc.
+
 </copyright>
 
 <changelog>
