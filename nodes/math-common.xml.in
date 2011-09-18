@@ -24,6 +24,11 @@ http://http://sprng.cs.fsu.edu/
 
 petsc
 http://www.mcs.anl.gov/petsc/petsc-2/index.html
+
+
+octave
+http://www.gnu.org/software/octave
+
 <copyright>
 2011 R. Clint Whaley and the Atlas Developers
 
@@ -41,6 +46,8 @@ Lawrence Berkeley National Laboratory (subject to receipt of any required
 approvals from U.S. Dept. of Energy)
 
 copyright by UChicago Argonne, LLC. Argonne National Laboratory
+
+Copyright  2007 Free Software Foundation, Inc.
 </copyright>
 
 <changelog>
@@ -54,6 +61,7 @@ copyright by UChicago Argonne, LLC. Argonne National Laboratory
 <package>superlu_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>sprng_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>petsc_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>octave</package>
 
 <post>
 
@@ -89,6 +97,15 @@ setenv LIBPATH /opt/metis/ROLLCOMPILER/lib:$LIBPATH
 export PATH=/opt/metis/ROLLCOMPILER/bin:$PATH
 export LD_LIBRARY_PATH=/opt/metis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 export LIBPATH=/opt/metis/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+
+<file name="/etc/profile.d/octave.csh" perms="0644">
+setenv PATH /opt/octave/bin:$PATH
+</file>
+
+<file name="/etc/profile.d/octave.sh" perms="0644">
+export PATH=/opt/octave/bin:$PATH
 </file>
 
 

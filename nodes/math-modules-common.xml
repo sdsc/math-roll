@@ -17,7 +17,6 @@ www.netlib.org/scalapack
 
 metis/parmetis
 http://glaros.dtc.umn.edu/gkhome/views/metis
-</description>
 
 superlu
 http://crd.lbl.gov/~xiaoye/SuperLU/
@@ -28,6 +27,11 @@ http://http://sprng.cs.fsu.edu/
 
 petsc
 http://www.mcs.anl.gov/petsc/petsc-2/index.html
+
+octave
+http://www.gnu.org/software/octave
+
+</description>
 <copyright>
 2011 R. Clint Whaley and the Atlas Developers
 
@@ -47,6 +51,10 @@ approvals from U.S. Dept. of Energy)
 
 
 copyright by UChicago Argonne, LLC. Argonne National Laboratory
+
+
+Copyright  2007 Free Software Foundation, Inc.
+
 </copyright>
 
 <changelog>
@@ -75,20 +83,20 @@ if test -f /etc/profile.d/atlas.sh; then
 
 <file name="/opt/modulefiles/applications/.gnu/atlas/3.9.45" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/atlas/3.9.45/gnu/lib
-prepend-path LIBPATH /opt/atlas/3.9.45/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/atlas/gnu/lib
+prepend-path LIBPATH /opt/atlas/gnu/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.intel/atlas/3.9.45" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/atlas/3.9.45/intel/lib
-prepend-path LIBPATH /opt/atlas/3.9.45/intel/lib
+prepend-path LD_LIBRARY_PATH /opt/atlas/intel/lib
+prepend-path LIBPATH /opt/atlas/intel/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.pgi/atlas/3.9.45" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/atlas/3.9.45/pgi/lib
-prepend-path LIBPATH /opt/atlas/3.9.45/pgi/lib
+prepend-path LD_LIBRARY_PATH /opt/atlas/pgi/lib
+prepend-path LIBPATH /opt/atlas/pgi/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.gnu/atlas/.version.3.9.45">
@@ -124,20 +132,20 @@ if test -f /etc/profile.d/lapack.sh; then
 
 <file name="/opt/modulefiles/applications/.gnu/lapack/3.3.1" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/lapack/3.3.1/gnu/lib
-prepend-path LIBPATH /opt/lapack/3.3.1/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/lapack/gnu/lib
+prepend-path LIBPATH /opt/lapack/gnu/lib
 </file>
 
 <file name="/opt/modulefiles/applications/lapack/.intel/3.3.1" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/lapack/3.3.1/intel/lib
-prepend-path LIBPATH /opt/lapack/3.3.1/intel/lib
+prepend-path LD_LIBRARY_PATH /opt/lapack/intel/lib
+prepend-path LIBPATH /opt/lapack/intel/lib
 </file>
 
 <file name="/opt/modulefiles/applications/lapack/.pgi/3.3.1" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/lapack/3.3.1/pgi/lib
-prepend-path LIBPATH /opt/lapack/3.3.1/pgi/lib
+prepend-path LD_LIBRARY_PATH /opt/lapack/pgi/lib
+prepend-path LIBPATH /opt/lapack/pgi/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.gnu/lapack/.version.3.3.1">
@@ -173,20 +181,20 @@ if test -f /etc/profile.d/scalapack.sh; then
 
 <file name="/opt/modulefiles/applications/scalapack/.gnu/1.8.0" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/scalapack/1.8.0/gnu/lib
-prepend-path LIBPATH /opt/scalapack/1.8.0/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/scalapack/gnu/lib
+prepend-path LIBPATH /opt/scalapack/gnu/lib
 </file>
 
 <file name="/opt/modulefiles/applications/scalapack/.intel/1.8.0" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/scalapack/1.8.0/intel/lib
-prepend-path LIBPATH /opt/scalapack/1.8.0/intel/lib
+prepend-path LD_LIBRARY_PATH /opt/scalapack/intel/lib
+prepend-path LIBPATH /opt/scalapack/intel/lib
 </file>
 
 <file name="/opt/modulefiles/applications/scalapack/.pgi/1.8.0" perms="0644">
 #%Module1.0
-prepend-path LD_LIBRARY_PATH /opt/scalapack/1.8.0/pgi/lib
-prepend-path LIBPATH /opt/scalapack/1.8.0/pgi/lib
+prepend-path LD_LIBRARY_PATH /opt/scalapack/pgi/lib
+prepend-path LIBPATH /opt/scalapack/pgi/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.gnu/scalapack/.version.1.8.0">
@@ -222,23 +230,23 @@ if test -f /etc/profile.d/metis.sh; then
 
 <file name="/opt/modulefiles/applications/metis/.gnu/5.0.1" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/metis/5.0.1/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/metis/5.0.1/gnu/lib
-prepend-path LIBPATH /opt/metis/5.0.1/gnu/lib
+prepend-path PATH /opt/metis/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/metis/gnu/lib
+prepend-path LIBPATH /opt/metis/gnu/lib
 </file>
 
 <file name="/opt/modulefiles/applications/metis/.intel/5.0.1" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/metis/5.0.1/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/metis/5.0.1/intel/lib
-prepend-path LIBPATH /opt/metis/5.0.1/intel/lib
+prepend-path PATH /opt/metis/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/metis/intel/lib
+prepend-path LIBPATH /opt/metis/intel/lib
 </file>
 
 <file name="/opt/modulefiles/applications/metis/.pgi/5.0.1" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/metis/5.0.1/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/metis/5.0.1/pgi/lib
-prepend-path LIBPATH /opt/metis/5.0.1/pgi/lib
+prepend-path PATH /opt/metis/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/metis/pgi/lib
+prepend-path LIBPATH /opt/metis/pgi/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.gnu/metis/.version.5.0.1">
@@ -273,23 +281,23 @@ if test -f /etc/profile.d/parmetis.sh; then
 
 <file name="/opt/modulefiles/applications/parmetis/.gnu/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/parmetis/2.5/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/parmetis/2.5/gnu/lib
-prepend-path LIBPATH /opt/parmetis/2.5/gnu/lib
+prepend-path PATH /opt/parmetis/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/gnu/lib
+prepend-path LIBPATH /opt/parmetis/gnu/lib
 </file>
 
 <file name="/opt/modulefiles/applications/parmetis/.intel/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/parmetis/2.5/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/parmetis/2.5/intel/lib
-prepend-path LIBPATH /opt/parmetis/2.5/intel/lib
+prepend-path PATH /opt/parmetis/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/intel/lib
+prepend-path LIBPATH /opt/parmetis/intel/lib
 </file>
 
 <file name="/opt/modulefiles/applications/parmetis/.pgi/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/parmetis/2.5/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/parmetis/2.5/pgi/lib
-prepend-path LIBPATH /opt/parmetis/2.5/pgi/lib
+prepend-path PATH /opt/parmetis/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/parmetis/pgi/lib
+prepend-path LIBPATH /opt/parmetis/pgi/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.gnu/parmetis/.version.2.5">
@@ -324,23 +332,20 @@ if test -f /etc/profile.d/superlu.sh; then
 
 <file name="/opt/modulefiles/applications/superlu/.gnu/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/superlu/2.5/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/superlu/2.5/gnu/lib
-prepend-path LIBPATH /opt/superlu/2.5/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/gnu/lib
+prepend-path LIBPATH /opt/superlu/gnu/lib
 </file>
 
 <file name="/opt/modulefiles/applications/superlu/.intel/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/superlu/2.5/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/superlu/2.5/intel/lib
-prepend-path LIBPATH /opt/superlu/2.5/intel/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/intel/lib
+prepend-path LIBPATH /opt/superlu/intel/lib
 </file>
 
 <file name="/opt/modulefiles/applications/superlu/.pgi/2.5" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/superlu/2.5/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/superlu/2.5/pgi/lib
-prepend-path LIBPATH /opt/superlu/2.5/pgi/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/pgi/lib
+prepend-path LIBPATH /opt/superlu/pgi/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.gnu/superlu/.version.2.5">
@@ -376,23 +381,20 @@ if test -f /etc/profile.d/sprng.sh; then
 
 <file name="/opt/modulefiles/applications/sprng/.gnu/2.0b" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/sprng/2.0b/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/sprng/2.0b/gnu/lib
-prepend-path LIBPATH /opt/sprng/2.0b/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/sprng/gnu/lib
+prepend-path LIBPATH /opt/sprng/gnu/lib
 </file>
 
 <file name="/opt/modulefiles/applications/sprng/.intel/2.0b" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/sprng/2.0b/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/sprng/2.0b/intel/lib
-prepend-path LIBPATH /opt/sprng/2.0b/intel/lib
+prepend-path LD_LIBRARY_PATH /opt/sprng/intel/lib
+prepend-path LIBPATH /opt/sprng/intel/lib
 </file>
 
 <file name="/opt/modulefiles/applications/sprng/.pgi/2.0b" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/sprng/2.0b/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/sprng/2.0b/pgi/lib
-prepend-path LIBPATH /opt/sprng/2.0b/pgi/lib
+prepend-path LD_LIBRARY_PATH /opt/sprng/pgi/lib
+prepend-path LIBPATH /opt/sprng/pgi/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.gnu/sprng/.version.2.0b">
@@ -427,23 +429,23 @@ if test -f /etc/profile.d/petsc.sh; then
 
 <file name="/opt/modulefiles/applications/petsc/.gnu/3.2-p2" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/petsc/3.2-p2/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/petsc/3.2-p2/gnu/lib
-prepend-path LIBPATH /opt/petsc/3.2-p2/gnu/lib
+prepend-path PATH /opt/petsc/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/petsc/gnu/lib
+prepend-path LIBPATH /opt/petsc/gnu/lib
 </file>
 
 <file name="/opt/modulefiles/applications/petsc/.intel/3.2-p2" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/petsc/3.2-p2/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/petsc/3.2-p2/intel/lib
-prepend-path LIBPATH /opt/petsc/3.2-p2/intel/lib
+prepend-path PATH /opt/petsc/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/petsc/intel/lib
+prepend-path LIBPATH /opt/petsc/intel/lib
 </file>
 
 <file name="/opt/modulefiles/applications/petsc/.pgi/3.2-p2" perms="0644">
 #%Module1.0
-prepend-path PATH /opt/petsc/3.2-p2/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/petsc/3.2-p2/pgi/lib
-prepend-path LIBPATH /opt/petsc/3.2-p2/pgi/lib
+prepend-path PATH /opt/petsc/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/petsc/pgi/lib
+prepend-path LIBPATH /opt/petsc/pgi/lib
 </file>
 
 <file name="/opt/modulefiles/applications/.gnu/petsc/.version.3.2-p2">
@@ -468,6 +470,53 @@ set ModulesVersion "3.2-p2"
   /bin/ln -s /opt/modulefiles/applications/.intel/petsc/.version.3.2-p2 \
              /opt/modulefiles/applications/.intel/petsc/.version
 
+<!-- OCTAVE -->
+if test -f /etc/profile.d/octave.sh; then
+  /bin/rm -f /etc/profile.d/octave.*
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/octave
+
+<file name="/opt/modulefiles/applications/octave/3.4.2" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/octave/bin
+</file>
+
+<file name="/opt/modulefiles/applications/octave/.intel/3.4.2" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/octave/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/octave/intel/lib
+prepend-path LIBPATH /opt/octave/intel/lib
+</file>
+
+<file name="/opt/modulefiles/applications/octave/.pgi/3.4.2" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/octave/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/octave/pgi/lib
+prepend-path LIBPATH /opt/octave/pgi/lib
+</file>
+
+<file name="/opt/modulefiles/applications/.gnu/octave/.version.3.4.2">
+#%Module1.0
+set ModulesVersion "3.4.2"
+</file>
+
+<file name="/opt/modulefiles/applications/.intel/octave/.version.3.4.2">
+#%Module1.0
+set ModulesVersion "3.4.2"
+</file>
+
+<file name="/opt/modulefiles/applications/.pgi/octave/.version.3.4.2">
+#%Module1.0
+set ModulesVersion "3.4.2"
+</file>
+
+  /bin/ln -s /opt/modulefiles/applications/.gnu/octave/.version.3.4.2 \
+             /opt/modulefiles/applications/.gnu/octave/.version
+  /bin/ln -s /opt/modulefiles/applications/.pgi/octave/.version.3.4.2 \
+             /opt/modulefiles/applications/.pgi/octave/.version
+  /bin/ln -s /opt/modulefiles/applications/.intel/octave/.version.3.4.2 \
+             /opt/modulefiles/applications/.intel/octave/.version
+
+fi
 fi
 </post>
 </kickstart>
