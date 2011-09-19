@@ -74,16 +74,16 @@ Copyright  2007 Free Software Foundation, Inc.
   <tail>math-modules-common</tail>
 </order>
 
-<edge from="math-common">
-   <to>fftw-common</to>
+<edge>from="fftw-common">
+   <to> from="math-common"</to>
 </edge>
 
 <order head="fftw-common">
   <tail>math-common</tail>
 </order>
 
-<edge from="math-common">
-   <to>dataform-common</to>
+<edge>form="dataform-common">
+  <to>math-common</to>
 </edge>
 
 <order head="dataform-common">
