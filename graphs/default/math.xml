@@ -56,7 +56,7 @@ Copyright  2007 Free Software Foundation, Inc.
 <changelog>
 </changelog>
 
-<edge from="compute">
+<edge from="base">
   <to>math-install</to>
 </edge>
 <order head="compute">
@@ -75,19 +75,19 @@ Copyright  2007 Free Software Foundation, Inc.
 </order>
 
 <edge>from="fftw-common">
-   <to> from="math-common"</to>
+   <to> from="math-install"</to>
 </edge>
 
 <order head="fftw-common">
-  <tail>math-common</tail>
+  <tail>math-install</tail>
 </order>
 
 <edge>form="dataform-common">
-  <to>math-common</to>
+  <to>math-install</to>
 </edge>
 
 <order head="dataform-common">
-  <tail>math-common</tail>
+  <tail>math-install</tail>
 </order>
 
 </graph>
