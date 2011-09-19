@@ -63,8 +63,7 @@ SOURCE = metis-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
-#-include $(ROCKSROOT)/etc/Rules.mk
--include version.mk
+-include $(ROCKSROOT)/etc/Rules.mk
 
 export ROLL_C=gcc
 COMPILERSETUP = \
