@@ -90,4 +90,11 @@ Copyright  2007 Free Software Foundation, Inc.
   <tail>math-install</tail>
 </order>
 
+<edge>form="cmake-common">
+  <to>math-install</to>
+</edge>
+
+<order head="cmake-common">
+  <tail>math-install</tail>
+</order>
 </graph>
