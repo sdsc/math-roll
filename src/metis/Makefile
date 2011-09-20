@@ -82,6 +82,7 @@ build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
            $(COMPILERSETUP); \
+           module load cmake; \
            cp patch-files/metis.h $(SOURCE)/include;\
            cd $(SOURCE); \
            make config cc=$${ROLL_C} prefix=$(ROOT)/$(PKGROOT); \
@@ -90,10 +91,11 @@ build:
 
 install::
 	( \
+          trap "/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)" EXIT; \
           cd $(SOURCE); \
+          module load cmake; \
           make install\
         )
-	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE) BLAS

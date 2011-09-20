@@ -110,6 +110,7 @@ MPISETUP = \
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
+          module load cmake; \
           trap SIGINT "echo TRAPPED" SIGINT SIGTERM; \
           $(COMPILERSETUP); \
           $(MPISETUP); \
@@ -123,6 +124,7 @@ install::
 	( \
           trap "/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)" EXIT; \
           cd $(SOURCE); \
+          module load cmake; \
           make install; \
         )
 	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
