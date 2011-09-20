@@ -110,10 +110,10 @@ MPISETUP = \
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
-          module load cmake; \
           trap SIGINT "echo TRAPPED" SIGINT SIGTERM; \
           $(COMPILERSETUP); \
           $(MPISETUP); \
+          module load cmake; \
           cp patch-files/metis.h $(SOURCE)/metis/include;\
           cd $(SOURCE); \
           make config prefix=$(ROOT)/$(PKGROOT); \
