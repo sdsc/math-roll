@@ -47,15 +47,15 @@ RANLIB       	= ranlib
 # C compiler setup
 CC           	= mpicc
 # CFLAGS should be set to be the C flags that include optimization
-CFLAGS          = -O2 -DDEBUGlevel=0 -DPRNTlevel=0 -DPROFlevel=0 \
-		-D_LONGINT
+CFLAGS          = -g -O0
+		
 #
 # NOOPTS should be set to be the C flags that turn off any optimization
 NOOPTS		= -O0
 ############################################################################
 # FORTRAN compiler setup
 FORTRAN         = mpif90
-F90FLAGS	= -O2
+F90FLAGS	=  -g -O0
 ############################################################################
 LOADER	        = mpicc
 LOADOPTS	= 
