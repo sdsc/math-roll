@@ -113,19 +113,22 @@ build:
           trap SIGINT "echo TRAPPED" SIGINT SIGTERM; \
           $(COMPILERSETUP); \
           $(MPISETUP); \
+          . /etc/profile.d/modules.sh; \
           module load cmake; \
-          cp patch-files/metis.h $(SOURCE)/metis/include;\
+#         cp patch-files/metis.h $(SOURCE)/metis/include;\
+          cp patch-files/metis.h $(SOURCE)/METISLib/include;\
           cd $(SOURCE); \
           make config prefix=$(ROOT)/$(PKGROOT); \
           make \
         )
 
 install::
+	mkdir -p $(ROOT)/$(PKGROOT)/lib
 	( \
-          trap "/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)" EXIT; \
           cd $(SOURCE); \
+          . /etc/profile.d/modules.sh; \
           module load cmake; \
-          make install; \
+          cp *.a $(ROOT)/$(PKGROOT)/lib; \
         )
 	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
 
