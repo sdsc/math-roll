@@ -110,7 +110,6 @@ MPISETUP = \
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
-          trap SIGINT "echo TRAPPED" SIGINT SIGTERM; \
           $(COMPILERSETUP); \
           $(MPISETUP); \
           . /etc/profile.d/modules.sh; \
@@ -127,6 +126,7 @@ install::
 	( \
           cp $(SOURCE)/*.a $(ROOT)/$(PKGROOT)/lib; \
           cp $(SOURCE)/*.h $(ROOT)/$(PKGROOT)/include; \
+          cp $(SOURCE)/METISLib/metis.h $(ROOT)/$(PKGROOT)/include; \
         )
 	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
 
