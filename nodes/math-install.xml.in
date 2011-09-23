@@ -29,6 +29,9 @@ http://www.mcs.anl.gov/petsc/petsc-2/index.html
 octave
 http://www.gnu.org/software/octave
 
+trilinos
+http://trilinos.sandia.gov/
+</description>
 <copyright>
 2011 R. Clint Whaley and the Atlas Developers
 
@@ -48,6 +51,8 @@ approvals from U.S. Dept. of Energy)
 copyright by UChicago Argonne, LLC. Argonne National Laboratory
 
 Copyright  2007 Free Software Foundation, Inc.
+
+Copyright (2001) Sandia Corporation
 </copyright>
 
 <changelog>
@@ -62,6 +67,7 @@ Copyright  2007 Free Software Foundation, Inc.
 <package>sprng_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>petsc_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>octave</package>
+<package>trilinos_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 
 <post>
 

@@ -31,6 +31,8 @@ http://www.mcs.anl.gov/petsc/petsc-2/index.html
 octave
 http://www.gnu.org/software/octave
 
+trilinos
+http://trilinos.sandia.gov/
 </description>
 <copyright>
 2011 R. Clint Whaley and the Atlas Developers
@@ -55,6 +57,7 @@ copyright by UChicago Argonne, LLC. Argonne National Laboratory
 
 Copyright  2007 Free Software Foundation, Inc.
 
+Copyright (2001) Sandia Corporation
 </copyright>
 
 <changelog>
@@ -279,47 +282,47 @@ if test -f /etc/profile.d/parmetis.sh; then
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/parmetis
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/parmetis
 
-<file name="/opt/modulefiles/applications/parmetis/.gnu/2.5" perms="0644">
+<file name="/opt/modulefiles/applications/parmetis/.gnu/4.0.1" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/parmetis/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/parmetis/gnu/lib
 prepend-path LIBPATH /opt/parmetis/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/parmetis/.intel/2.5" perms="0644">
+<file name="/opt/modulefiles/applications/parmetis/.intel/4.0.1" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/parmetis/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/parmetis/intel/lib
 prepend-path LIBPATH /opt/parmetis/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/parmetis/.pgi/2.5" perms="0644">
+<file name="/opt/modulefiles/applications/parmetis/.pgi/4.0.1" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/parmetis/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/parmetis/pgi/lib
 prepend-path LIBPATH /opt/parmetis/pgi/lib
 </file>
 
-<file name="/opt/modulefiles/applications/.gnu/parmetis/.version.2.5">
+<file name="/opt/modulefiles/applications/.gnu/parmetis/.version.4.0.1">
 #%Module1.0
-set ModulesVersion "2.5"
+set ModulesVersion "4.0.1"
 </file>
 
-<file name="/opt/modulefiles/applications/.intel/parmetis/.version.2.5">
+<file name="/opt/modulefiles/applications/.intel/parmetis/.version.4.0.1">
 #%Module1.0
-set ModulesVersion "2.5"
+set ModulesVersion "4.0.1"
 </file>
 
-<file name="/opt/modulefiles/applications/.pgi/parmetis/.version.2.5">
+<file name="/opt/modulefiles/applications/.pgi/parmetis/.version.4.0.1">
 #%Module1.0
-set ModulesVersion "2.5"
+set ModulesVersion "4.0.1"
 </file>
 
-  /bin/ln -s /opt/modulefiles/applications/.gnu/parmetis/.version.2.5 \
+  /bin/ln -s /opt/modulefiles/applications/.gnu/parmetis/.version.4.0.1 \
              /opt/modulefiles/applications/.gnu/parmetis/.version
-  /bin/ln -s /opt/modulefiles/applications/.pgi/parmetis/.version.2.5 \
+  /bin/ln -s /opt/modulefiles/applications/.pgi/parmetis/.version.4.0.1 \
              /opt/modulefiles/applications/.pgi/parmetis/.version
-  /bin/ln -s /opt/modulefiles/applications/.intel/parmetis/.version.2.5 \
+  /bin/ln -s /opt/modulefiles/applications/.intel/parmetis/.version.4.0.1 \
              /opt/modulefiles/applications/.intel/parmetis/.version
 
 fi
@@ -517,6 +520,55 @@ set ModulesVersion "3.4.2"
              /opt/modulefiles/applications/.intel/octave/.version
 
 fi
-fi
+<!-- TRILINOS -->
+if test -f /etc/profile.d/trilinos.sh; then
+  /bin/rm -f /etc/profile.d/trilinos.*
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/trilinos
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/trilinos
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/trilinos
+
+<file name="/opt/modulefiles/applications/trilinos/.gnu/10.6.4" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/trilinos/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/trilinos/gnu/lib
+prepend-path LIBPATH /opt/trilinos/gnu/lib
+</file>
+
+<file name="/opt/modulefiles/applications/trilinos/.intel/10.6.4" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/trilinos/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/trilinos/intel/lib
+prepend-path LIBPATH /opt/trilinos/intel/lib
+</file>
+
+<file name="/opt/modulefiles/applications/trilinos/.pgi/10.6.4" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/trilinos/gnu/lib
+prepend-path LD_LIBRARY_PATH /opt/trilinos/pgi/lib
+prepend-path LIBPATH /opt/trilinos/pgi/lib
+</file>
+
+<file name="/opt/modulefiles/applications/.gnu/trilinos/.version.10.6.4">
+#%Module1.0
+set ModulesVersion "10.6.4"
+</file>
+
+<file name="/opt/modulefiles/applications/.intel/trilinos/.version.10.6.4">
+#%Module1.0
+set ModulesVersion "10.6.4"
+</file>
+
+<file name="/opt/modulefiles/applications/.pgi/trilinos/.version.10.6.4">
+#%Module1.0
+set ModulesVersion "10.6.4"
+</file>
+
+  /bin/ln -s /opt/modulefiles/applications/.gnu/trilinos/.version.10.6.4 \
+             /opt/modulefiles/applications/.gnu/trilinos/.version
+  /bin/ln -s /opt/modulefiles/applications/.pgi/trilinos/.version.10.6.4 \
+             /opt/modulefiles/applications/.pgi/trilinos/.version
+  /bin/ln -s /opt/modulefiles/applications/.intel/trilinos/.version.10.6.4 \
+             /opt/modulefiles/applications/.intel/trilinos/.version
+
 </post>
 </kickstart>
