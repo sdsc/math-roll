@@ -119,13 +119,7 @@ build:
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)/lib
-	( \
-	  cp BLACS/LIB/blacsF77init_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacsF77init_MPI-0.a; \
-	  cp BLACS/LIB/blacsCinit_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacsCinit_MPI-0.a; \
-	  cp BLACS/LIB/blacs_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacs_MPI-0.a; \
-	  cd $(SOURCE); \
-	  cp libscalapack.a $(ROOT)/$(PKGROOT)/lib; \
-	)
+	cp $(SOURCE)/lib/*.a $(ROOT)/$(PKGROOT)/lib
 
 clean::
 	rm -rf $(SOURCE) BLACS
