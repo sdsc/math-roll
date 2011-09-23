@@ -72,7 +72,6 @@ else
 endif
 
 
-export MPITYPE=mpi
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
@@ -84,11 +83,7 @@ MPISETUP = \
   fi; \
   echo Using MPI from $${MPI_HOME}; \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
-  if test $(ROLLMPI) = "mvapich" -o $(ROLLMPI) = "mvapich2" -o $(ROLLMPI) = "mpich" -o $(ROLLMPI) = "mpich2"; then \
-      export MPITYPE=mpich; \
-      export ROLLCOMMENT=\#; \
-  fi
+  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
 PKGROOT = /opt/superlu/$(ROLLCOMPILER)
 SOURCE = superlu-$(VERSION)
@@ -113,7 +108,6 @@ build:
           $(MPISETUP); \
           cp patch-files/make.inc $(SOURCE)/make.inc; \
           perl -pi -e "s!ROLL_INSTALL!$(REDHAT.ROOT)/src/superlu/$(SOURCE)!" $(SOURCE)/make.inc; \
-          perl -pi -e "s!ROLL_METIS!$(REDHAT.ROOT)/src/build-metis_$(ROLLCOMPILER)/lib!" $(SOURCE)/make.inc; \
           perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib!" $(SOURCE)/make.inc; \
           perl -pi -e "s!ROLL_BLAS!$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib!" $(SOURCE)/make.inc; \
            cd $(SOURCE); \
@@ -127,6 +121,7 @@ install::
 	  make install; \
           cp lib/*.a $(ROOT)$(PKGROOT)/lib/libsuperlu.a \
 	)
+	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE)

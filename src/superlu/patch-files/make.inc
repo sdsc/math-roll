@@ -26,7 +26,7 @@ DSUPERLULIB   	= $(DSuperLUroot)/lib/libsuperlu_dist_2.5.a
 #
 BLASDEF	     	= 
 BLASLIB	        = -LROLL_BLAS -lblas
-METISLIB    	= -LROLL_METIS -lmetis
+METISLIB   	= -LROLL_PARMETIS -lmetis
 PARMETISLIB   	= -LROLL_PARMETIS -lparmetis
 
 # Define the required Fortran libraries, if you use C compiler to link
