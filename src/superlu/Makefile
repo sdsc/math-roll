@@ -122,7 +122,7 @@ install::
           cp lib/*.a $(ROOT)$(PKGROOT)/lib/libsuperlu.a \
 	)
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
-	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
+	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE)
