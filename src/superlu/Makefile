@@ -116,13 +116,17 @@ build:
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)/lib
+	mkdir -p $(ROOT)/$(PKGROOT)/include
 	( \
 	  cd $(SOURCE); \
 	  make install; \
-          cp lib/*.a $(ROOT)$(PKGROOT)/lib/libsuperlu.a \
+          cp lib/*.a $(ROOT)$(PKGROOT)/lib/libsuperlu.a; \
+          cp SRC/*.h $(ROOT)$(PKGROOT)/include; \
+          cp CBLAS/*.h $(ROOT)$(PKGROOT)/include; \
 	)
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE)
+	rm -rf $(REDHAT.ROOT)/src/build-$(NAME)

@@ -125,7 +125,7 @@ install::
 	( \
           cp $(SOURCE)/*.a $(ROOT)/$(PKGROOT)/lib; \
           cp $(SOURCE)/*.h $(ROOT)/$(PKGROOT)/include; \
-          cp $(SOURCE)/METISLib/metis.h $(ROOT)/$(PKGROOT)/include; \
+          cp patch-files/metis.h $(ROOT)/$(PKGROOT)/include; \
           cp $(SOURCE)/ParMETISLib/*.h $(ROOT)/$(PKGROOT)/include; \
         )
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
