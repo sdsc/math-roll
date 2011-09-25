@@ -129,6 +129,7 @@ install::
           cp $(SOURCE)/METISLib/metis.h $(ROOT)/$(PKGROOT)/include; \
           cp $(SOURCE)/ParMETISLib/stdheaders.h $(ROOT)/$(PKGROOT)/include; \
         )
+	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::

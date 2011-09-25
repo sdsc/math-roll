@@ -103,6 +103,7 @@ install::
 	  cp lapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
           cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	)
+	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::

@@ -137,7 +137,8 @@ install::
 	  cd $(SOURCE); \
 	  cp libscalapack.a $(ROOT)/$(PKGROOT)/lib; \
 	)
-	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
+	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
+	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE) BLACS
