@@ -112,20 +112,16 @@ build:
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
           cd $(SOURCE); \
-           ./configure --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 --with-blas-lib=$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib/libblas.a --with-lapack-lib=$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib/liblapack.a; \
+           ./configure --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 --with-blas-lib=$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib/libblas.a --with-lapack-lib=$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib/liblapack.a --with-superlu-dist=1 --with-superlu_dist-dir=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK) --with-parmetis-dist=1 --with-parmetis-include=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-lib=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib/libparmetis.a --with-metis-include=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-metis-lib=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib/libmetis.a; \
            make PETSC_DIR=$(REDHAT.ROOT)/src/petsc/$(SOURCE)  PETSC_ARCH=arch-linux2-c-debug all \
         )
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)/lib
+	mkdir -p $(ROOT)/$(PKGROOT)
 	( \
-	  cp BLACS/LIB/blacsF77init_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacsF77init_MPI-0.a; \
-	  cp BLACS/LIB/blacsCinit_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacsCinit_MPI-0.a; \
-	  cp BLACS/LIB/blacs_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacs_MPI-0.a; \
-	  cd $(SOURCE); \
-	  cp libscalapack.a $(ROOT)/$(PKGROOT)/lib; \
+           cd $(SOURCE); \
+           make install \
 	)
-	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE)

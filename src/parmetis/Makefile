@@ -127,8 +127,9 @@ install::
           cp $(SOURCE)/*.a $(ROOT)/$(PKGROOT)/lib; \
           cp $(SOURCE)/*.h $(ROOT)/$(PKGROOT)/include; \
           cp $(SOURCE)/METISLib/metis.h $(ROOT)/$(PKGROOT)/include; \
+          cp $(SOURCE)/ParMETISLib/stdheaders.h $(ROOT)/$(PKGROOT)/include; \
         )
-	/bin/cp -r $(ROOT)/$(PKGROOT) $(REDHAT.ROOT)/src/build-$(NAME)
+	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
 	rm -rf $(SOURCE) BLAS
