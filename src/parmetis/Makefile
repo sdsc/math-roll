@@ -114,7 +114,6 @@ build:
           $(MPISETUP); \
           . /etc/profile.d/modules.sh; \
           module load cmake; \
-          cp patch-files/metis.h $(SOURCE)/METISLib/include;\
           cd $(SOURCE); \
           make config prefix=$(ROOT)/$(PKGROOT); \
           make \
@@ -127,7 +126,7 @@ install::
           cp $(SOURCE)/*.a $(ROOT)/$(PKGROOT)/lib; \
           cp $(SOURCE)/*.h $(ROOT)/$(PKGROOT)/include; \
           cp $(SOURCE)/METISLib/metis.h $(ROOT)/$(PKGROOT)/include; \
-          cp $(SOURCE)/ParMETISLib/stdheaders.h $(ROOT)/$(PKGROOT)/include; \
+          cp $(SOURCE)/ParMETISLib/*.h $(ROOT)/$(PKGROOT)/include; \
         )
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
