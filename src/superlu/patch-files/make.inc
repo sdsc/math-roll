@@ -25,7 +25,7 @@ DSuperLUroot 	= ROLL_INSTALL
 DSUPERLULIB   	= $(DSuperLUroot)/lib/libsuperlu_dist_2.5.a
 #
 BLASDEF	     	= 
-BLASLIB	        = $(MKLROOT)/lib/em64t/libmkl_solver_lp64_sequential.a -Wl,--start-group  $(MKLROOT)/lib/em64t/libmkl_intel_lp64.a $(MKLROOT)/lib/em64t/libmkl_sequential.a $(MKLROOT)/lib/em64t/libmkl_core.a -Wl,--end-group -lpthread
+BLASLIB	        = MKLROOT/lib/em64t/libmkl_solver_lp64_sequential.a -Wl,--start-group  MKLROOT/lib/em64t/libmkl_intel_lp64.a MKLROOT/lib/em64t/libmkl_sequential.a MKLROOT/lib/em64t/libmkl_core.a -Wl,--end-group -lpthread
 METISLIB   	= -LROLL_PARMETIS -lmetis
 PARMETISLIB   	= -LROLL_PARMETIS -lparmetis
 
