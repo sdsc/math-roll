@@ -78,7 +78,7 @@ build:
           cd $(SOURCE); \
           mkdir build; \
           cd build; \
-          ../configure --prefix=$(ROOT)/$(PKGROOT) --without-curl --enable-docs=no --with-blas="-L$${MKL_ROOT}/lib/em64t  -Wl,--start-group -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -Wl,--end-group -fopenmp -lpthread" --with-lapack="-L$${MKL_ROOT}/lib/em64t -Wl,--start-group -lmkl_gf_lp64 -lmkl_gnu_thread -lmkl_core -Wl,--end-group -openmp -lpthread" --with-fftw3-libdir=/home/diag/opt/fftw/3.2.1/gnu/lib --with-fftw3-includedir=/home/diag/opt/fftw/3.2.1/gnu/include --with-hdf5-libdir=/home/diag/opt/hdf5/1.8.6/gnu/lib --with-hdf5-includedir=/home/diag/opt/hdf5/1.8.6/gnu/include; \
+          ../configure --prefix=$(ROOT)/$(PKGROOT) --without-curl --enable-64 --enable-docs=no --with-blas="$${MKL_ROOT}/lib/em64t/libmkl_solver_ilp64.a -Wl,--start-group  $${MKL_ROOT}/lib/em64t/libmkl_gf_ilp64.a $${MKL_ROOT}/lib/em64t/libmkl_gnu_thread.a $${MKL_ROOT}/lib/em64t//libmkl_core.a -Wl,--end-group -fopenmp -lpthread" --with-lapack="$${MKL_ROOT}/lib/em64t/libmkl_solver_ilp64.a -Wl,--start-group  $${MKL_ROOT}/lib/em64t/libmkl_gf_ilp64.a $${MKL_ROOT}/lib/em64t/libmkl_gnu_thread.a $${MKL_ROOT}/lib/em64t//libmkl_core.a -Wl,--end-group -fopenmp -lpthread" --with-fftw3-libdir=/home/diag/opt/fftw/3.2.1/gnu/lib --with-fftw3-includedir=/home/diag/opt/fftw/3.2.1/gnu/include --with-hdf5-libdir=/home/diag/opt/hdf5/1.8.6/gnu/lib --with-hdf5-includedir=/home/diag/opt/hdf5/1.8.6/gnu/include; \
           make \
         )
 
