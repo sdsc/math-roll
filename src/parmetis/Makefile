@@ -78,19 +78,12 @@ else
   MPI= $(ROLLMPI)_$(ROLLNETWORK)
 endif
 
-export CC=gcc
-export CXX=g++
+export CC=mpicc
+export CXX=mpicxx
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
     module load $(ROLLCOMPILER); \
-  fi; \
-  if test $(ROLLCOMPILER) = "intel"; then \
-      export CC=icc; \
-      export CXX=icpc; \
-  elif test $(ROLLCOMPILER) = "pgi"; then \
-      export CC=pgcc; \
-      export CXX=pgCC; \
   fi
 
 
@@ -112,10 +105,7 @@ build:
 	( \
           $(COMPILERSETUP); \
           $(MPISETUP); \
-          . /etc/profile.d/modules.sh; \
-          module load cmake; \
           cd $(SOURCE); \
-          make config prefix=$(ROOT)/$(PKGROOT); \
           make \
         )
 
