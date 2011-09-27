@@ -82,6 +82,7 @@ build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
            $(COMPILERSETUP); \
+           . /etc/profiles.h/modules.sh; \
            module load cmake; \
            cp patch-files/metis.h $(SOURCE)/include;\
            cp patch-files/GKlibSystem.cmake $(SOURCE)/GKlib; \
@@ -96,6 +97,7 @@ install::
           mkdir -p  $(REDHAT.ROOT)/src/build-$(NAME)"; \
           trap " " EXIT; \
           cd $(SOURCE); \
+           . /etc/profiles.h/modules.sh; \
           module load cmake; \
           make install\
         )
