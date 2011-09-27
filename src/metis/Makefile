@@ -94,7 +94,7 @@ build:
 install::
 	( \
           mkdir -p  $(REDHAT.ROOT)/src/build-$(NAME)"; \
-          trap "/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)" EXIT; \
+          trap " " EXIT; \
           cd $(SOURCE); \
           module load cmake; \
           make install\

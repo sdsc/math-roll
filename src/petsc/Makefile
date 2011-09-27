@@ -94,6 +94,10 @@ PKGROOT = /opt/petsc/$(ROLLCOMPILER)
 SOURCE = petsc-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
+ifeq ("${MKL_ROOT}", "")
+   export MKL_ROOT=/opt/intel/Compiler/11.1/072/mkl
+endif
+MKLLINK="${MKL_ROOT}/lib/em64t/libmkl_solver_lp64_sequential.a -Wl,--start-group  ${MKL_ROOT}/lib/em64t/libmkl_intel_lp64.a ${MKL_ROOT}/lib/em64t/libmkl_sequential.a ${MKL_ROOT}/lib/em64t/libmkl_core.a -Wl,--end-group -lpthread"
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
@@ -112,7 +116,7 @@ build:
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
           cd $(SOURCE); \
-           ./configure --prefix=$(ROOT)/$(PKGROOT) --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 --with-blas-lib=$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib/libblas.a --with-lapack-lib=$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib/liblapack.a --with-superlu-dist=1 --with-superlu_dist-lib=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib/libsuperlu.a  --with-superlu_dist-include=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-dist=1 --with-parmetis-include=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-lib="-L$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib -lparmetis -lmetis"; \
+           ./configure --prefix=$(ROOT)/$(PKGROOT) --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 --with-blas-lib=$(MKLLINK) --with-lapack-lib=$(MKLLINK) --with-superlu-dist=1 --with-superlu_dist-lib=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib/libsuperlu.a  --with-superlu_dist-include=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-dist=1 --with-parmetis-include=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-lib="-L$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib -lparmetis -lmetis"; \
            make PETSC_DIR=$(REDHAT.ROOT)/src/petsc/$(SOURCE)  PETSC_ARCH=arch-linux2-c-debug all \
         )
 
