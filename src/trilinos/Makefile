@@ -126,7 +126,7 @@ build:
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
 	( \
-           cd $(SOURCE); \
+           cd $(SOURCE)/build; \
            make install \
 	)
 
