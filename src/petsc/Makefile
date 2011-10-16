@@ -72,7 +72,6 @@ else
 endif
 
 
-export MPITYPE=mpi
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
@@ -85,10 +84,6 @@ MPISETUP = \
   echo Using MPI from $${MPI_HOME}; \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
-  if test $(ROLLMPI) = "mvapich" -o $(ROLLMPI) = "mvapich2" -o $(ROLLMPI) = "mpich" -o $(ROLLMPI) = "mpich2"; then \
-      export MPITYPE=mpich; \
-      export ROLLCOMMENT=\#; \
-  fi
 
 PKGROOT = /opt/petsc/$(ROLLCOMPILER)
 SOURCE = petsc-$(VERSION)
@@ -117,7 +112,7 @@ build:
           $(MPISETUP); \
           cd $(SOURCE); \
            ./configure --prefix=$(ROOT)/$(PKGROOT) --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 --with-blas-lib=$(MKLLINK) --with-lapack-lib=$(MKLLINK) --with-superlu-dist=1 --with-superlu_dist-lib=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib/libsuperlu.a  --with-superlu_dist-include=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-dist=1 --with-parmetis-include=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-lib="-L$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib -lparmetis -lmetis"; \
-           make PETSC_DIR=$(REDHAT.ROOT)/src/petsc/$(SOURCE)  PETSC_ARCH=arch-linux2-c-debug all \
+           make PETSC_DIR=$(PWD)  PETSC_ARCH=arch-linux2-c-debug all \
         )
 
 install::

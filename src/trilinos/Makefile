@@ -77,7 +77,6 @@ endif
 MKLLINK=-L${MKL_ROOT}/lib/em64t -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread
 
 
-export MPITYPE=mpi
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
@@ -90,10 +89,6 @@ MPISETUP = \
   echo Using MPI from $${MPI_HOME}; \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
-  if test $(ROLLMPI) = "mvapich" -o $(ROLLMPI) = "mvapich2" -o $(ROLLMPI) = "mpich" -o $(ROLLMPI) = "mpich2"; then \
-      export MPITYPE=mpich; \
-      export ROLLCOMMENT=\#; \
-  fi
 
 PKGROOT = /opt/trilinos/$(ROLLCOMPILER)
 SOURCE = trilinos-$(VERSION)
