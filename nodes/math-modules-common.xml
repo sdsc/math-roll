@@ -430,47 +430,47 @@ if test -f /etc/profile.d/petsc.sh; then
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/petsc
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/petsc
 
-<file name="/opt/modulefiles/applications/petsc/.gnu/3.2-p2" perms="0644">
+<file name="/opt/modulefiles/applications/petsc/.gnu/3.2.p3" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/petsc/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/petsc/gnu/lib
 prepend-path LIBPATH /opt/petsc/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/petsc/.intel/3.2-p2" perms="0644">
+<file name="/opt/modulefiles/applications/petsc/.intel/3.2.p3" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/petsc/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/petsc/intel/lib
 prepend-path LIBPATH /opt/petsc/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/petsc/.pgi/3.2-p2" perms="0644">
+<file name="/opt/modulefiles/applications/petsc/.pgi/3.2.p3" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/petsc/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/petsc/pgi/lib
 prepend-path LIBPATH /opt/petsc/pgi/lib
 </file>
 
-<file name="/opt/modulefiles/applications/.gnu/petsc/.version.3.2-p2">
+<file name="/opt/modulefiles/applications/.gnu/petsc/.version.3.2.p3">
 #%Module1.0
-set ModulesVersion "3.2-p2"
+set ModulesVersion "3.2.p3"
 </file>
 
-<file name="/opt/modulefiles/applications/.intel/petsc/.version.3.2-p2">
+<file name="/opt/modulefiles/applications/.intel/petsc/.version.3.2.p3">
 #%Module1.0
-set ModulesVersion "3.2-p2"
+set ModulesVersion "3.2.p3"
 </file>
 
-<file name="/opt/modulefiles/applications/.pgi/petsc/.version.3.2-p2">
+<file name="/opt/modulefiles/applications/.pgi/petsc/.version.3.2.p3">
 #%Module1.0
-set ModulesVersion "3.2-p2"
+set ModulesVersion "3.2.p3"
 </file>
 
-  /bin/ln -s /opt/modulefiles/applications/.gnu/petsc/.version.3.2-p2 \
+  /bin/ln -s /opt/modulefiles/applications/.gnu/petsc/.version.3.2.p3 \
              /opt/modulefiles/applications/.gnu/petsc/.version
-  /bin/ln -s /opt/modulefiles/applications/.pgi/petsc/.version.3.2-p2 \
+  /bin/ln -s /opt/modulefiles/applications/.pgi/petsc/.version.3.2.p3 \
              /opt/modulefiles/applications/.pgi/petsc/.version
-  /bin/ln -s /opt/modulefiles/applications/.intel/petsc/.version.3.2-p2 \
+  /bin/ln -s /opt/modulefiles/applications/.intel/petsc/.version.3.2.p3 \
              /opt/modulefiles/applications/.intel/petsc/.version
 
 <!-- OCTAVE -->
