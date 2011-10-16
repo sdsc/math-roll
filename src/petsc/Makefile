@@ -83,7 +83,7 @@ MPISETUP = \
   fi; \
   echo Using MPI from $${MPI_HOME}; \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
+  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
 PKGROOT = /opt/petsc/$(ROLLCOMPILER)
 SOURCE = petsc-$(VERSION)
