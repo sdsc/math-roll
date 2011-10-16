@@ -107,7 +107,7 @@ build:
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
           cp patch-files/make.inc $(SOURCE)/make.inc; \
-          perl -pi -e "s!ROLL_INSTALL!$(REDHAT.ROOT)/src/superlu/$(SOURCE)!" $(SOURCE)/make.inc; \
+          perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE)!" $(SOURCE)/make.inc; \
           perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib!" $(SOURCE)/make.inc; \
           perl -pi -e "s!MKLROOT!$${MKL_ROOT}!g" $(SOURCE)/make.inc; \
            cd $(SOURCE); \
