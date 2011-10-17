@@ -31,6 +31,9 @@ http://www.gnu.org/software/octave
 
 trilinos
 http://trilinos.sandia.gov/
+
+gsl
+http://http://www.gnu.org/software/gsl/
 </description>
 <copyright>
 2011 R. Clint Whaley and the Atlas Developers
@@ -68,6 +71,7 @@ Copyright (2001) Sandia Corporation
 <package>petsc_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>octave</package>
 <package>trilinos_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>gsl_ROLLCOMPILER</package>
 
 <post>
 
@@ -95,7 +99,7 @@ export LIBRARY_PATH=/opt/atlas/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 
 <file name="/etc/profile.d/metis.csh" perms="0644">
 setenv PATH /opt/metis/ROLLCOMPILER/bin:$PATH
-setenv LD_LIBRARY_PATH /opt/metis/5.0.1/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LD_LIBRARY_PATH /opt/metis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 setenv LIBPATH /opt/metis/ROLLCOMPILER/lib:$LIBPATH
 </file>
 
@@ -114,6 +118,17 @@ setenv PATH /opt/octave/bin:$PATH
 export PATH=/opt/octave/bin:$PATH
 </file>
 
+<file name="/etc/profile.d/gsl.csh" perms="0644">
+setenv PATH /opt/gsl/bin:$PATH
+setenv LD_LIBRARY_PATH /opt/gsl/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/gsl/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/gsl.sh" perms="0644">
+export PATH=/opt/gsl/bin:$PATH
+export LD_LIBRARY_PATH=/opt/gsl/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/gsl/ROLLCOMPILER/lib:$LIBPATH
+</file>
 
 </post>
 </kickstart>
