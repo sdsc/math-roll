@@ -110,9 +110,10 @@ build:
 	( \
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
+          module load cmake; \
           cd $(SOURCE); \
            ./configure --prefix=$(ROOT)/$(PKGROOT) --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 --with-blas-lib=$(MKLLINK) --with-lapack-lib=$(MKLLINK) --with-superlu-dist=1 --with-superlu_dist-lib=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib/libsuperlu.a  --with-superlu_dist-include=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-dist=1 --with-parmetis-include=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/include --with-parmetis-lib="-L$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib -lparmetis -lmetis"; \
-           make PETSC_DIR=$(PWD)  PETSC_ARCH=arch-linux2-c-debug all \
+           make PETSC_DIR=$(PWD)/$(SOURCE)  PETSC_ARCH=arch-linux2-c-debug all \
         )
 
 install::
