@@ -569,47 +569,47 @@ if test -f /etc/profile.d/gsl.sh; then
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/gsl
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/gsl
 
-<file name="/opt/modulefiles/applications/gsl/.gnu/1.15" perms="0644">
+<file name="/opt/modulefiles/applications/gsl/.gnu/1.11" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/gsl/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/gsl/gnu/lib
 prepend-path LIBPATH /opt/gsl/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/gsl/.intel/1.15" perms="0644">
+<file name="/opt/modulefiles/applications/gsl/.intel/1.11" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/gsl/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/gsl/intel/lib
 prepend-path LIBPATH /opt/gsl/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/gsl/.pgi/1.15" perms="0644">
+<file name="/opt/modulefiles/applications/gsl/.pgi/1.11" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/gsl/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/gsl/pgi/lib
 prepend-path LIBPATH /opt/gsl/pgi/lib
 </file>
 
-<file name="/opt/modulefiles/applications/.gnu/gsl/.version.1.15">
+<file name="/opt/modulefiles/applications/.gnu/gsl/.version.1.11">
 #%Module1.0
-set ModulesVersion "1.15"
+set ModulesVersion "1.11"
 </file>
 
-<file name="/opt/modulefiles/applications/.intel/gsl/.version.1.15">
+<file name="/opt/modulefiles/applications/.intel/gsl/.version.1.11">
 #%Module1.0
-set ModulesVersion "1.15"
+set ModulesVersion "1.11"
 </file>
 
-<file name="/opt/modulefiles/applications/.pgi/gsl/.version.1.15">
+<file name="/opt/modulefiles/applications/.pgi/gsl/.version.1.11">
 #%Module1.0
-set ModulesVersion "1.15"
+set ModulesVersion "1.11"
 </file>
 
-  /bin/ln -s /opt/modulefiles/applications/.gnu/gsl/.version.1.15 \
+  /bin/ln -s /opt/modulefiles/applications/.gnu/gsl/.version.1.11 \
              /opt/modulefiles/applications/.gnu/gsl/.version
-  /bin/ln -s /opt/modulefiles/applications/.pgi/gsl/.version.1.15 \
+  /bin/ln -s /opt/modulefiles/applications/.pgi/gsl/.version.1.11 \
              /opt/modulefiles/applications/.pgi/gsl/.version
-  /bin/ln -s /opt/modulefiles/applications/.intel/gsl/.version.1.15 \
+  /bin/ln -s /opt/modulefiles/applications/.intel/gsl/.version.1.11 \
              /opt/modulefiles/applications/.intel/gsl/.version
 fi
 </post>
