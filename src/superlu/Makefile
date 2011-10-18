@@ -64,6 +64,9 @@ ifndef ROLLMPI
   ROLLMPI = openmpi
   export ROLLCOMMENT=   
 endif
+ifeq ("${MKL_ROOT}", "")
+   export MKL_ROOT=/opt/intel/Compiler/11.1/072/mkl
+endif
 
 ifeq ("$(ROLLNETWORK)", "eth")
   MPI= $(ROLLMPI)
