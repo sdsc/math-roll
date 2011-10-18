@@ -76,24 +76,33 @@ CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --shared  --with-netlib-lapack-ta
 ifeq ("$(ROLLCOMPILER)", "intel")
   CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --shared  --with-netlib-lapack-tarfile=$(REDHAT.ROOT)/src/atlas/lapack-3.3.1.tgz -C ic icc -F ic '-O2' -C if ifort -F if '-O2 -fltconsistency' -Fa alg -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --shared  --with-netlib-lapack-tarfile=$(REDHAT.ROOT)/src/atlas/lapack-3.3.1.tgz -C ic pgcc -F ic '-O2 -noswitcherror' -C if pgf90 -F if '-O2 -noswitcherror'
+  CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --shared  --with-netlib-lapack-tarfile=$(REDHAT.ROOT)/src/atlas/lapack-3.3.1.tgz -C ic pgcc -F ic '-O2' -C if pgf90 -F if '-O2'
 endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
+         if test $(ROLLCOMPILER) = "pgi"; then \
+            make clean; \
+            exit; \
+         fi; \
 	  $(COMPILERSETUP); \
           cpufreq-selector -g performance; \
           mv /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp; \
           cd $(SOURCE); \
           mkdir build; \
           cd build; \
-	  ../configure  $(CONFIGURE_OPTIONS) ; \
+          ../configure  $(CONFIGURE_OPTIONS) ; \
           mv /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq; \
-	  make build \
+          make build \
 	)
 
 install::
+	( \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+            exit; \
+          fi \
+        )
 	mkdir -p $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
