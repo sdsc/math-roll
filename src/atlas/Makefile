@@ -72,11 +72,11 @@ COMPILERSETUP = \
   fi
 
 
-CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-lapack-tarfile=$(PWD)/src/atlas/lapack-3.3.1/lapack.tgz -F ic '-O2' -F if '-O2'
+CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-netlib-lapack=$(REDHAT.ROOT)/src/build-lapack_gnu/lib/liblapack.a -F ic '-O2' -F if '-O2'
 ifeq ("$(ROLLCOMPILER)", "intel")
-  CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-netlib-lapack-tarfile=$(REDHAT.ROOT)/src/atlas/lapack-3.3.1.tgz -C ic icc -F ic '-O2' -C if ifort -F if '-O2 -fltconsistency' -Fa alg -fPIC
+  CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-netlib-lapack=$(REDHAT.ROOT)/src/build-lapack_intel/lib/liblapack.a -C ic icc -F ic '-O2' -C if ifort -F if '-O2 -fltconsistency' -Fa alg -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-netlib-lapack-tarfile=$(REDHAT.ROOT)/src/atlas/lapack-3.3.1.tgz -C ic pgcc -F ic '-O2' -C if pgf90 -F if '-O2'
+  CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-netlib-lapack=$(REDHAT.ROOT)/src/build-lapack_pgi/lib/liblapack.a -C ic pgcc -F ic '-O2' -C if pgf90 -F if '-O2'
 endif
 
 build:
@@ -89,8 +89,8 @@ build:
           mkdir build; \
           cd build; \
           ../configure  $(CONFIGURE_OPTIONS) ; \
-          mv /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq; \
-          make build \
+#         mv /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq; \
+#         make build \
 	)
 
 install::
