@@ -108,6 +108,7 @@ build:
           $(MPISETUP); \
           cp patch-files/make.CHOICES $(SOURCE); \
           cp patch-files/make.GENERIC $(SOURCE)/SRC; \
+          cp patch-files/check_genf_ptr.F $(SOURCE)/SRC; \
           cd $(SOURCE); \
           make \
         )
