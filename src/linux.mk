@@ -62,4 +62,5 @@ SRCDIRS = `find . -type d -maxdepth 1 \
 	-not -name parmetis \
 	-not -name metis \
 	-not -name petsc \
-	-not -name .` lapack scalapack metis parmetis superlu petsc
+	-not -name atlas \
+	-not -name .` lapack atlas scalapack metis parmetis superlu petsc
