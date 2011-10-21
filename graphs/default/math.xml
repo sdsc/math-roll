@@ -64,7 +64,7 @@ Copyright (2001) Sandia Corporation
 <edge from="base">
   <to>math-install</to>
 </edge>
-<order head="compute">
+<order head="common">
   <tail>math-install</tail>
 </order>
 
