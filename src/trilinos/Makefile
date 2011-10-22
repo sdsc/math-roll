@@ -107,6 +107,10 @@ COMPILERSETUP = \
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+              make clean; \
+              exit; \
+          fi
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
            . /etc/profile.d/modules.sh; \
