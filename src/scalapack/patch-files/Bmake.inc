@@ -204,7 +204,7 @@
    F77LOADFLAGS   = 
    CC             = mpicc
    CCFLAGS        = -O2
-   CCLOADER       = $(CC)
+   CCLOADER       = $(CC) ROLLPGI
    CCLOADFLAGS    = 
 
 #  --------------------------------------------------------------------------
