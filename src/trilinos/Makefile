@@ -125,8 +125,12 @@ build:
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
 	( \
-           cd $(SOURCE)/build; \
-           make install \
+           if test -e $(SOURCE)/build; then  \
+              cd $(SOURCE)/build; \
+              make install; \
+           else \
+              rm -rf $(ROOT)/$(PKGROOT); \
+           fi \
 	)
 
 clean::
