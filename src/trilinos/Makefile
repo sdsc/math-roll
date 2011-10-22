@@ -110,7 +110,7 @@ build:
           if test $(ROLLCOMPILER) = "pgi"; then \
               make clean; \
               exit; \
-          fi
+          fi; \
  	  $(COMPILERSETUP); \
           $(MPISETUP); \
            . /etc/profile.d/modules.sh; \
