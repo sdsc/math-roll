@@ -67,7 +67,7 @@ REDISTTSTdir  = $(TESTINGdir)
 #
 #  The fortran and C compilers, loaders, and their flags
 #
-F77           = mpif77
+F77           = mpif90
 CC            = mpicc
 NOOPT         = 
 F77FLAGS      =  -O2 $(NOOPT)
