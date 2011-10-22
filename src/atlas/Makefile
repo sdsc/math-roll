@@ -84,13 +84,17 @@ build:
 	( \
 	  $(COMPILERSETUP); \
           cpufreq-selector -g performance; \
-          mv /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp; \
+          mv -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp; \
           cd $(SOURCE); \
           mkdir build; \
           cd build; \
           ../configure  $(CONFIGURE_OPTIONS) ; \
-#         mv /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq; \
-#         make build \
+          mv -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq; \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+              cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
+              mv -f tmp bin/Makefile; \
+          fi; \
+          make build \
 	)
 
 install::
