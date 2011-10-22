@@ -82,7 +82,7 @@ build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
            $(COMPILERSETUP); \
-           . /etc/profiles.h/modules.sh; \
+           . /etc/profile.d/modules.sh; \
            module load cmake; \
            cp patch-files/metis.h $(SOURCE)/include;\
            cp patch-files/GKlibSystem.cmake $(SOURCE)/GKlib; \
