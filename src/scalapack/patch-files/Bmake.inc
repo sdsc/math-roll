@@ -200,7 +200,7 @@
    F77            = mpif90
    F77NO_OPTFLAGS = 
    F77FLAGS       = $(F77NO_OPTFLAGS) -O2
-   F77LOADER      = $(F77)
+   F77LOADER      = $(F77) ROLLPGI
    F77LOADFLAGS   = 
    CC             = mpicc
    CCFLAGS        = -O2
