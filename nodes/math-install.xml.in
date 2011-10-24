@@ -63,14 +63,14 @@ Copyright (2001) Sandia Corporation
 
 <package>atlas_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
-<package>scalapack_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>scalapack_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>metis_ROLLCOMPILER</package>
-<package>parmetis_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
-<package>superlu_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
-<package>sprng_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
-<package>petsc_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>parmetis_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>superlu_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>sprng_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>petsc_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>octave</package>
-<package>trilinos_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>trilinos_ROLLCOMPILER_ROLLNETWROK_ROLLMPI</package>
 <package>gsl_ROLLCOMPILER</package>
 
 <post>
