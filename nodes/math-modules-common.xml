@@ -15,8 +15,6 @@ scalapack
 www.netlib.org/scalapack
 
 
-metis/parmetis
-http://glaros.dtc.umn.edu/gkhome/views/metis
 
 superlu
 http://crd.lbl.gov/~xiaoye/SuperLU/
@@ -225,57 +223,6 @@ set ModulesVersion "1.8.0"
              /opt/modulefiles/applications/.intel/scalapack/.version
 
 
-<!-- METIS -->
-if test -f /etc/profile.d/metis.sh; then
-  /bin/rm -f /etc/profile.d/metis.*
-  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/metis
-  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/metis
-  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/metis
-
-<file name="/opt/modulefiles/applications/metis/.gnu/5.0.1" perms="0644">
-#%Module1.0
-prepend-path PATH /opt/metis/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/metis/gnu/lib
-prepend-path LIBPATH /opt/metis/gnu/lib
-</file>
-
-<file name="/opt/modulefiles/applications/metis/.intel/5.0.1" perms="0644">
-#%Module1.0
-prepend-path PATH /opt/metis/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/metis/intel/lib
-prepend-path LIBPATH /opt/metis/intel/lib
-</file>
-
-<file name="/opt/modulefiles/applications/metis/.pgi/5.0.1" perms="0644">
-#%Module1.0
-prepend-path PATH /opt/metis/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/metis/pgi/lib
-prepend-path LIBPATH /opt/metis/pgi/lib
-</file>
-
-<file name="/opt/modulefiles/applications/.gnu/metis/.version.5.0.1">
-#%Module1.0
-set ModulesVersion "5.0.1"
-</file>
-
-<file name="/opt/modulefiles/applications/.intel/metis/.version.5.0.1">
-#%Module1.0
-set ModulesVersion "5.0.1"
-</file>
-
-<file name="/opt/modulefiles/applications/.pgi/metis/.version.5.0.1">
-#%Module1.0
-set ModulesVersion "5.0.1"
-</file>
-
-  /bin/ln -s /opt/modulefiles/applications/.gnu/metis/.version.5.0.1 \
-             /opt/modulefiles/applications/.gnu/metis/.version
-  /bin/ln -s /opt/modulefiles/applications/.pgi/metis/.version.5.0.1 \
-             /opt/modulefiles/applications/.pgi/metis/.version
-  /bin/ln -s /opt/modulefiles/applications/.intel/metis/.version.5.0.1 \
-             /opt/modulefiles/applications/.intel/metis/.version
-
-fi
 <!-- PARMETIS -->
   /bin/rm -f /etc/profile.d/parmetis.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/parmetis

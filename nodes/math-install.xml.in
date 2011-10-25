@@ -13,8 +13,6 @@ http://www.netlib.org/lapack
 scalapack
 www.netlib.org/scalapack
 
-metis/parmetis
-http://glaros.dtc.umn.edu/gkhome/views/metis
 
 SuperLU
 http://crd.lbl.gov/~xiaoye/SuperLU/
@@ -64,7 +62,6 @@ Copyright (2001) Sandia Corporation
 <package>atlas_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
 <package>scalapack_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>metis_ROLLCOMPILER</package>
 <package>parmetis_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>superlu_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>sprng_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
@@ -94,19 +91,6 @@ setenv LIBPATH /opt/lapack/ROLLCOMPILER/lib:$LIBPATH
 <file name="/etc/profile.d/lapack.sh" perms="0644">
 export LD_LIBRARY_PATH=/opt/lapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=/opt/atlas/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-</file>
-
-
-<file name="/etc/profile.d/metis.csh" perms="0644">
-setenv PATH /opt/metis/ROLLCOMPILER/bin:$PATH
-setenv LD_LIBRARY_PATH /opt/metis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/metis/ROLLCOMPILER/lib:$LIBPATH
-</file>
-
-<file name="/etc/profile.d/metis.sh" perms="0644">
-export PATH=/opt/metis/ROLLCOMPILER/bin:$PATH
-export LD_LIBRARY_PATH=/opt/metis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-export LIBPATH=/opt/metis/ROLLCOMPILER/lib:$LIBPATH
 </file>
 
 
