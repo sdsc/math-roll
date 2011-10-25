@@ -81,6 +81,7 @@ COMPILERSETUP = \
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
+           trap " " EXIT; \
            $(COMPILERSETUP); \
            . /etc/profile.d/modules.sh; \
            module load cmake; \
@@ -94,6 +95,7 @@ build:
 
 install::
 	( \
+          trap " " EXIT; \
           mkdir -p  $(REDHAT.ROOT)/src/build-$(NAME)"; \
           trap " " EXIT; \
           cd $(SOURCE); \
