@@ -54,14 +54,4 @@
 # @Copyright@
 #
 
-SRCDIRS = `find . -type d -maxdepth 1 \
-	-not -name CVS \
-	-not -name lapack \
-	-not -name scalapack \
-	-not -name superlu \
-	-not -name parmetis \
-	-not -name metis \
-	-not -name petsc \
-	-not -name atlas \
-        -not -name build-\* \
-	-not -name .` lapack atlas scalapack metis parmetis superlu petsc
+SRCDIRS =  metis
