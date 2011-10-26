@@ -140,13 +140,13 @@ prepend-path LD_LIBRARY_PATH /opt/lapack/gnu/lib
 prepend-path LIBPATH /opt/lapack/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/lapack/.intel/3.3.1" perms="0644">
+<file name="/opt/modulefiles/applications/.intel/lapack/3.3.1" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/lapack/intel/lib
 prepend-path LIBPATH /opt/lapack/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/lapack/.pgi/3.3.1" perms="0644">
+<file name="/opt/modulefiles/applications/.pgi/lapack/3.3.1" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/lapack/pgi/lib
 prepend-path LIBPATH /opt/lapack/pgi/lib
@@ -177,6 +177,7 @@ set ModulesVersion "3.3.1"
 fi
 
 <!-- SCALAPACK -->
+if test -f /etc/profile.d/scalapack.sh; then
   /bin/rm -f /etc/profile.d/scalapack.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/scalapack
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/scalapack
@@ -222,28 +223,29 @@ set ModulesVersion "1.8.0"
   /bin/ln -s /opt/modulefiles/applications/.intel/scalapack/.version.1.8.0 \
              /opt/modulefiles/applications/.intel/scalapack/.version
 
-
+fi
 <!-- PARMETIS -->
+if test -f /etc/profile.d/parmetis.sh; then
   /bin/rm -f /etc/profile.d/parmetis.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/parmetis
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/parmetis
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/parmetis
 
-<file name="/opt/modulefiles/applications/parmetis/.gnu/4.0.1" perms="0644">
+<file name="/opt/modulefiles/applications/.gnu/parmetis/4.0.1" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/parmetis/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/parmetis/gnu/lib
 prepend-path LIBPATH /opt/parmetis/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/parmetis/.intel/4.0.1" perms="0644">
+<file name="/opt/modulefiles/applications/.intel/parmetis/4.0.1" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/parmetis/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/parmetis/intel/lib
 prepend-path LIBPATH /opt/parmetis/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/parmetis/.pgi/4.0.1" perms="0644">
+<file name="/opt/modulefiles/applications/.pgi/parmetis/4.0.1" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/parmetis/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/parmetis/pgi/lib
@@ -271,26 +273,27 @@ set ModulesVersion "4.0.1"
              /opt/modulefiles/applications/.pgi/parmetis/.version
   /bin/ln -s /opt/modulefiles/applications/.intel/parmetis/.version.4.0.1 \
              /opt/modulefiles/applications/.intel/parmetis/.version
-
+fi
 <!-- SUPERLU -->
+if test -f /etc/profile.d/superlu.sh; then
   /bin/rm -f /etc/profile.d/superlu.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/superlu
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/superlu
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/superlu
 
-<file name="/opt/modulefiles/applications/superlu/.gnu/2.5" perms="0644">
+<file name="/opt/modulefiles/applications/.gnu/superlu/2.5" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/superlu/gnu/lib
 prepend-path LIBPATH /opt/superlu/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/superlu/.intel/2.5" perms="0644">
+<file name="/opt/modulefiles/applications/.intel/superlu/2.5" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/superlu/intel/lib
 prepend-path LIBPATH /opt/superlu/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/superlu/.pgi/2.5" perms="0644">
+<file name="/opt/modulefiles/applications/.pgi/superlu/2.5" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/superlu/pgi/lib
 prepend-path LIBPATH /opt/superlu/pgi/lib
@@ -318,26 +321,27 @@ set ModulesVersion "2.5"
   /bin/ln -s /opt/modulefiles/applications/.intel/superlu/.version.2.5 \
              /opt/modulefiles/applications/.intel/superlu/.version
 
-
+fi
 <!-- SPRNG -->
+if test -f /etc/profile.d/sprng.sh; then
   /bin/rm -f /etc/profile.d/sprng.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/sprng
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/sprng
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/sprng
 
-<file name="/opt/modulefiles/applications/sprng/.gnu/2.0b" perms="0644">
+<file name="/opt/modulefiles/applications/.gnu/sprng/2.0b" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/sprng/gnu/lib
 prepend-path LIBPATH /opt/sprng/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/sprng/.intel/2.0b" perms="0644">
+<file name="/opt/modulefiles/applications/.intel/sprng/2.0b" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/sprng/intel/lib
 prepend-path LIBPATH /opt/sprng/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/sprng/.pgi/2.0b" perms="0644">
+<file name="/opt/modulefiles/applications/.pgi/sprng/2.0b" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/sprng/pgi/lib
 prepend-path LIBPATH /opt/sprng/pgi/lib
@@ -364,8 +368,9 @@ set ModulesVersion "2.0b"
              /opt/modulefiles/applications/.pgi/sprng/.version
   /bin/ln -s /opt/modulefiles/applications/.intel/sprng/.version.2.0b \
              /opt/modulefiles/applications/.intel/sprng/.version
-
+fi
 <!-- PETSC -->
+if test -f /etc/profile.d/petsc.sh; then
   /bin/rm -f /etc/profile.d/petsc.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/petsc
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/petsc
@@ -413,7 +418,7 @@ set ModulesVersion "3.2.p3"
              /opt/modulefiles/applications/.pgi/petsc/.version
   /bin/ln -s /opt/modulefiles/applications/.intel/petsc/.version.3.2.p3 \
              /opt/modulefiles/applications/.intel/petsc/.version
-
+fi
 <!-- OCTAVE -->
 if test -f /etc/profile.d/octave.sh; then
   /bin/rm -f /etc/profile.d/octave.*
@@ -424,64 +429,37 @@ if test -f /etc/profile.d/octave.sh; then
 prepend-path PATH /opt/octave/bin
 </file>
 
-<file name="/opt/modulefiles/applications/octave/.intel/3.4.2" perms="0644">
-#%Module1.0
-prepend-path PATH /opt/octave/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/octave/intel/lib
-prepend-path LIBPATH /opt/octave/intel/lib
-</file>
-
-<file name="/opt/modulefiles/applications/octave/.pgi/3.4.2" perms="0644">
-#%Module1.0
-prepend-path PATH /opt/octave/gnu/lib
-prepend-path LD_LIBRARY_PATH /opt/octave/pgi/lib
-prepend-path LIBPATH /opt/octave/pgi/lib
-</file>
-
-<file name="/opt/modulefiles/applications/.gnu/octave/.version.3.4.2">
+<file name="/opt/modulefiles/applications/octave/.version.3.4.2">
 #%Module1.0
 set ModulesVersion "3.4.2"
 </file>
 
-<file name="/opt/modulefiles/applications/.intel/octave/.version.3.4.2">
-#%Module1.0
-set ModulesVersion "3.4.2"
-</file>
-
-<file name="/opt/modulefiles/applications/.pgi/octave/.version.3.4.2">
-#%Module1.0
-set ModulesVersion "3.4.2"
-</file>
-
-  /bin/ln -s /opt/modulefiles/applications/.gnu/octave/.version.3.4.2 \
-             /opt/modulefiles/applications/.gnu/octave/.version
-  /bin/ln -s /opt/modulefiles/applications/.pgi/octave/.version.3.4.2 \
-             /opt/modulefiles/applications/.pgi/octave/.version
-  /bin/ln -s /opt/modulefiles/applications/.intel/octave/.version.3.4.2 \
-             /opt/modulefiles/applications/.intel/octave/.version
+  /bin/ln -s /opt/modulefiles/applications/octave/.version.3.4.2 \
+             /opt/modulefiles/applications/octave/.version
 
 fi
 <!-- TRILINOS -->
+if test -f /etc/profile.d/trilinos.sh; then
   /bin/rm -f /etc/profile.d/trilinos.*
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.gnu/trilinos
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/trilinos
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/trilinos
 
-<file name="/opt/modulefiles/applications/trilinos/.gnu/10.6.4" perms="0644">
+<file name="/opt/modulefiles/applications/.gnu/trilinos/10.6.4" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/trilinos/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/trilinos/gnu/lib
 prepend-path LIBPATH /opt/trilinos/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/trilinos/.intel/10.6.4" perms="0644">
+<file name="/opt/modulefiles/applications/.intel/trilinos/10.6.4" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/trilinos/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/trilinos/intel/lib
 prepend-path LIBPATH /opt/trilinos/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/trilinos/.pgi/10.6.4" perms="0644">
+<file name="/opt/modulefiles/applications/.pgi/trilinos/10.6.4" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/trilinos/pgi/lib
 prepend-path LIBPATH /opt/trilinos/pgi/lib
@@ -508,7 +486,7 @@ set ModulesVersion "10.6.4"
              /opt/modulefiles/applications/.pgi/trilinos/.version
   /bin/ln -s /opt/modulefiles/applications/.intel/trilinos/.version.10.6.4 \
              /opt/modulefiles/applications/.intel/trilinos/.version
-
+fi
 <!-- GSL -->
 if test -f /etc/profile.d/gsl.sh; then
   /bin/rm -f /etc/profile.d/gsl.*
@@ -516,21 +494,21 @@ if test -f /etc/profile.d/gsl.sh; then
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/gsl
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/gsl
 
-<file name="/opt/modulefiles/applications/gsl/.gnu/1.11" perms="0644">
+<file name="/opt/modulefiles/applications/.gnu/gsl/1.11" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/gsl/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/gsl/gnu/lib
 prepend-path LIBPATH /opt/gsl/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/gsl/.intel/1.11" perms="0644">
+<file name="/opt/modulefiles/applications/.intel/gsl/1.11" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/gsl/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/gsl/intel/lib
 prepend-path LIBPATH /opt/gsl/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/gsl/.pgi/1.11" perms="0644">
+<file name="/opt/modulefiles/applications/.pgi/gsl/1.11" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/gsl/gnu/lib
 prepend-path LD_LIBRARY_PATH /opt/gsl/pgi/lib

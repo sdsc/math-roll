@@ -67,7 +67,7 @@ Copyright (2001) Sandia Corporation
 <package>sprng_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>petsc_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>octave</package>
-<package>trilinos_ROLLCOMPILER_ROLLNETWROK_ROLLMPI</package>
+<package>trilinos_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>gsl_ROLLCOMPILER</package>
 
 <post>
