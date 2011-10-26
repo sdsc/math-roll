@@ -183,19 +183,19 @@ if test -f /etc/profile.d/scalapack.sh; then
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.pgi/scalapack
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.intel/scalapack
 
-<file name="/opt/modulefiles/applications/scalapack/.gnu/1.8.0" perms="0644">
+<file name="/opt/modulefiles/applications/.gnu/scalapack/1.8.0" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/scalapack/gnu/lib
 prepend-path LIBPATH /opt/scalapack/gnu/lib
 </file>
 
-<file name="/opt/modulefiles/applications/scalapack/.intel/1.8.0" perms="0644">
+<file name="/opt/modulefiles/applications/.intel/scalapack/1.8.0" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/scalapack/intel/lib
 prepend-path LIBPATH /opt/scalapack/intel/lib
 </file>
 
-<file name="/opt/modulefiles/applications/scalapack/.pgi/1.8.0" perms="0644">
+<file name="/opt/modulefiles/applications/.pgi/scalapack/1.8.0" perms="0644">
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/scalapack/pgi/lib
 prepend-path LIBPATH /opt/scalapack/pgi/lib
