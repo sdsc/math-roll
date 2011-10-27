@@ -114,5 +114,81 @@ export LD_LIBRARY_PATH=/opt/gsl/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 export LIBPATH=/opt/gsl/ROLLCOMPILER/lib:$LIBPATH
 </file>
 
+<file name="/etc/profile.d/scalapack.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/gsl.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/scalapack.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/scalapack.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/parmetis.csh" perms="0644">
+setenv PATH /opt/parmetis/ROLLCOMPILER/bin:$PATH
+setenv LD_LIBRARY_PATH /opt/parmetis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/parmetis/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/parmetis.sh" perms="0644">
+export PATH=/opt/parmetis/ROLLCOMPILER/bin:$PATH
+export LD_LIBRARY_PATH=/opt/parmetis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/parmetis/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/superlu.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/superlu/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/superlu/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/superlu.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/superlu/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/superlu/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/sprng.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/sprng/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/sprng/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/sprng.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/sprng/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/sprng/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/petsc.csh" perms="0644">
+setenv PATH /opt/petsc/ROLLCOMPILER/bin:$PATH
+setenv LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/petsc/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/petsc.sh" perms="0644">
+export PATH=/opt/petsc/ROLLCOMPILER/bin:$PATH
+export LD_LIBRARY_PATH=/opt/petsc/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/petsc/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/trilinos.csh" perms="0644">
+setenv PATH /opt/trilinos/ROLLCOMPILER/bin:$PATH
+setenv LD_LIBRARY_PATH /opt/trilinos/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/trilinos/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/trilinos.sh" perms="0644">
+export PATH=/opt/trilinos/ROLLCOMPILER/bin:$PATH
+export LD_LIBRARY_PATH=/opt/trilinos/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/trilinos/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
 </post>
 </kickstart>
