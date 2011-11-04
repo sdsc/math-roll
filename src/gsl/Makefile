@@ -72,10 +72,13 @@ COMPILERSETUP = \
   fi
 
 CC=gcc
+CFLAGS="-O2"
 ifeq ("$(ROLLCOMPILER)", "intel")
   CC=icc
+  CFLAGS="-O2 -fp-model precise"
 else ifeq ("$(ROLLCOMPILER)", "pgi")
   CC=pgcc
+  CFLAGS="-fast"
 endif
 
 build:
@@ -83,15 +86,23 @@ build:
 	( \
 	  $(COMPILERSETUP); \
           cd $(SOURCE); \
-	  ./configure  CC=$(CC) --prefix=$(ROOT)/$(PKGROOT); \
+	  ./configure  CC=$(CC) CFLAGS=$(CFLAGS) --prefix=$(ROOT)/$(PKGROOT); \
 	  make \
         )
 
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)
 	( \
+	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
-	  make install \
+	  make install; \
+          make check; \
+          mkdir -p $(ROOT)/$(PKGROOT)/testruns; \
+          for file in `cat ../patch-files/tests`; do\
+              mkdir $(ROOT)/$(PKGROOT)/testruns/$$file; \
+              cp   $$file/test $(ROOT)/$(PKGROOT)/testruns/$$file; \
+          done; \
+          cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns \
 	)
 
 clean::
