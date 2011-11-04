@@ -1,0 +1,101 @@
+<?xml version="1.0" standalone="no"?>
+
+<kickstart>
+
+<description>
+The math roll installation test.
+</description>
+
+<copyright>
+Copyright (c) 2000 - 2011 The Regents of the University of California.
+All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
+</copyright>
+
+<changelog>
+</changelog>
+
+<post>
+
+/bin/mkdir -m 0755 /root/rolltests
+
+<file name="/root/rolltests/math.t" perms="0755">
+<![CDATA[#!/usr/bin/perl -w
+# math roll installation test.  Usage:
+# math.t [nodetype]
+#   where nodetype is one of "Compute", "Dbnode", "Frontend" or "Login"
+#   if not specified, the test assumes either Compute or Frontend
+
+use Test::More qw(no_plan);
+
+my $appliance = $#ARGV >= 0 ? $ARGV[0] :
+                -d '/export/rocks/install' ? 'Frontend' : 'Compute';
+my $installedOnAppliancesPattern = 'Compute';
+my @packages = ('gsl');
+my $output;
+my $TESTFILE = 'tmpmath';
+
+# math-install.xml
+foreach my $package(@packages) {
+  if($appliance =~ /$installedOnAppliancesPattern/) {
+    ok(-d "/opt/$package", "$package installed");
+  } else {
+    ok(! -d "/opt/$package", "$package not installed");
+  }
+}
+
+# gsl
+my $packageHome = '/opt/gsl/ROLLCOMPILER';
+my $testDir = "$packageHome/runtests/actin-dimer";
+SKIP: {
+
+  skip 'apbs not installed', 1 if ! -d $packageHome;
+  skip 'apbs test not installed', 1 if ! -d $testDir;
+  open(OUT, ">$TESTFILE.sh");
+  print OUT <<END;
+. /etc/profile.d/modules.sh
+module load ROLLCOMPILER gsl
+cd $packageHome/examples/actin-dimer
+$packageHome/bin/apbs apbs-smol-auto.in
+END
+  close(OUT);
+  $output = `/bin/bash $TESTFILE.sh`;
+  ok($output =~ /Global.*energy.*\d+\.\d+.*kJ\/mol/, 'apbs sample run');
+
+}
+
+# math-modules-common
+SKIP: {
+
+  skip 'math not installed', 1
+    if $appliance !~ /$installedOnAppliancesPattern/;
+  my $modulesInstalled = -f '/etc/profile.d/modules.sh';
+  if($modulesInstalled) {
+    like($ENV{MODULEPATH}, qr#/opt/modulefiles/applications#,
+         'MODULEPATH set for applications');
+  }
+  foreach my $package(@packages) {
+    my ($noVersion) = $package =~ m#([^/]+)#;
+    if($modulesInstalled) {
+      ok(! -f "/etc/profile.d/$noVersion.csh" &&
+         ! -f "/etc/profile.d/$noVersion.sh", "$package profile.d removed");
+      `/bin/ls /opt/modulefiles/applications/$noVersion/[0-9]* 2>&1`;
+      ok($? == 0, "$package module installed");
+      `/bin/ls /opt/modulefiles/applications/$noVersion/.version.[0-9]* 2>&1`;
+      ok($? == 0, "$package version module installed");
+      ok(-l "/opt/modulefiles/applications/$noVersion/.version",
+         "$package version module link created");
+    } else {
+      ok(-f "/etc/profile.d/$noVersion.csh" &&
+         -f "/etc/profile.d/$noVersion.sh", "$package profile.d created");
+    }
+  }
+
+}
+
+`rm -f $TESTFILE*`;
+]]>
+</file>
+
+</post>
+
+</kickstart> 
