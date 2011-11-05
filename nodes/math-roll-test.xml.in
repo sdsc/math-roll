@@ -44,23 +44,29 @@ foreach my $package(@packages) {
 }
 
 # gsl
-my $packageHome = '/opt/gsl/ROLLCOMPILER';
-my $testDir = "$packageHome/runtests/actin-dimer";
+my $packageHome = '/opt/gsl/intel';
+my $testDir = '/opt/gsl/intel/testruns';
 SKIP: {
-
-  skip 'apbs not installed', 1 if ! -d $packageHome;
-  skip 'apbs test not installed', 1 if ! -d $testDir;
+  skip 'gsl not installed', 1 if ! -d $packageHome;
+  skip 'gsl test not installed', 1 if ! -d $testDir;
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
+#!/bin/bash
 . /etc/profile.d/modules.sh
 module load ROLLCOMPILER gsl
-cd $packageHome/examples/actin-dimer
-$packageHome/bin/apbs apbs-smol-auto.in
+cd $packageHome/testruns
+tests=`ls`
+for test in \$tests; do
+if test -d \$test; then
+\$test/test
+fi
+done
+./test_gsl_histogram.sh
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE.sh`;
-  ok($output =~ /Global.*energy.*\d+\.\d+.*kJ\/mol/, 'apbs sample run');
-
+  ok($output !=~ /FAIL/, 'gsl tests');
+}
 }
 
 # math-modules-common
