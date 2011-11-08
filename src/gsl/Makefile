@@ -103,7 +103,7 @@ install::
               cp   $$file/test $(ROOT)/$(PKGROOT)/testruns/$$file; \
           done; \
           cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns \
-          cp gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns \
+          cp gsl_histogram $(ROOT)/$(PKGROOT)/testruns \
 	)
 
 clean::
