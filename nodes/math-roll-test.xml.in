@@ -65,8 +65,7 @@ done
 END
   close(OUT);
   $output = `/bin/bash $TESTFILE.sh`;
-  ok($output !=~ /FAIL/, 'gsl tests');
-}
+  ok($output =~ /^(?!.*(?:FAIL))/, 'gsl tests');
 }
 
 # math-modules-common

@@ -102,8 +102,8 @@ install::
               mkdir $(ROOT)/$(PKGROOT)/testruns/$$file; \
               cp   $$file/test $(ROOT)/$(PKGROOT)/testruns/$$file; \
           done; \
-          cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns \
-          cp gsl_histogram $(ROOT)/$(PKGROOT)/testruns \
+          cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns; \
+          cp gsl-histogram $(ROOT)/$(PKGROOT)/testruns \
 	)
 
 clean::
