@@ -102,4 +102,13 @@ Copyright (2001) Sandia Corporation
 <order head="cmake-common">
   <tail>math-install</tail>
 </order>
+
+
+<edge from="base">
+  <to>math-roll-test</to>
+</edge>
+<order head="base">
+  <tail>math-roll-test</tail>
+</order>
+
 </graph>
