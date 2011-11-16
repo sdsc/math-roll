@@ -97,11 +97,13 @@ build:
 install::
 	mkdir -p $(ROOT)/$(PKGROOT)/lib
 	mkdir -p $(ROOT)/$(PKGROOT)/include
+	mkdir -p $(ROOT)/$(PKGROOT)/runtests
 	( \
           cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
 	  cd $(SOURCE); \
 	  cp lapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
           cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
+          cp ../patch-files/tests TESTING/x* TESTING/*.in $(ROOT)/$(PKGROOT)/runtests \
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)

@@ -79,30 +79,6 @@ Copyright (2001) Sandia Corporation
   <tail>math-modules-common</tail>
 </order>
 
-<edge>from="fftw-common">
-   <to> from="math-install"</to>
-</edge>
-
-<order head="fftw-common">
-  <tail>math-install</tail>
-</order>
-
-<edge>form="dataform-common">
-  <to>math-install</to>
-</edge>
-
-<order head="dataform-common">
-  <tail>math-install</tail>
-</order>
-
-<edge>form="cmake-common">
-  <to>math-install</to>
-</edge>
-
-<order head="cmake-common">
-  <tail>math-install</tail>
-</order>
-
 
 <edge from="base">
   <to>math-roll-test</to>

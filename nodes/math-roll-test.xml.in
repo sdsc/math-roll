@@ -30,7 +30,7 @@ use Test::More qw(no_plan);
 my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = 'Compute';
-my @packages = ('gsl');
+my @packages = ('gsl','lapack');
 my $output;
 my $TESTFILE = 'tmpmath';
 
@@ -44,8 +44,8 @@ foreach my $package(@packages) {
 }
 
 # gsl
-my $packageHome = '/opt/gsl/intel';
-my $testDir = '/opt/gsl/intel/testruns';
+my $packageHome = '/opt/gsl/ROLLCOMPILER';
+my $testDir = '/opt/gsl/ROLLCOMPILER/testruns';
 SKIP: {
   skip 'gsl not installed', 1 if ! -d $packageHome;
   skip 'gsl test not installed', 1 if ! -d $testDir;
@@ -66,6 +66,25 @@ END
   close(OUT);
   $output = `/bin/bash $TESTFILE.sh`;
   ok($output =~ /^(?!.*(?:FAIL))/, 'gsl tests');
+
+
+# lapack
+my $packageHome = '/opt/lapack/ROLLCOMPILER';
+my $testDir = '/opt/lapack/ROLLCOMPILER/testruns';
+SKIP: {
+  skip 'gsl not installed', 1 if ! -d $packageHome;
+  skip 'gsl test not installed', 1 if ! -d $testDir;
+  open(OUT, ">$TESTFILE.sh");
+  print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load ROLLCOMPILER lapack
+cd $packageHome/testruns
+sh ./tests
+END
+  close(OUT);
+  $output = `/bin/bash $TESTFILE.sh|grep -c -i fail`;
+  ok($output <= 19, 'lapack tests');
 }
 
 # math-modules-common
