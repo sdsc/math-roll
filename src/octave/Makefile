@@ -61,6 +61,10 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
+ifeq ("${MKL_ROOT}", "")
+   export MKL_ROOT=/opt/intel/composer_xe_2011_sp1.7.256/mkl
+endif
+
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
