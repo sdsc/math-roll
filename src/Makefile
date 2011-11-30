@@ -63,10 +63,9 @@ default:
 	@echo "copyright|rpm|pkg|clean"
 
 copyright rpm pkg clean::
-	echo "SRCDIRS $(SRCDIRS)"
 	for i in $(SRCDIRS) ; do \
 	  grep -q ROLLCOMPILER $$i/version.mk; \
-	  if test $$? == 0; then \
+	  if test $$? -eq 0; then \
 	    for c in $(ROLLCOMPILER); do \
 	      for m in $(ROLLMPI); do \
 	         for n in $(ROLLNETWORK); do \
