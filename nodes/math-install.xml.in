@@ -7,68 +7,52 @@ math libraries
 Automatically Tuned Linear Algebra Package (ATLAS)
 http://math-atlas.sourceforge.net
 
+gsl
+http://http://www.gnu.org/software/gsl/
+
 LAPACK (LINEAR ALGEBRA PACKAGE)
 http://www.netlib.org/lapack
-
-scalapack
-www.netlib.org/scalapack
-
-
-SuperLU
-http://crd.lbl.gov/~xiaoye/SuperLU/
-
-sprng 
-http://http://sprng.cs.fsu.edu/
-
-petsc
-http://www.mcs.anl.gov/petsc/petsc-2/index.html
-
 
 octave
 http://www.gnu.org/software/octave
 
+par/metis
+http://glaros.dtc.umn.edu/gkhome/views/metis
+
+petsc
+http://www.mcs.anl.gov/petsc/petsc-2/index.html
+
+scalapack
+www.netlib.org/scalapack
+
+sprng 
+http://http://sprng.cs.fsu.edu/
+
+SuperLU
+http://crd.lbl.gov/~xiaoye/SuperLU/
+
 trilinos
 http://trilinos.sandia.gov/
-
-gsl
-http://http://www.gnu.org/software/gsl/
 </description>
+
 <copyright>
-2011 R. Clint Whaley and the Atlas Developers
-
-Copyright (c) 1992-2010 The University of Tennessee and The University
-of Tennessee Research Foundation.  All rights reserved.
-Copyright (c) 2000-2010 The University of California Berkeley. All
-rights reserved.
-Copyright (c) 2006-2010 The University of Colorado Denver.  All rights
-reserved.
-
-Copyright Regents of the University of Minnesota
-
-Copyright (c) 2003, The Regents of the University of California, through
-Lawrence Berkeley National Laboratory (subject to receipt of any required
-approvals from U.S. Dept. of Energy)
-
-copyright by UChicago Argonne, LLC. Argonne National Laboratory
-
-Copyright  2007 Free Software Foundation, Inc.
-
-Copyright (2001) Sandia Corporation
+Copyright (c) 2000 - 2011 The Regents of the University of California.
+All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 </copyright>
 
 <changelog>
 </changelog>
 
 <package>atlas_ROLLCOMPILER</package>
-<package>lapack_ROLLCOMPILER</package>
-<package>scalapack_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>parmetis_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>superlu_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>sprng_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>petsc_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>octave</package>
-<package>trilinos_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>gsl_ROLLCOMPILER</package>
+<package>lapack_ROLLCOMPILER</package>
+<package>octave</package>
+<package>parmetis_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>petsc_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>scalapack_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>sprng_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>superlu_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>trilinos_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 
 <post>
 
@@ -76,30 +60,9 @@ Copyright (2001) Sandia Corporation
 setenv LD_LIBRARY_PATH /opt/atlas/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 setenv LIBPATH /opt/atlas/ROLLCOMPILER/lib:$LIBPATH
 </file>
-
 <file name="/etc/profile.d/atlas.sh" perms="0644">
 export LD_LIBRARY_PATH=/opt/atlas/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 export LIBRARY_PATH=/opt/atlas/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-</file>
-
-
-<file name="/etc/profile.d/lapack.csh" perms="0644">
-setenv LD_LIBRARY_PATH /opt/lapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/lapack/ROLLCOMPILER/lib:$LIBPATH
-</file>
-
-<file name="/etc/profile.d/lapack.sh" perms="0644">
-export LD_LIBRARY_PATH=/opt/lapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-export LIBRARY_PATH=/opt/atlas/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-</file>
-
-
-<file name="/etc/profile.d/octave.csh" perms="0644">
-setenv PATH /opt/octave/bin:$PATH
-</file>
-
-<file name="/etc/profile.d/octave.sh" perms="0644">
-export PATH=/opt/octave/bin:$PATH
 </file>
 
 <file name="/etc/profile.d/gsl.csh" perms="0644">
@@ -107,31 +70,26 @@ setenv PATH /opt/gsl/bin:$PATH
 setenv LD_LIBRARY_PATH /opt/gsl/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 setenv LIBPATH /opt/gsl/ROLLCOMPILER/lib:$LIBPATH
 </file>
-
 <file name="/etc/profile.d/gsl.sh" perms="0644">
 export PATH=/opt/gsl/bin:$PATH
 export LD_LIBRARY_PATH=/opt/gsl/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 export LIBPATH=/opt/gsl/ROLLCOMPILER/lib:$LIBPATH
 </file>
 
-<file name="/etc/profile.d/scalapack.csh" perms="0644">
-setenv LD_LIBRARY_PATH /opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+<file name="/etc/profile.d/lapack.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/lapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/lapack/ROLLCOMPILER/lib:$LIBPATH
+</file>
+<file name="/etc/profile.d/lapack.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/lapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBRARY_PATH=/opt/lapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 </file>
 
-<file name="/etc/profile.d/gsl.sh" perms="0644">
-export LD_LIBRARY_PATH=/opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-export LIBPATH=/opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+<file name="/etc/profile.d/octave.csh" perms="0644">
+setenv PATH /opt/octave/bin:$PATH
 </file>
-
-<file name="/etc/profile.d/scalapack.csh" perms="0644">
-setenv LD_LIBRARY_PATH /opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
-</file>
-
-<file name="/etc/profile.d/scalapack.sh" perms="0644">
-export LD_LIBRARY_PATH=/opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-export LIBPATH=/opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+<file name="/etc/profile.d/octave.sh" perms="0644">
+export PATH=/opt/octave/bin:$PATH
 </file>
 
 <file name="/etc/profile.d/parmetis.csh" perms="0644">
@@ -139,31 +97,10 @@ setenv PATH /opt/parmetis/ROLLCOMPILER/bin:$PATH
 setenv LD_LIBRARY_PATH /opt/parmetis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 setenv LIBPATH /opt/parmetis/ROLLCOMPILER/lib:$LIBPATH
 </file>
-
 <file name="/etc/profile.d/parmetis.sh" perms="0644">
 export PATH=/opt/parmetis/ROLLCOMPILER/bin:$PATH
 export LD_LIBRARY_PATH=/opt/parmetis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 export LIBPATH=/opt/parmetis/ROLLCOMPILER/lib:$LIBPATH
-</file>
-
-<file name="/etc/profile.d/superlu.csh" perms="0644">
-setenv LD_LIBRARY_PATH /opt/superlu/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/superlu/ROLLCOMPILER/lib:$LIBPATH
-</file>
-
-<file name="/etc/profile.d/superlu.sh" perms="0644">
-export LD_LIBRARY_PATH=/opt/superlu/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-export LIBPATH=/opt/superlu/ROLLCOMPILER/lib:$LIBPATH
-</file>
-
-<file name="/etc/profile.d/sprng.csh" perms="0644">
-setenv LD_LIBRARY_PATH /opt/sprng/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/sprng/ROLLCOMPILER/lib:$LIBPATH
-</file>
-
-<file name="/etc/profile.d/sprng.sh" perms="0644">
-export LD_LIBRARY_PATH=/opt/sprng/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-export LIBPATH=/opt/sprng/ROLLCOMPILER/lib:$LIBPATH
 </file>
 
 <file name="/etc/profile.d/petsc.csh" perms="0644">
@@ -171,11 +108,37 @@ setenv PATH /opt/petsc/ROLLCOMPILER/bin:$PATH
 setenv LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 setenv LIBPATH /opt/petsc/ROLLCOMPILER/lib:$LIBPATH
 </file>
-
 <file name="/etc/profile.d/petsc.sh" perms="0644">
 export PATH=/opt/petsc/ROLLCOMPILER/bin:$PATH
 export LD_LIBRARY_PATH=/opt/petsc/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 export LIBPATH=/opt/petsc/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/scalapack.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+</file>
+<file name="/etc/profile.d/scalapack.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/scalapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/scalapack/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/sprng.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/sprng/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/sprng/ROLLCOMPILER/lib:$LIBPATH
+</file>
+<file name="/etc/profile.d/sprng.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/sprng/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/sprng/ROLLCOMPILER/lib:$LIBPATH
+</file>
+
+<file name="/etc/profile.d/superlu.csh" perms="0644">
+setenv LD_LIBRARY_PATH /opt/superlu/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/superlu/ROLLCOMPILER/lib:$LIBPATH
+</file>
+<file name="/etc/profile.d/superlu.sh" perms="0644">
+export LD_LIBRARY_PATH=/opt/superlu/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/superlu/ROLLCOMPILER/lib:$LIBPATH
 </file>
 
 <file name="/etc/profile.d/trilinos.csh" perms="0644">
@@ -183,7 +146,6 @@ setenv PATH /opt/trilinos/ROLLCOMPILER/bin:$PATH
 setenv LD_LIBRARY_PATH /opt/trilinos/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 setenv LIBPATH /opt/trilinos/ROLLCOMPILER/lib:$LIBPATH
 </file>
-
 <file name="/etc/profile.d/trilinos.sh" perms="0644">
 export PATH=/opt/trilinos/ROLLCOMPILER/bin:$PATH
 export LD_LIBRARY_PATH=/opt/trilinos/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
