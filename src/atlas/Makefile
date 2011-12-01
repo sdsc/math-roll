@@ -72,38 +72,41 @@ COMPILERSETUP = \
   fi
 
 
-CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-netlib-lapack=$(REDHAT.ROOT)/src/build-lapack_gnu/lib/liblapack.a -F ic '-O2' -F if '-O2'
-ifeq ("$(ROLLCOMPILER)", "intel")
-  CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-netlib-lapack=$(REDHAT.ROOT)/src/build-lapack_intel/lib/liblapack.a -C ic icc -F ic '-O2' -C if ifort -F if '-O2 -fltconsistency' -Fa alg -fPIC
+CONFIGURE_OPTIONS = \
+  --prefix=$(ROOT)/$(PKGROOT) \
+  --with-netlib-lapack=$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib/liblapack.a
+ifeq ("$(ROLLCOMPILER)", "gnu")
+  CONFIGURE_OPTIONS += -F ic '-O2' -F if '-O2'
+else ifeq ("$(ROLLCOMPILER)", "intel")
+  CONFIGURE_OPTIONS += -C ic icc -F ic '-O2' -C if ifort \
+                       -F if '-O2 -fltconsistency' -Fa alg -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CONFIGURE_OPTIONS= --prefix=$(ROOT)/$(PKGROOT) --with-netlib-lapack=$(REDHAT.ROOT)/src/build-lapack_pgi/lib/liblapack.a -C ic pgcc -F ic '-O2' -C if pgf90 -F if '-O2'
+  CONFIGURE_OPTIONS += -C ic pgcc -F ic '-O2' -C if pgf90 -F if '-O2'
 endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
 	  $(COMPILERSETUP); \
-          cpufreq-selector -g performance; \
-          mv -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp; \
-          cd $(SOURCE); \
-          mkdir build; \
-          cd build; \
-          ../configure  $(CONFIGURE_OPTIONS) ; \
-          mv -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq; \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-              cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
-              mv -f tmp bin/Makefile; \
-          fi; \
-          make build \
+	  cpufreq-selector -g performance; \
+	  cd $(SOURCE); \
+	  mkdir build; \
+	  cd build; \
+	  mv -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq \
+	        /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp; \
+	  ../configure $(CONFIGURE_OPTIONS); \
+	  mv -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp \
+	        /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq; \
+	  if test "$(ROLLCOMPILER)" = "pgi"; then \
+	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
+	    mv -f tmp bin/Makefile; \
+	  fi; \
+	  make build \
 	)
 
 install::
-	( \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-            exit; \
-          fi \
-        )
-	mkdir -p $(ROOT)/$(PKGROOT)
+	if test $(ROLLCOMPILER) = "pgi"; then exit; fi
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
 	  make prefix=$(ROOT)/$(PKGROOT) install \
