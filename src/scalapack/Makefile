@@ -142,4 +142,3 @@ install::
 
 clean::
 	rm -rf $(SOURCE) BLACS
-	rm -rf $(REDHAT.ROOT)/src/build-$(NAME)

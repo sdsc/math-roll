@@ -109,4 +109,4 @@ install::
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
-	rm -rf $(SOURCE) BLAS $(REDHAT.ROOT)/src/build-$(NAME)
+	rm -rf $(SOURCE) BLAS

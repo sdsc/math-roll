@@ -132,4 +132,3 @@ install::
 
 clean::
 	rm -rf $(SOURCE)
-	rm -rf $(REDHAT.ROOT)/src/build-$(NAME)
