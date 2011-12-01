@@ -65,49 +65,48 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
-export ROLL_FORTRAN=gfortran -implicit-none
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
     module load $(ROLLCOMPILER); \
-  fi; \
-  if test $(ROLLCOMPILER) = "intel"; then \
-      export ROLL_FORTRAN=ifort; \
-  elif test $(ROLLCOMPILER) = "pgi"; then \
-      export ROLL_FORTRAN=pgf90; \
   fi
 
+FC = gfortran -implicit-none
+ifeq ("$(ROLLCOMPILER)", "intel")
+  FC = ifort
+else ifeq ("$(ROLLCOMPILER)", "pgi")
+  FC = pgf90
+endif
 
 build:
 	tar zxvf $(SOURCE).tgz
+	cp patch-files/make.inc.lapack $(SOURCE)/make.inc
+	perl -pi -e "s!ROLL_FORTRAN!$(FC)!" $(SOURCE)/make.inc
 	tar zvxf blas.tgz
+	cp patch-files/make.inc.blas BLAS/make.inc
+	perl -pi -e "s!ROLL_FORTRAN!$(FC)!" BLAS/make.inc
 	( \
- 	  $(COMPILERSETUP); \
-          cp patch-files/make.inc.blas BLAS/make.inc; \
-          perl -pi -e "s!ROLL_FORTRAN!$${ROLL_FORTRAN}!" BLAS/make.inc; \
-          cd BLAS; \
-          make; \
-          cd ..; \
-          cp patch-files/make.inc.lapack $(SOURCE)/make.inc; \
-          perl -pi -e "s!ROLL_FORTRAN!$${ROLL_FORTRAN}!" $(SOURCE)/make.inc; \
-          cd $(SOURCE); \
-          make; \
-        )
+	  $(COMPILERSETUP); \
+	  cd BLAS; \
+	  make; \
+	  cd ../$(SOURCE); \
+	  make \
+	)
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)/lib
-	mkdir -p $(ROOT)/$(PKGROOT)/include
-	mkdir -p $(ROOT)/$(PKGROOT)/runtests
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/runtests
 	( \
-          cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
+	  cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
 	  cd $(SOURCE); \
 	  cp lapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
-          cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
-          cp ../patch-files/tests TESTING/x* TESTING/*.in $(ROOT)/$(PKGROOT)/runtests \
+	  cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
+	  cp ../patch-files/tests TESTING/x* TESTING/*.in \
+	     $(ROOT)/$(PKGROOT)/runtests \
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
 clean::
-	rm -rf $(SOURCE) BLAS
-	rm -rf $(REDHAT.ROOT)/src/build-$(NAME)
+	rm -rf $(SOURCE) BLAS $(REDHAT.ROOT)/src/build-$(NAME)
