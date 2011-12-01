@@ -71,39 +71,39 @@ COMPILERSETUP = \
     module load $(ROLLCOMPILER); \
   fi
 
-CC=gcc
-CFLAGS="-O2"
+CC = gcc
+CFLAGS = -O2
 ifeq ("$(ROLLCOMPILER)", "intel")
-  CC=icc
-  CFLAGS="-O2 -fp-model precise"
+  CC = icc
+  CFLAGS = -O2 -fp-model precise
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CC=pgcc
-  CFLAGS="-fast"
+  CC = pgcc
+  CFLAGS = -fast
 endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
 	  $(COMPILERSETUP); \
-          cd $(SOURCE); \
-	  ./configure  CC=$(CC) CFLAGS=$(CFLAGS) --prefix=$(ROOT)/$(PKGROOT); \
+	  cd $(SOURCE); \
+	  ./configure CC=$(CC) CFLAGS="$(CFLAGS)" --prefix=$(ROOT)/$(PKGROOT); \
 	  make \
-        )
+	)
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
 	  make install; \
-          make check; \
-          mkdir -p $(ROOT)/$(PKGROOT)/testruns; \
-          for file in `cat ../patch-files/tests`; do\
-              mkdir $(ROOT)/$(PKGROOT)/testruns/$$file; \
-              cp   $$file/test $(ROOT)/$(PKGROOT)/testruns/$$file; \
-          done; \
-          cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns; \
-          cp gsl-histogram $(ROOT)/$(PKGROOT)/testruns \
+	  make check; \
+	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/testruns; \
+	  for file in `cat ../patch-files/tests`; do \
+	    mkdir $(ROOT)/$(PKGROOT)/testruns/$$file; \
+	    cp $$file/test $(ROOT)/$(PKGROOT)/testruns/$$file; \
+	  done; \
+	  cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns; \
+	  cp gsl-histogram $(ROOT)/$(PKGROOT)/testruns \
 	)
 
 clean::
