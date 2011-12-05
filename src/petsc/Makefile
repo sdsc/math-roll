@@ -62,20 +62,32 @@ ifndef ROLLNETWORK
 endif
 ifndef ROLLMPI
   ROLLMPI = openmpi
-  export ROLLCOMMENT=   
 endif
+
+PKGROOT = /opt/petsc/$(ROLLCOMPILER)
+SOURCE = petsc-$(VERSION)
+CMAKE = cmake-2.8.5
+REDHAT.ROOT = $(PWD)/../../
+RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
+
+-include $(ROCKSROOT)/etc/Rules.mk
+
+COMPILERSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(ROLLCOMPILER); \
+  fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
-  MPI= $(ROLLMPI)
+  MPIMODULE = $(ROLLMPI)
 else
-  MPI= $(ROLLMPI)_$(ROLLNETWORK)
+  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
 endif
-
 
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(MPI); \
+    module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
   if test -z "$${MPI_HOME}"; then \
@@ -85,43 +97,54 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-PKGROOT = /opt/petsc/$(ROLLCOMPILER)
-SOURCE = petsc-$(VERSION)
-REDHAT.ROOT = $(PWD)/../../
-RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
-ifeq ("${MKL_ROOT}", "")
-   export MKL_ROOT=/opt/intel/Compiler/11.1/072/mkl
+PARMETIS_HOME = \
+  $(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)
+SUPERLU_HOME = \
+  $(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)
+
+ifeq ("$(ROLLCOMPILER)", "intel")
+  COMPILERSETUP += ; \
+    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
+    export MKLLINK="$${MKLLIB}/libmkl_solver_lp64_sequential.a \
+                    -Wl,--start-group \
+                    $${MKLLIB}/libmkl_intel_lp64.a \
+                    $${MKLLIB}/libmkl_sequential.a \
+                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread"
 endif
-MKLLINK="${MKL_ROOT}/lib/em64t/libmkl_solver_lp64_sequential.a -Wl,--start-group  ${MKL_ROOT}/lib/em64t/libmkl_intel_lp64.a ${MKL_ROOT}/lib/em64t/libmkl_sequential.a ${MKL_ROOT}/lib/em64t/libmkl_core.a -Wl,--end-group -lpthread"
-
--include $(ROCKSROOT)/etc/Rules.mk
-
-export ROLL_FORTRAN=gfortran
-export ROLL_CC=gcc
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
-
 
 build:
+	tar zxvf $(CMAKE).tar.gz
+	( \
+	  cd $(CMAKE); \
+	  ./configure --prefix=`pwd`/install; \
+	  make; \
+	  mkdir install; \
+	  make install \
+	)
 	tar zxvf $(SOURCE).tar.gz
 	( \
- 	  $(COMPILERSETUP); \
-          $(MPISETUP); \
-          module load cmake; \
-          cd $(SOURCE); \
-           ./configure --prefix=$(ROOT)/$(PKGROOT) --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 --with-blas-lib=$(MKLLINK) --with-lapack-lib=$(MKLLINK) --with-superlu-dist=1 --with-superlu_dist-lib=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)/lib/libsuperlu.a  --with-superlu_dist-include=$(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)/include --with-parmetis-dist=1 --with-parmetis-include=$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)/include --with-parmetis-lib="-L$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)/lib -lparmetis -lmetis"; \
-           make PETSC_DIR=$(PWD)/$(SOURCE)  PETSC_ARCH=arch-linux2-c-debug all \
-        )
+	  export PATH=`pwd`/$(CMAKE)/install/bin:$${PATH}; \
+	  $(COMPILERSETUP); \
+	  $(MPISETUP); \
+	  cd $(SOURCE); \
+	  ./configure --prefix=$(ROOT)/$(PKGROOT) \
+	    --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 \
+	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
+	    --with-superlu-dist=1 \
+	    --with-superlu_dist-include=$(SUPERLU_HOME)/include \
+	    --with-superlu_dist-lib=$(SUPERLU_HOME)/lib/libsuperlu.a \
+	    --with-parmetis-dist=1 \
+	    --with-parmetis-include=$(PARMETIS_HOME)/include \
+	    --with-parmetis-lib="-L$(PARMETIS_HOME)/lib -lparmetis -lmetis"; \
+	  make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
+	)
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
-           cd $(SOURCE); \
-           make install \
+	  cd $(SOURCE); \
+	  make install \
 	)
 
 clean::
-	rm -rf $(SOURCE)
+	rm -rf $(SOURCE) $(CMAKE)
