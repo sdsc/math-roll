@@ -57,6 +57,12 @@
 ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
+ifndef ROLLNETWORK
+  ROLLNETWORK = eth
+endif
+ifndef ROLLMPI
+  ROLLMPI = openmpi
+endif
 
 PKGROOT = /opt/parmetis/$(ROLLCOMPILER)
 SOURCE = parmetis-$(VERSION)
@@ -65,32 +71,22 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPI= $(ROLLMPI)
-else
-  MPI= $(ROLLMPI)_$(ROLLNETWORK)
-endif
-
-export CC=mpicc
-export CXX=mpicxx
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
     module load $(ROLLCOMPILER); \
   fi
 
+ifeq ("$(ROLLNETWORK)", "eth")
+  MPIMODULE = $(ROLLMPI)
+else
+  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
+endif
 
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(MPI); \
+    module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
   if test -z "$${MPI_HOME}"; then \
@@ -103,20 +99,20 @@ MPISETUP = \
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
-          $(COMPILERSETUP); \
-          $(MPISETUP); \
-          cd $(SOURCE); \
-          make \
+	  $(COMPILERSETUP); \
+	  $(MPISETUP); \
+	  cd $(SOURCE); \
+	  make \
         )
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)/lib
-	mkdir -p $(ROOT)/$(PKGROOT)/include
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	( \
-          cp $(SOURCE)/*.a $(ROOT)/$(PKGROOT)/lib; \
-          cp $(SOURCE)/*.h $(ROOT)/$(PKGROOT)/include; \
-          cp patch-files/metis.h $(ROOT)/$(PKGROOT)/include; \
-          cp $(SOURCE)/ParMETISLib/*.h $(ROOT)/$(PKGROOT)/include; \
+	  cp $(SOURCE)/*.a $(ROOT)/$(PKGROOT)/lib; \
+	  cp $(SOURCE)/*.h $(ROOT)/$(PKGROOT)/include; \
+	  cp patch-files/metis.h $(ROOT)/$(PKGROOT)/include; \
+	  cp $(SOURCE)/ParMETISLib/*.h $(ROOT)/$(PKGROOT)/include; \
         )
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
