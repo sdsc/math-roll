@@ -61,37 +61,60 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
-ifeq ("${MKL_ROOT}", "")
-   export MKL_ROOT=/opt/intel/composer_xe_2011_sp1.7.256/mkl
-endif
-
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
     module load $(ROLLCOMPILER); \
-  fi; \
+    module load fftw hdf5; \
+  fi
+
+CC = gcc
+CFLAGS = -O2
+CXX = g++
+F77 = gfortran
+FFLAGS = -O2
+ifeq ("$(ROLLCOMPILER)", "intel")
+  CC = icc
+  CFLAGS = -fpic
+  CXX = icpc
+  F77 = ifort
+  FFLAGS = -fpic -O3 -i8
+  COMPILERSETUP += ; \
+    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
+    export MKLOPTS="$${MKLLIB}/libmkl_solver_ilp64.a -Wl,--start-group \
+                    $${MKLLIB}/libmkl_gf_ilp64.a \
+                    $${MKLLIB}/libmkl_gnu_thread.a \
+                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -fopenmp -lpthread"
+endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
+	cp patch-files/sighandlers.cc $(SOURCE)/src
 	( \
-          trap " " EXIT; \
-          export CPPFLAGS=-I/home/diag/opt/hdf5/1.8.6/gnu/include; \
-          export F77=gfortran; \
-          . /etc/profile.d/modules.sh; \
-          module load intel; \
-          cp patch-files/sighandlers.cc $(SOURCE)/src; \
-          cd $(SOURCE); \
-          mkdir build; \
-          cd build; \
-          ../configure --prefix=$(ROOT)/$(PKGROOT) --without-curl --enable-64 --enable-docs=no --with-blas="$${MKL_ROOT}/lib/intel64/libmkl_solver_ilp64.a -Wl,--start-group  $${MKL_ROOT}/lib/intel64/libmkl_gf_ilp64.a $${MKL_ROOT}/lib/intel64/libmkl_gnu_thread.a $${MKL_ROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -fopenmp -lpthread" --with-lapack="$${MKL_ROOT}/lib/intel64/libmkl_solver_ilp64.a -Wl,--start-group  $${MKL_ROOT}/lib/intel64/libmkl_gf_ilp64.a $${MKL_ROOT}/lib/intel64/libmkl_gnu_thread.a $${MKL_ROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -fopenmp -lpthread" --with-fftw3-libdir=/home/diag/opt/fftw/3.2.1/gnu/lib --with-fftw3-includedir=/home/diag/opt/fftw/3.2.1/gnu/include --with-hdf5-libdir=/home/diag/opt/hdf5/1.8.6/gnu/lib --with-hdf5-includedir=/home/diag/opt/hdf5/1.8.6/gnu/include; \
-          make -i \
-        )
+	  $(COMPILERSETUP); \
+	  trap " " EXIT; \
+	  export CPPFLAGS=-I$${HDF5HOME}/include; \
+	  export CC=$(CC); \
+	  export CFLAGS=$(CFLAGS); \
+	  export CXX=$(CXX); \
+	  export F77=$(F77); \
+	  export FFLAGS="$(FFLAGS)"; \
+	  cd $(SOURCE); \
+	  mkdir build; \
+	  cd build; \
+	  ../configure --prefix=$(ROOT)/$(PKGROOT) \
+	    --without-curl --enable-64 --disable-docs \
+	    --with-blas="$${MKLOPTS}" --with-lapack="$${MKLOPTS}" \
+	    --with-fftw3=$${FFTWHOME} \
+	    --with-hdf5=$${HDF5HOME}; \
+	  make -i \
+	)
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
-           cd $(SOURCE)/build; \
-           make -i install \
+	  cd $(SOURCE)/build; \
+	  make -i install \
 	)
 
 clean::
