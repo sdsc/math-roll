@@ -92,20 +92,18 @@ build:
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
-	  mv -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq \
-	        /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp; \
+	  chmod 0000 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq;  \
 	  ../configure $(CONFIGURE_OPTIONS); \
-	  mv -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq.tmp \
-	        /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq; \
-	  if test "$(ROLLCOMPILER)" = "pgi"; then \
-	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
-	    mv -f tmp bin/Makefile; \
-	  fi; \
+	  chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq;  \
+#	  if test "$(ROLLCOMPILER)" = "pgi"; then \
+#	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
+#	    mv -f tmp bin/Makefile; \
+#	  fi; \
 	  make build \
 	)
 
 install::
-	if test $(ROLLCOMPILER) = "pgi"; then exit; fi
+#	if test $(ROLLCOMPILER) = "pgi"; then exit; fi
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
