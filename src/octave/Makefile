@@ -61,31 +61,27 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
+# The different structure of this Makefile reflects the fact that we've only
+# been able to compile octave using the gnu compilers combined with the intel
+# MKL libraries.
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
+    module load intel gnu; \
     module load fftw hdf5; \
   fi
+COMPILERSETUP += ; \
+  export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
+  export MKLOPTS="$${MKLLIB}/libmkl_solver_ilp64.a -Wl,--start-group \
+                  $${MKLLIB}/libmkl_gf_ilp64.a \
+                  $${MKLLIB}/libmkl_gnu_thread.a \
+                  $${MKLLIB}/libmkl_core.a -Wl,--end-group -fopenmp -lpthread"
 
 CC = gcc
 CFLAGS = -O2
 CXX = g++
 F77 = gfortran
 FFLAGS = -O2
-ifeq ("$(ROLLCOMPILER)", "intel")
-  CC = icc
-  CFLAGS = -fpic
-  CXX = icpc
-  F77 = ifort
-  FFLAGS = -fpic -O3 -i8
-  COMPILERSETUP += ; \
-    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-    export MKLOPTS="$${MKLLIB}/libmkl_solver_ilp64.a -Wl,--start-group \
-                    $${MKLLIB}/libmkl_gf_ilp64.a \
-                    $${MKLLIB}/libmkl_gnu_thread.a \
-                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -fopenmp -lpthread"
-endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
