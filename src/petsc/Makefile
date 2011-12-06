@@ -66,7 +66,6 @@ endif
 
 PKGROOT = /opt/petsc/$(ROLLCOMPILER)
 SOURCE = petsc-$(VERSION)
-CMAKE = cmake-2.8.5
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -113,17 +112,8 @@ ifeq ("$(ROLLCOMPILER)", "intel")
 endif
 
 build:
-	tar zxvf $(CMAKE).tar.gz
-	( \
-	  cd $(CMAKE); \
-	  ./configure --prefix=`pwd`/install; \
-	  make; \
-	  mkdir install; \
-	  make install \
-	)
 	tar zxvf $(SOURCE).tar.gz
 	( \
-	  export PATH=`pwd`/$(CMAKE)/install/bin:$${PATH}; \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
@@ -147,4 +137,4 @@ install::
 	)
 
 clean::
-	rm -rf $(SOURCE) $(CMAKE)
+	rm -rf $(SOURCE)
