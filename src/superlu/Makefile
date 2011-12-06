@@ -62,23 +62,31 @@ ifndef ROLLNETWORK
 endif
 ifndef ROLLMPI
   ROLLMPI = openmpi
-  export ROLLCOMMENT=   
 endif
-ifeq ("${MKL_ROOT}", "")
-   export MKL_ROOT=/opt/intel/Compiler/11.1/072/mkl
-endif
+
+PKGROOT = /opt/superlu/$(ROLLCOMPILER)
+SOURCE = superlu-$(VERSION)
+REDHAT.ROOT = $(PWD)/../../
+RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
+
+-include $(ROCKSROOT)/etc/Rules.mk
+
+COMPILERSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(ROLLCOMPILER); \
+  fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
-  MPI= $(ROLLMPI)
+  MPIMODULE = $(ROLLMPI)
 else
-  MPI= $(ROLLMPI)_$(ROLLNETWORK)
+  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
 endif
-
 
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(MPI); \
+    module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
   if test -z "$${MPI_HOME}"; then \
@@ -88,44 +96,28 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-PKGROOT = /opt/superlu/$(ROLLCOMPILER)
-SOURCE = superlu-$(VERSION)
-REDHAT.ROOT = $(PWD)/../../
-RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
-
--include $(ROCKSROOT)/etc/Rules.mk
-
-export ROLL_FORTRAN=gfortran
-export ROLL_CC=gcc
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
-
-
 build:
 	tar zxvf $(SOURCE).tgz
+	cp patch-files/make.inc $(SOURCE)
 	( \
- 	  $(COMPILERSETUP); \
-          $(MPISETUP); \
-          cp patch-files/make.inc $(SOURCE)/make.inc; \
-          perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE)!" $(SOURCE)/make.inc; \
-          perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)/lib!" $(SOURCE)/make.inc; \
-          perl -pi -e "s!MKLROOT!$${MKL_ROOT}!g" $(SOURCE)/make.inc; \
-           cd $(SOURCE); \
-           make \
-        )
+	  $(COMPILERSETUP); \
+	  $(MPISETUP); \
+	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE)!" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)/lib!" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!MKLROOT!$${MKL_ROOT}!g" $(SOURCE)/make.inc; \
+	  cd $(SOURCE); \
+	  make \
+	)
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)/lib
-	mkdir -p $(ROOT)/$(PKGROOT)/include
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	( \
 	  cd $(SOURCE); \
 	  make install; \
-          cp lib/*.a $(ROOT)$(PKGROOT)/lib/libsuperlu.a; \
-          cp SRC/*.h $(ROOT)$(PKGROOT)/include; \
-          cp CBLAS/*.h $(ROOT)$(PKGROOT)/include; \
+	  cp lib/*.a $(ROOT)$(PKGROOT)/lib/libsuperlu.a; \
+	  cp SRC/*.h $(ROOT)$(PKGROOT)/include; \
+	  cp CBLAS/*.h $(ROOT)$(PKGROOT)/include; \
 	)
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
