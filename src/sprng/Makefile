@@ -62,20 +62,31 @@ ifndef ROLLNETWORK
 endif
 ifndef ROLLMPI
   ROLLMPI = openmpi
-  export ROLLCOMMENT=   
 endif
+
+PKGROOT = $(ROOT)/opt/sprng/$(ROLLCOMPILER)
+SOURCE = sprng-$(VERSION)
+REDHAT.ROOT = $(PWD)/../../
+RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
+
+-include $(ROCKSROOT)/etc/Rules.mk
+
+COMPILERSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(ROLLCOMPILER); \
+  fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
-  MPI= $(ROLLMPI)
+  MPIMODULE = $(ROLLMPI)
 else
-  MPI= $(ROLLMPI)_$(ROLLNETWORK)
+  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
 endif
-
 
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(MPI); \
+    module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
   if test -z "$${MPI_HOME}"; then \
@@ -85,37 +96,21 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-PKGROOT = $(ROOT)/opt/sprng/$(ROLLCOMPILER)
-SOURCE = sprng-$(VERSION)
-REDHAT.ROOT = $(PWD)/../../
-RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
-
--include $(ROCKSROOT)/etc/Rules.mk
-
-export ROLL_FORTRAN=gfortran
-export ROLL_CC=gcc
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
-
-
 build:
 	tar zxvf $(SOURCE).tgz
+	cp patch-files/make.CHOICES $(SOURCE)
+	cp patch-files/make.GENERIC $(SOURCE)/SRC
+	cp patch-files/check_genf_ptr.F $(SOURCE)/SRC
 	( \
- 	  $(COMPILERSETUP); \
-          $(MPISETUP); \
-          cp patch-files/make.CHOICES $(SOURCE); \
-          cp patch-files/make.GENERIC $(SOURCE)/SRC; \
-          cp patch-files/check_genf_ptr.F $(SOURCE)/SRC; \
-          cd $(SOURCE); \
-          make \
+	  $(COMPILERSETUP); \
+	  $(MPISETUP); \
+	  cd $(SOURCE); \
+	  make \
         )
 
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)/lib
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	cp $(SOURCE)/lib/*.a $(ROOT)/$(PKGROOT)/lib
 
 clean::
-	rm -rf $(SOURCE) BLACS
+	rm -rf $(SOURCE)
