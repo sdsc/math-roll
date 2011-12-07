@@ -141,7 +141,7 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
-	  make install
+	  make install \
 	)
 
 clean::
