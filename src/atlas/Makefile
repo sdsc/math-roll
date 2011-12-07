@@ -81,25 +81,27 @@ else ifeq ("$(ROLLCOMPILER)", "intel")
   CONFIGURE_OPTIONS += -C ic icc -F ic '-O2' -C if ifort \
                        -F if '-O2 -fltconsistency' -Fa alg -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CONFIGURE_OPTIONS += -C ic pgcc -F ic '-O2' -C if pgf90 -F if '-O2'
+  CONFIGURE_OPTIONS += -C ic pgcc -F ic '-O2' -C if pgf77 -F if '-O2'
 endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
 	  $(COMPILERSETUP); \
-	  cpufreq-selector -g performance; \
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
-	  chmod 0000 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq;  \
+          cpus=`ls -d /sys/devices/system/cpu/cpu[0-9] /sys/devices/system/cpu/cpu[1-9][0-9]`; \
+          for cpu in $$cpus; do \
+               cpu=`basename $$cpu|sed -e 's/cpu//'`; \
+ 	       cpufreq-selector -c $$cpu -g performance; \
+          done; \
 	  ../configure $(CONFIGURE_OPTIONS); \
-	  chmod 0444 /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq;  \
-#	  if test "$(ROLLCOMPILER)" = "pgi"; then \
-#	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
-#	    mv -f tmp bin/Makefile; \
-#	  fi; \
-	  make build \
+ 	  if test "$(ROLLCOMPILER)" = "pgi"; then \
+ 	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
+ 	    mv -f tmp bin/Makefile; \
+ 	  fi; \
+ 	  make build \
 	)
 
 install::
