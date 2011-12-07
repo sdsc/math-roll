@@ -64,7 +64,7 @@ ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
 
-PKGROOT = /opt/parmetis/$(ROLLCOMPILER)/$(ROLLMPI)
+PKGROOT = /opt/parmetis/$(ROLLCOMPILER)
 SOURCE = parmetis-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress

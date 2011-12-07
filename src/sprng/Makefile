@@ -64,7 +64,7 @@ ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
 
-PKGROOT = /opt/sprng/$(ROLLCOMPILER)/$(ROLLMPI)
+PKGROOT = /opt/sprng/$(ROLLCOMPILER)
 SOURCE = sprng-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
