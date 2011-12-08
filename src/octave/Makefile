@@ -86,6 +86,7 @@ FFLAGS = -O2
 build:
 	tar zxvf $(SOURCE).tar.gz
 	cp patch-files/sighandlers.cc $(SOURCE)/src
+	yum -y install pcre-devel.x86_64
 	( \
 	  $(COMPILERSETUP); \
 	  trap " " EXIT; \
