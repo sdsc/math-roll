@@ -107,6 +107,7 @@ build:
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
+          module load cmake; \
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
