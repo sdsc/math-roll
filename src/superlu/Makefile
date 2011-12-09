@@ -74,6 +74,9 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module load intel; \
+    export MKLROOT=$${MKL_ROOT}; \
+    module unload intel; \
     module load $(ROLLCOMPILER); \
   fi
 
@@ -104,7 +107,7 @@ build:
 	  $(MPISETUP); \
 	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE)!" $(SOURCE)/make.inc; \
 	  perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)/lib!" $(SOURCE)/make.inc; \
-	  perl -pi -e "s!MKLROOT!$${MKL_ROOT}!g" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!MKLROOT!$${MKLROOT}!g" $(SOURCE)/make.inc; \
 	  cd $(SOURCE); \
 	  make \
 	)
