@@ -80,7 +80,7 @@ COMPILERSETUP = \
                     -Wl,--start-group \
                     $${MKLLIB}/libmkl_intel_lp64.a \
                     $${MKLLIB}/libmkl_sequential.a \
-                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread"
+                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread"; \
     module unload intel; \
     module load $(ROLLCOMPILER); \
   fi
