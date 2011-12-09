@@ -74,6 +74,14 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module load intel; \
+    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
+    export MKLLINK="$${MKLLIB}/libmkl_solver_lp64_sequential.a \
+                    -Wl,--start-group \
+                    $${MKLLIB}/libmkl_intel_lp64.a \
+                    $${MKLLIB}/libmkl_sequential.a \
+                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread"
+    module unload intel; \
     module load $(ROLLCOMPILER); \
   fi
 
@@ -101,15 +109,6 @@ PARMETIS_HOME = \
 SUPERLU_HOME = \
   $(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)
 
-ifeq ("$(ROLLCOMPILER)", "intel")
-  COMPILERSETUP += ; \
-    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-    export MKLLINK="$${MKLLIB}/libmkl_solver_lp64_sequential.a \
-                    -Wl,--start-group \
-                    $${MKLLIB}/libmkl_intel_lp64.a \
-                    $${MKLLIB}/libmkl_sequential.a \
-                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread"
-endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
