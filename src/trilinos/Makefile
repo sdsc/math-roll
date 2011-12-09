@@ -73,6 +73,11 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module load intel; \
+    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
+    export MKLLINK="-L$${MKLLIB} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core \
+                    -lpthread"; \
+    module unload intel; \
     module load $(ROLLCOMPILER); \
   fi
 
@@ -95,48 +100,46 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-ifeq ("$(ROLLCOMPILER)", "intel")
-  COMPILERSETUP += ; \
-    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-    export MKLLINK="-L$${MKLLIB} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core \
-                    -lpthread"
-endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+              make clean; \
+              exit; \
+          fi
+  	  $(COMPILERSETUP); \
+  	  $(MPISETUP); \
           module load cmake; \
-	  cd $(SOURCE); \
-	  mkdir build; \
-	  cd build; \
-	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(ROOT)/$(PKGROOT) \
-	        -DCMAKE_BUILD_TYPE:STRING=DEBUG \
-	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpif90 \
-	        -DCMAKE_CXX_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicxx \
-	        -DCMAKE_C_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicc \
-	        -DTrilinos_ENABLE_DEFAULT_PACKAGES:BOOL=ON \
-	        -DTrilinos_ENABLE_Epetra:BOOL=ON \
-	        -DTrilinos_ENABLE_Teuchos:BOOL=ON \
-	        -DTrilinos_ENABLE_CTrilinos:BOOL=ON \
-	        -DTrilinos_ENABLE_ForTrilinos:BOOL=OFF \
-	        -DTrilinos_ENABLE_TESTS:BOOL=ON \
-	        -DTPL_BLAS_LIBRARIES:STRING="$${MKLLINK}" \
-	        -DTPL_LAPACK_LIBRARIES:STRING="$${MKLLINK}" \
-	        -DDART_TESTING_TIMEOUT:STRING=600 \
-	        -DTPL_ENABLE_MPI:BOOL=ON \
-	        -DMPI_BASE_DIR:PATH=${MPI_HOME} \
-	        -DMPI_USE_COMPILER_WRAPPERS:BOOL=ON \
-	        -DTrilinos_EXTRA_LINK_FLAGS:STRING="" \
-	        -DMPI_EXEC_MAX_NUMPROCS:STRING=1024 \
-	        -DTPL_MPI_INCLUDE_DIRS:INTERNAL=${MPI_HOME}/include \
-	        -DTPL_MPI_LIBRARIES:INTERNAL=${MPI_HOME}/lib \
-	        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
-	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
-	        $(PWD)/$(SOURCE); \
-	  make \
-	)
+  	  cd $(SOURCE); \
+  	  mkdir build; \
+  	  cd build; \
+  	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(ROOT)/$(PKGROOT) \
+  	        -DCMAKE_BUILD_TYPE:STRING=DEBUG \
+  	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpif90 \
+  	        -DCMAKE_CXX_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicxx \
+  	        -DCMAKE_C_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicc \
+  	        -DTrilinos_ENABLE_DEFAULT_PACKAGES:BOOL=ON \
+  	        -DTrilinos_ENABLE_Epetra:BOOL=ON \
+  	        -DTrilinos_ENABLE_Teuchos:BOOL=ON \
+  	        -DTrilinos_ENABLE_CTrilinos:BOOL=ON \
+  	        -DTrilinos_ENABLE_ForTrilinos:BOOL=OFF \
+  	        -DTrilinos_ENABLE_TESTS:BOOL=ON \
+  	        -DTPL_BLAS_LIBRARIES:STRING="$${MKLLINK}" \
+  	        -DTPL_LAPACK_LIBRARIES:STRING="$${MKLLINK}" \
+  	        -DDART_TESTING_TIMEOUT:STRING=600 \
+  	        -DTPL_ENABLE_MPI:BOOL=ON \
+  	        -DMPI_BASE_DIR:PATH=${MPI_HOME} \
+  	        -DMPI_USE_COMPILER_WRAPPERS:BOOL=ON \
+  	        -DTrilinos_EXTRA_LINK_FLAGS:STRING="" \
+  	        -DMPI_EXEC_MAX_NUMPROCS:STRING=1024 \
+  	        -DTPL_MPI_INCLUDE_DIRS:INTERNAL=${MPI_HOME}/include \
+  	        -DTPL_MPI_LIBRARIES:INTERNAL=${MPI_HOME}/lib \
+  	        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
+  	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
+  	        $(PWD)/$(SOURCE); \
+  	  make \
+       )
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
