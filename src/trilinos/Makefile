@@ -104,10 +104,6 @@ MPISETUP = \
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-              make clean; \
-              exit; \
-          fi; \
   	  $(COMPILERSETUP); \
   	  $(MPISETUP); \
           module load cmake; \
@@ -144,6 +140,11 @@ build:
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+              make clean; \
+              rm -rf $(ROOT)/$(PKGROOT); \
+              exit; \
+          fi; \
 	  cd $(SOURCE)/build; \
 	  make install \
 	)
