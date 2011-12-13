@@ -67,15 +67,16 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load intel gnu; \
+    module load intel; \
+    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
+    export MKLLINK="$${MKLLIB}/libmkl_solver_ilp64.a -Wl,--start-group \
+                    $${MKLLIB}/libmkl_gf_ilp64.a \
+                    $${MKLLIB}/libmkl_gnu_thread.a \
+                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -fopenmp -lpthread"; \
+    module unload intel; \
+    module load $(ROLLCOMPILER); \
     module load fftw hdf5; \
   fi
-COMPILERSETUP += ; \
-  export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-  export MKLOPTS="$${MKLLIB}/libmkl_solver_ilp64.a -Wl,--start-group \
-                  $${MKLLIB}/libmkl_gf_ilp64.a \
-                  $${MKLLIB}/libmkl_gnu_thread.a \
-                  $${MKLLIB}/libmkl_core.a -Wl,--end-group -fopenmp -lpthread"
 
 CC = gcc
 CFLAGS = -O2
@@ -101,7 +102,7 @@ build:
 	  cd build; \
 	  ../configure --prefix=$(ROOT)/$(PKGROOT) \
 	    --without-curl --enable-64 --disable-docs \
-	    --with-blas="$${MKLOPTS}" --with-lapack="$${MKLOPTS}" \
+	    --with-blas="$${MKLLINK}" --with-lapack="$${MKLLINK}" \
 	    --with-fftw3=$${FFTWHOME} \
 	    --with-hdf5=$${HDF5HOME}; \
 	  make -i \
