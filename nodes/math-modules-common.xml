@@ -102,21 +102,21 @@ if test -f /etc/profile.d/gsl.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/gsl
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/gsl/1.11 &lt;&lt; END
+    cat &gt; /opt/modulefiles/applications/.$COMPILER/gsl/1.15 &lt;&lt; END
 #%Module1.0
 prepend-path PATH /opt/gsl/$COMPILER/bin
 prepend-path LD_LIBRARY_PATH /opt/gsl/$COMPILER/lib
 prepend-path LIBPATH /opt/gsl/$COMPILER/lib
 END
-    chmod 0644 /opt/modulefiles/applications/.$COMPILER/gsl/1.11
+    chmod 0644 /opt/modulefiles/applications/.$COMPILER/gsl/1.15
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/gsl/.version.1.11 &lt;&lt; END
+    cat &gt; /opt/modulefiles/applications/.$COMPILER/gsl/.version.1.15 &lt;&lt; END
 #%Module1.0
-set ModulesVersion "1.11"
+set ModulesVersion "1.15"
 END
-    chmod 0644 /opt/modulefiles/applications/.$COMPILER/gsl/.version.1.11
+    chmod 0644 /opt/modulefiles/applications/.$COMPILER/gsl/.version.1.15
 
-    /bin/ln -s /opt/modulefiles/applications/.$COMPILER/gsl/.version.1.11 \
+    /bin/ln -s /opt/modulefiles/applications/.$COMPILER/gsl/.version.1.15 \
                /opt/modulefiles/applications/.$COMPILER/gsl/.version
 
   done
