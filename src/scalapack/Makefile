@@ -111,8 +111,6 @@ endif
 
 build:
 	tar zxvf $(SOURCE).tgz
-	tar zvxf mpiblacs.tgz
-	cp patch-files/Bmake.inc BLACS/Bmake.inc
 	cp patch-files/Makefile.root BLACS/SRC/MPI/Makefile
 	cp patch-files/Makefile.testing BLACS/TESTING/Makefile
 	cp patch-files/SLmake.inc $(SOURCE)
