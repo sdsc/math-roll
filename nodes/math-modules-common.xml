@@ -271,7 +271,7 @@ if test -f /etc/profile.d/scalapack.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/scalapack
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/scalapack/1.8.0 &lt;&lt; END
+    cat &gt; /opt/modulefiles/applications/.$COMPILER/scalapack/2.0.1 &lt;&lt; END
 #%Module1.0
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
@@ -291,15 +291,15 @@ if { ! [info exists env(MPIHOME)] } {
 prepend-path LD_LIBRARY_PATH /opt/scalapack/$COMPILER/$mpiFlavor/lib
 prepend-path LIBPATH /opt/scalapack/$COMPILER/$mpiFlavor/lib
 END
-    chmod 0644 /opt/modulefiles/applications/.$COMPILER/scalapack/1.8.0
+    chmod 0644 /opt/modulefiles/applications/.$COMPILER/scalapack/2.0.1
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/scalapack/.version.1.8.0 &lt;&lt; END
+    cat &gt; /opt/modulefiles/applications/.$COMPILER/scalapack/.version.2.0.1 &lt;&lt; END
 #%Module1.0
-set ModulesVersion "1.8.0"
+set ModulesVersion "2.0.1"
 END
-    chmod 0644 /opt/modulefiles/applications/.$COMPILER/scalapack/.version.1.8.0
+    chmod 0644 /opt/modulefiles/applications/.$COMPILER/scalapack/.version.2.0.1
 
-    /bin/ln -s /opt/modulefiles/applications/.$COMPILER/scalapack/.version.1.8.0 \
+    /bin/ln -s /opt/modulefiles/applications/.$COMPILER/scalapack/.version.2.0.1 \
                /opt/modulefiles/applications/.$COMPILER/scalapack/.version
 
   done
