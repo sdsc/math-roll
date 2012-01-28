@@ -95,54 +95,28 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-F77 = gfortran
-CC = gcc
 ROLLCOMMENT =
 ROLLPGI =
-ifeq ("$(ROLLCOMPILER)", "intel")
-  F77 = ifort
-  CC = icc
-else ifeq ("$(ROLLCOMPILER)", "pgi")
-  F77 = 
-  CC = pgf77
+ifeq ("$(ROLLCOMPILER)", "pgi")
   ROLLPGI = -pgf90libs
 endif
 
 
 build:
 	tar zxvf $(SOURCE).tgz
-	cp patch-files/Makefile.root BLACS/SRC/MPI/Makefile
-	cp patch-files/Makefile.testing BLACS/TESTING/Makefile
 	cp patch-files/SLmake.inc $(SOURCE)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
-	  perl -pi -e "s!ROLL_DIR!$(PWD)!;s!ROLL_MPI!$${MPI_HOME}!" BLACS/Bmake.inc; \
-	  perl -pi -e "s!ROLLPGI!$(ROLLPGI)!" BLACS/Bmake.inc; \
 	  perl -pi -e "s!ROLLPGI!$(ROLLPGI)!" $(SOURCE)/SLmake.inc; \
-	  perl -pi -e "s!ROLLCOMMENT!$(ROLLCOMMENT)!"  BLACS/SRC/MPI/Makefile; \
-	  perl -pi -e "s!ROLLCOMMENT!$(ROLLCOMMENT)!"  BLACS/TESTING/Makefile; \
 	  perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_BLACS!$(PWD)/BLACS/LIB!;s!ROLL_LAPACK!$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)!" $(SOURCE)/SLmake.inc; \
-	  export CC=$(CC); \
-	  export F77=$(F77); \
-	  cd BLACS; \
-	  mkdir bin; \
-	  make all; \
-	  cd ../$(SOURCE); \
-	  make all; \
-	  make exe \
+          cd $(SOURCE); \
+	  make all \
 	)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
-	( \
-	  cp BLACS/LIB/blacsF77init_MPI-0.a \
-	     $(ROOT)/$(PKGROOT)/lib/libblacsF77init_MPI-0.a; \
-	  cp BLACS/LIB/blacsCinit_MPI-0.a \
-	     $(ROOT)/$(PKGROOT)/lib/libblacsCinit_MPI-0.a; \
-	  cp BLACS/LIB/blacs_MPI-0.a $(ROOT)/$(PKGROOT)/lib/libblacs_MPI-0.a; \
-	  cp $(SOURCE)/libscalapack.a $(ROOT)/$(PKGROOT)/lib \
-	)
+	cp $(SOURCE)/libscalapack.a $(ROOT)/$(PKGROOT)/lib
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 
