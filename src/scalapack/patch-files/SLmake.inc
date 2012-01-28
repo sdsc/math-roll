@@ -8,95 +8,53 @@
 #
 #  Creation date:   February 15, 2000
 #
-#  Modified:
+#  Modified:        October 13, 2011
 #
 #  Send bug reports, comments or suggestions to scalapack@cs.utk.edu
 #
 ############################################################################
 #
-SHELL         = /bin/sh
+#  C preprocessor definitions:  set CDEFS to one of the following:
 #
-#  The complete path to the top level of ScaLAPACK directory, usually
-#  $(HOME)/SCALAPACK
-#
-home          = ROLL_SCALAPACK
-#
-#  The platform identifier to suffix to the end of library names
-#
-PLAT          = 
-#
-#  BLACS setup.  All version need the debug level (0 or 1),
-#  and the directory where the BLACS libraries are
-#
-BLACSDBGLVL   = 0
-BLACSdir      = ROLL_BLACS
-#
-#  MPI setup; tailor to your system if using MPIBLACS
-#  Will need to comment out these 6 lines if using PVM
-#
-USEMPI        = -DUsingMpiBlacs
-SMPLIB        = 
-BLACSFINIT    = $(BLACSdir)/blacsF77init_MPI-0.a
-BLACSCINIT    = $(BLACSdir)/blacsCinit_MPI-0.a
-BLACSLIB      = $(BLACSdir)/blacs_MPI-0.a
-TESTINGdir    = $(home)/TESTING
+#     -DNoChange (fortran subprogram names are lower case without any suffix)
+#     -DUpCase   (fortran subprogram names are upper case without any suffix)
+#     -DAdd_     (fortran subprogram names are lower case with "_" appended)
 
-#
-#  PVMBLACS setup, uncomment next 6 lines if using PVM
-#
-#USEMPI        =
-#SMPLIB        = $(PVM_ROOT)/lib/$(PLAT)/libpvm3.a
-#BLACSFINIT    =
-#BLACSCINIT    =
-#BLACSLIB      = $(BLACSdir)/blacs_PVM-$(PLAT)-$(BLACSDBGLVL).a
-#TESTINGdir    = $(HOME)/pvm3/bin/$(PLAT)
+CDEFS         = -DAdd_ -DNO_IEEE 
 
-CBLACSLIB     = $(BLACSCINIT) $(BLACSLIB) $(BLACSCINIT)
-FBLACSLIB     = $(BLACSFINIT) $(BLACSLIB) $(BLACSFINIT)
-
-#
-#  The directories to find the various pieces of ScaLapack
-#
-PBLASdir      = $(home)/PBLAS
-SRCdir        = $(home)/SRC
-TESTdir       = $(home)/TESTING
-PBLASTSTdir   = $(TESTINGdir)
-TOOLSdir      = $(home)/TOOLS
-REDISTdir     = $(home)/REDIST
-REDISTTSTdir  = $(TESTINGdir)
 #
 #  The fortran and C compilers, loaders, and their flags
 #
-F77           = mpif90
-CC            = mpicc
-NOOPT         = 
-F77FLAGS      =  -O2 $(NOOPT)
-CCFLAGS       = -O2
-SRCFLAG       =
-F77LOADER     = $(F77) ROLLPGI
-CCLOADER      = $(CC) ROLLPGI
-F77LOADFLAGS  =
-CCLOADFLAGS   =
-#
-#  C preprocessor defs for compilation 
-#  (-DNoChange, -DAdd_, -DUpCase, or -Df77IsF2C)
-#
-CDEFS         = -DAdd_ -DNO_IEEE $(USEMPI)
+
+FC            = mpif90
+CC            = mpicc 
+NOOPT         = -O0
+FCFLAGS       = -O3
+CCFLAGS       = -O3
+FCLOADER      = $(FC)
+CCLOADER      = $(CC)
+FCLOADFLAGS   = $(FCFLAGS)
+CCLOADFLAGS   = $(CCFLAGS)
+
 #
 #  The archiver and the flag(s) to use when building archive (library)
 #  Also the ranlib routine.  If your system has no ranlib, set RANLIB = echo
 #
+
 ARCH          = ar
 ARCHFLAGS     = cr
 RANLIB        = ranlib
+
 #
-#  The name of the libraries to be created/linked to
+#  The name of the ScaLAPACK library to be created
 #
-SCALAPACKLIB  = $(home)/libscalapack.a
+
+SCALAPACKLIB  = libscalapack.a
+
+#
+#  BLAS, LAPACK (and possibly other) libraries needed for linking test programs
+#
+
 BLASLIB       = ROLL_LAPACK/lib/libblas.a
 LAPACKLIB     = ROLL_LAPACK/lib/liblapack.a
-#
-PBLIBS        = $(SCALAPACKLIB) $(FBLACSLIB) $(LAPACKLIB) $(BLASLIB) $(SMPLIB)
-PRLIBS        = $(SCALAPACKLIB) $(CBLACSLIB) $(SMPLIB)
-RLIBS         = $(SCALAPACKLIB) $(FBLACSLIB) $(CBLACSLIB) $(LAPACKLIB) $(BLASLIB) $(SMPLIB)
-LIBS          = $(PBLIBS)
+LIBS          = $(LAPACKLIB) $(BLASLIB)
