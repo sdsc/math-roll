@@ -87,6 +87,7 @@ else
   MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
 endif
 
+
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
@@ -98,7 +99,13 @@ MPISETUP = \
   fi; \
   echo Using MPI from $${MPI_HOME}; \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
+  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
+  if test "$(ROLLMPI)" = "mvapich" -o "$(ROLLMPI)" = "mvapich2"; then \
+     export MPIRUN="$${MPI_HOME}/bin/mpirun_rsh"; \
+  else \
+     export MPIRUN="$${MPI_HOME}/bin/mpirun"; \
+  fi
+
 
 
 build:
@@ -133,9 +140,10 @@ build:
   	        -DMPI_BASE_DIR:PATH=${MPI_HOME} \
   	        -DMPI_USE_COMPILER_WRAPPERS:BOOL=ON \
   	        -DTrilinos_EXTRA_LINK_FLAGS:STRING="" \
-  	        -DMPI_EXEC_MAX_NUMPROCS:STRING=1024 \
-  	        -DTPL_MPI_INCLUDE_DIRS:INTERNAL=${MPI_HOME}/include \
-  	        -DTPL_MPI_LIBRARIES:INTERNAL=${MPI_HOME}/lib \
+  	        -DMPI_EXEC_MAX_NUMPROCS:STRING=8 \
+                -DMPI_EXEC:FILEPATH="$${MPIRUN}" \
+  	        -DTPL_MPI_INCLUDE_DIRS:INTERNAL="$${MPI_HOME}/include" \
+  	        -DTPL_MPI_LIBRARIES:INTERNAL="$${MPI_HOME}/lib" \
   	        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
   	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
   	        $(PWD)/$(SOURCE); \
