@@ -100,11 +100,7 @@ MPISETUP = \
   echo Using MPI from $${MPI_HOME}; \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
-  if test "$(ROLLMPI)" = "mvapich" -o "$(ROLLMPI)" = "mvapich2"; then \
-     export MPIRUN="$${MPI_HOME}/bin/mpirun_rsh"; \
-  else \
-     export MPIRUN="$${MPI_HOME}/bin/mpirun"; \
-  fi
+  export MPIRUN="$${MPI_HOME}/bin/mpirun"; \
 
 
 
