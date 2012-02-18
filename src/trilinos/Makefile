@@ -100,7 +100,7 @@ MPISETUP = \
   echo Using MPI from $${MPI_HOME}; \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
-  export MPIRUN="$${MPI_HOME}/bin/mpirun"; \
+  export MPIRUN="$${MPI_HOME}/bin/mpirun"
 
 
 
