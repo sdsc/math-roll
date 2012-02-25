@@ -110,7 +110,9 @@ build:
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	cp $(SOURCE)/lib/*.a $(ROOT)/$(PKGROOT)/lib
+	cp $(SOURCE)/include/* $(ROOT)/$(PKGROOT)/include
 
 clean::
 	rm -rf $(SOURCE)
