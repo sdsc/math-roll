@@ -17,7 +17,7 @@ http://www.netlib.org/lapack
 octave
 http://www.gnu.org/software/octave
 
-par/metis
+parmetis
 http://glaros.dtc.umn.edu/gkhome/views/metis
 
 petsc
