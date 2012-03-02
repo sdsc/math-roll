@@ -148,6 +148,7 @@ END
     /bin/ln -s /opt/modulefiles/applications/.$COMPILER/lapack/.version.3.3.1 \
                /opt/modulefiles/applications/.$COMPILER/lapack/.version
 
+   done
 fi
 
 <!-- OCTAVE -->
