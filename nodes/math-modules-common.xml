@@ -184,24 +184,9 @@ if test -f /etc/profile.d/parmetis.sh; then
 
     cat &gt; /opt/modulefiles/applications/.$COMPILER/parmetis/4.0.1 &lt;&lt; END
 #%Module1.0
-if { ! [info exists env(MPIHOME)] } {
-  puts stderr "Need to load an mpi module first"
-  exit
-} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
-  set mpiFlavor mpich2
-} elseif { [string match "*mpich*" $env(MPIHOME)] } {
-  set mpiFlavor mpich
-} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
-  set mpiFlavor mvapich2
-} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
-  set mpiFlavor openmpi
-} else {
-  puts stderr "Unknown mpi $env(MPIHOME)"
-  exit
-}
-prepend-path PATH /opt/parmetis/$COMPILER/$mpiFlavor/bin
-prepend-path LD_LIBRARY_PATH /opt/parmetis/$COMPILER/$mpiFlavor/lib
-prepend-path LIBPATH /opt/parmetis/$COMPILER/$mpiFlavor/lib
+prepend-path PATH /opt/parmetis/$COMPILER/bin
+prepend-path LD_LIBRARY_PATH /opt/parmetis/$COMPILER/lib
+prepend-path LIBPATH /opt/parmetis/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/parmetis/4.0.1
 
@@ -229,24 +214,9 @@ if test -f /etc/profile.d/petsc.sh; then
 
     cat &gt; /opt/modulefiles/applications/.$COMPILER/petsc/3.2.p3 &lt;&lt; END
 #%Module1.0
-if { ! [info exists env(MPIHOME)] } {
-  puts stderr "Need to load an mpi module first"
-  exit
-} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
-  set mpiFlavor mpich2
-} elseif { [string match "*mpich*" $env(MPIHOME)] } {
-  set mpiFlavor mpich
-} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
-  set mpiFlavor mvapich2
-} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
-  set mpiFlavor openmpi
-} else {
-  puts stderr "Unknown mpi $env(MPIHOME)"
-  exit
-}
-prepend-path PATH /opt/petsc/$COMPILER/$mpiFlavor/bin
-prepend-path LD_LIBRARY_PATH /opt/petsc/$COMPILER/$mpiFlavor/lib
-prepend-path LIBPATH /opt/petsc/$COMPILER/$mpiFlavor/lib
+prepend-path PATH /opt/petsc/$COMPILER/bin
+prepend-path LD_LIBRARY_PATH /opt/petsc/$COMPILER/lib
+prepend-path LIBPATH /opt/petsc/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/petsc/3.2.p3
 
@@ -274,23 +244,8 @@ if test -f /etc/profile.d/scalapack.sh; then
 
     cat &gt; /opt/modulefiles/applications/.$COMPILER/scalapack/2.0.1 &lt;&lt; END
 #%Module1.0
-if { ! [info exists env(MPIHOME)] } {
-  puts stderr "Need to load an mpi module first"
-  exit
-} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
-  set mpiFlavor mpich2
-} elseif { [string match "*mpich*" $env(MPIHOME)] } {
-  set mpiFlavor mpich
-} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
-  set mpiFlavor mvapich2
-} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
-  set mpiFlavor openmpi
-} else {
-  puts stderr "Unknown mpi $env(MPIHOME)"
-  exit
-}
-prepend-path LD_LIBRARY_PATH /opt/scalapack/$COMPILER/$mpiFlavor/lib
-prepend-path LIBPATH /opt/scalapack/$COMPILER/$mpiFlavor/lib
+prepend-path LD_LIBRARY_PATH /opt/scalapack/$COMPILER/lib
+prepend-path LIBPATH /opt/scalapack/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/scalapack/2.0.1
 
@@ -318,23 +273,8 @@ if test -f /etc/profile.d/sprng.sh; then
 
     cat &gt; /opt/modulefiles/applications/.$COMPILER/sprng/2.0b &lt;&lt; END
 #%Module1.0
-if { ! [info exists env(MPIHOME)] } {
-  puts stderr "Need to load an mpi module first"
-  exit
-} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
-  set mpiFlavor mpich2
-} elseif { [string match "*mpich*" $env(MPIHOME)] } {
-  set mpiFlavor mpich
-} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
-  set mpiFlavor mvapich2
-} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
-  set mpiFlavor openmpi
-} else {
-  puts stderr "Unknown mpi $env(MPIHOME)"
-  exit
-}
-prepend-path LD_LIBRARY_PATH /opt/sprng/$COMPILER/$mpiFlavor/lib
-prepend-path LIBPATH /opt/sprng/$COMPILER/$mpiFlavor/lib
+prepend-path LD_LIBRARY_PATH /opt/sprng/$COMPILER/lib
+prepend-path LIBPATH /opt/sprng/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/sprng/2.0b
 
@@ -362,23 +302,8 @@ if test -f /etc/profile.d/superlu.sh; then
 
     cat &gt; /opt/modulefiles/applications/.$COMPILER/superlu/2.5 &lt;&lt; END
 #%Module1.0
-if { ! [info exists env(MPIHOME)] } {
-  puts stderr "Need to load an mpi module first"
-  exit
-} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
-  set mpiFlavor mpich2
-} elseif { [string match "*mpich*" $env(MPIHOME)] } {
-  set mpiFlavor mpich
-} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
-  set mpiFlavor mvapich2
-} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
-  set mpiFlavor openmpi
-} else {
-  puts stderr "Unknown mpi $env(MPIHOME)"
-  exit
-}
-prepend-path LD_LIBRARY_PATH /opt/superlu/$COMPILER/$mpiFlavor/lib
-prepend-path LIBPATH /opt/superlu/$COMPILER/$mpiFlavor/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/$COMPILER/lib
+prepend-path LIBPATH /opt/superlu/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/superlu/2.5
 
@@ -406,24 +331,9 @@ if test -f /etc/profile.d/trilinos.sh; then
 
     cat &gt; /opt/modulefiles/applications/.$COMPILER/trilinos/10.6.4 &lt;&lt; END
 #%Module1.0
-if { ! [info exists env(MPIHOME)] } {
-  puts stderr "Need to load an mpi module first"
-  exit
-} elseif { [string match "*mpich2*" $env(MPIHOME)] } {
-  set mpiFlavor mpich2
-} elseif { [string match "*mpich*" $env(MPIHOME)] } {
-  set mpiFlavor mpich
-} elseif { [string match "*mvapich2*" $env(MPIHOME)] } {
-  set mpiFlavor mvapich2
-} elseif { [string match "*openmpi*" $env(MPIHOME)] } {
-  set mpiFlavor openmpi
-} else {
-  puts stderr "Unknown mpi $env(MPIHOME)"
-  exit
-}
-prepend-path PATH /opt/trilinos/$COMPILER/$mpiFlavor/bin
-prepend-path LD_LIBRARY_PATH /opt/trilinos/$COMPILER/$mpiFlavor/lib
-prepend-path LIBPATH /opt/trilinos/$COMPILER/$mpiFlavor/lib
+prepend-path PATH /opt/trilinos/$COMPILER/bin
+prepend-path LD_LIBRARY_PATH /opt/trilinos/$COMPILER/lib
+prepend-path LIBPATH /opt/trilinos/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/trilinos/10.6.4
 
