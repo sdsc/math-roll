@@ -1,70 +1,5 @@
-<?xml version="1.0" standalone="no"?>
-
-<kickstart>
-
-<description>
-math libraries
-
-Automatically Tuned Linear Algebra Package (ATLAS)
-http://math-atlas.sourceforge.net
-
-gsl
-http://www.gnu.org/software/gsl/
-
-LAPACK (LINEAR ALGEBRA PACKAGE)
-http://www.netlib.org/lapack
-
-octave
-http://www.gnu.org/software/octave
-
-parmetis
-http://glaros.dtc.umn.edu/gkhome/views/metis
-
-petsc
-http://www.mcs.anl.gov/petsc/petsc-2/index.html
-
-scalapack
-http://www.netlib.org/scalapack
-
-sprng 
-http://sprng.cs.fsu.edu/
-
-superlu
-http://crd.lbl.gov/~xiaoye/SuperLU/
-
-trilinos
-http://trilinos.sandia.gov/
-</description>
-
-<copyright>
-Copyright (c) 2000 - 2011 The Regents of the University of California.
-All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
-</copyright>
-
-<changelog>
-</changelog>
-
-<post>
-
-# Remove /etc/profile.d files in favor of loadable modules when available
-
-if test `grep -c /opt/modulefiles/applications /etc/profile.d/modules.csh` = 0; then
-  echo 'setenv MODULEPATH /opt/modulefiles/applications:$MODULEPATH' >> \
-       /etc/profile.d/modules.csh
-  echo 'if ( -s ${HOME}/.modules ) then' >> /etc/profile.d/modules.csh
-  echo 'source ${HOME}/.modules' >> /etc/profile.d/modules.csh
-  echo 'endif' >> /etc/profile.d/modules.csh
-
-fi
-if test `grep -c /opt/modulefiles/applications /etc/profile.d/modules.sh` = 0; then
-  echo 'export MODULEPATH=/opt/modulefiles/applications:$MODULEPATH' >> \
-       /etc/profile.d/modules.sh
-  echo 'if test -f ${HOME}/.modules; then' >> /etc/profile.d/modules.sh
-  echo '. ${HOME}/.modules' >> /etc/profile.d/modules.sh
-  echo 'fi' >> /etc/profile.d/modules.sh
-fi
-
-<!-- ATLAS -->
+#!/bin/sh
+#<!-- ATLAS -->
 if test -f /etc/profile.d/atlas.sh; then
 
   /bin/rm -f /etc/profile.d/atlas.*
@@ -73,14 +8,14 @@ if test -f /etc/profile.d/atlas.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/atlas
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/atlas/3.9.45 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/atlas/3.9.45 << END
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/atlas/$COMPILER/lib
 prepend-path LIBPATH /opt/atlas/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/atlas/3.9.45
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/atlas/.version.3.9.45 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/atlas/.version.3.9.45 << END
 #%Module1.0
 set ModulesVersion "3.9.45"
 END
@@ -93,7 +28,7 @@ END
 
 fi
 
-<!-- GSL -->
+#<!-- GSL -->
 if test -f /etc/profile.d/gsl.sh; then
 
   /bin/rm -f /etc/profile.d/gsl.*
@@ -102,7 +37,7 @@ if test -f /etc/profile.d/gsl.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/gsl
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/gsl/1.15 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/gsl/1.15 << END
 #%Module1.0
 prepend-path PATH /opt/gsl/$COMPILER/bin
 prepend-path LD_LIBRARY_PATH /opt/gsl/$COMPILER/lib
@@ -110,7 +45,7 @@ prepend-path LIBPATH /opt/gsl/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/gsl/1.15
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/gsl/.version.1.15 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/gsl/.version.1.15 << END
 #%Module1.0
 set ModulesVersion "1.15"
 END
@@ -123,7 +58,7 @@ END
 
 fi
 
-<!-- LAPACK -->
+#<!-- LAPACK -->
 if test -f /etc/profile.d/lapack.sh; then
 
   /bin/rm -f /etc/profile.d/lapack.*
@@ -132,14 +67,14 @@ if test -f /etc/profile.d/lapack.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/lapack
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/lapack/3.3.1 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/lapack/3.3.1 << END
 #%Module1.0
 prepend-path LD_LIBRARY_PATH /opt/lapack/$COMPILER/lib
 prepend-path LIBPATH /opt/lapack/$COMPILER/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/lapack/3.3.1
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/lapack/.version.3.3.1 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/lapack/.version.3.3.1 << END
 #%Module1.0
 set ModulesVersion "3.3.1"
 END
@@ -151,30 +86,30 @@ END
    done
 fi
 
-<!-- OCTAVE -->
+#<!-- OCTAVE -->
 if test -f /etc/profile.d/octave.sh; then
 
   /bin/rm -f /etc/profile.d/octave.*
 
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/octave
 
-<file name="/opt/modulefiles/applications/octave/3.4.2" perms="0644">
+cat > /opt/modulefiles/applications/octave/3.4.2 <<END
 #%Module1.0
 prepend-path PATH /opt/octave/bin
-prepend-path LD_LIBRARY_PATH /opt/octave/lib/octave/3.4.2
-</file>
+END
+chmod 0644 /opt/modulefiles/applications/octave/3.4.2
 
-<file name="/opt/modulefiles/applications/octave/.version.3.4.2">
+cat > /opt/modulefiles/applications/octave/.version.3.4.2 <<END
 #%Module1.0
 set ModulesVersion "3.4.2"
-</file>
+END
 
   /bin/ln -s /opt/modulefiles/applications/octave/.version.3.4.2 \
              /opt/modulefiles/applications/octave/.version
 
 fi
 
-<!-- PARMETIS -->
+#<!-- PARMETIS -->
 if test -f /etc/profile.d/parmetis.sh; then
 
   /bin/rm -f /etc/profile.d/parmetis.*
@@ -183,7 +118,7 @@ if test -f /etc/profile.d/parmetis.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/parmetis
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/parmetis/4.0.1 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/parmetis/4.0.1 << END
 #%Module1.0
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
@@ -206,7 +141,7 @@ prepend-path LIBPATH /opt/parmetis/$COMPILER/\$mpiFlavor/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/parmetis/4.0.1
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/parmetis/.version.4.0.1 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/parmetis/.version.4.0.1 << END
 #%Module1.0
 set ModulesVersion "4.0.1"
 END
@@ -228,7 +163,7 @@ if test -f /etc/profile.d/petsc.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/petsc
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/petsc/3.2.p3 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/petsc/3.2.p3 << END
 #%Module1.0
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
@@ -251,7 +186,7 @@ prepend-path LIBPATH /opt/petsc/$COMPILER/\$mpiFlavor/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/petsc/3.2.p3
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/petsc/.version.3.2.p3 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/petsc/.version.3.2.p3 << END
 #%Module1.0
 set ModulesVersion "3.2.p3"
 END
@@ -273,7 +208,7 @@ if test -f /etc/profile.d/scalapack.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/scalapack
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/scalapack/2.0.1 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/scalapack/2.0.1 << END
 #%Module1.0
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
@@ -295,7 +230,7 @@ prepend-path LIBPATH /opt/scalapack/$COMPILER/\$mpiFlavor/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/scalapack/2.0.1
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/scalapack/.version.2.0.1 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/scalapack/.version.2.0.1 << END
 #%Module1.0
 set ModulesVersion "2.0.1"
 END
@@ -317,7 +252,7 @@ if test -f /etc/profile.d/sprng.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/sprng
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/sprng/2.0b &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/sprng/2.0b << END
 #%Module1.0
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
@@ -339,7 +274,7 @@ prepend-path LIBPATH /opt/sprng/$COMPILER/\$mpiFlavor/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/sprng/2.0b
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/sprng/.version.2.0b &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/sprng/.version.2.0b << END
 #%Module1.0
 set ModulesVersion "2.0b"
 END
@@ -361,7 +296,7 @@ if test -f /etc/profile.d/superlu.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/superlu
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/superlu/2.5 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/superlu/2.5 << END
 #%Module1.0
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
@@ -383,7 +318,7 @@ prepend-path LIBPATH /opt/superlu/$COMPILER/\$mpiFlavor/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/superlu/2.5
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/superlu/.version.2.5 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/superlu/.version.2.5 << END
 #%Module1.0
 set ModulesVersion "2.5"
 END
@@ -405,7 +340,7 @@ if test -f /etc/profile.d/trilinos.sh; then
 
     /bin/mkdir -m 0755 -p /opt/modulefiles/applications/.$COMPILER/trilinos
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/trilinos/10.6.4 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/trilinos/10.6.4 << END
 #%Module1.0
 if { ! [info exists env(MPIHOME)] } {
   puts stderr "Need to load an mpi module first"
@@ -428,7 +363,7 @@ prepend-path LIBPATH /opt/trilinos/$COMPILER/\$mpiFlavor/lib
 END
     chmod 0644 /opt/modulefiles/applications/.$COMPILER/trilinos/10.6.4
 
-    cat &gt; /opt/modulefiles/applications/.$COMPILER/trilinos/.version.10.6.4 &lt;&lt; END
+    cat > /opt/modulefiles/applications/.$COMPILER/trilinos/.version.10.6.4 << END
 #%Module1.0
 set ModulesVersion "10.6.4"
 END

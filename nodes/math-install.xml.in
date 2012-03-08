@@ -87,9 +87,11 @@ export LIBRARY_PATH=/opt/lapack/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
 
 <file name="/etc/profile.d/octave.csh" perms="0644">
 setenv PATH /opt/octave/bin:$PATH
+setenv LD_LIBRARY_PATH /opt/octave/lib/octave/3.4.2:$LD_LIBRARY_PATH
 </file>
 <file name="/etc/profile.d/octave.sh" perms="0644">
 export PATH=/opt/octave/bin:$PATH
+export LD_LIBRARY_PATH=/opt/octave/lib/octave/3.4.2:$LD_LIBRARY_PATH
 </file>
 
 <file name="/etc/profile.d/parmetis.csh" perms="0644">
