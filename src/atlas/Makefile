@@ -101,6 +101,8 @@ build:
  	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
  	    mv -f tmp bin/Makefile; \
  	  fi; \
+          echo "`module list`"; \
+          exit ; \
  	  make build \
 	)
 
