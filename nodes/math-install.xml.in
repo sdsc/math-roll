@@ -93,20 +93,20 @@ export PATH=/opt/octave/bin:$PATH
 </file>
 
 <file name="/etc/profile.d/parmetis.csh" perms="0644">
-setenv PATH /opt/parmetis/ROLLCOMPILER/bin:$PATH
-setenv LD_LIBRARY_PATH /opt/parmetis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/parmetis/ROLLCOMPILER/lib:$LIBPATH
+setenv PATH /opt/parmetis/ROLLCOMPILER/ROLLMPI/bin:$PATH
+setenv LD_LIBRARY_PATH /opt/parmetis/ROLLCOMPILER/ROLLMPI/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/parmetis/ROLLCOMPILER/ROLLMPI/lib:$LIBPATH
 </file>
 <file name="/etc/profile.d/parmetis.sh" perms="0644">
-export PATH=/opt/parmetis/ROLLCOMPILER/bin:$PATH
-export LD_LIBRARY_PATH=/opt/parmetis/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-export LIBPATH=/opt/parmetis/ROLLCOMPILER/lib:$LIBPATH
+export PATH=/opt/parmetis/ROLLCOMPILER/ROLLMPI/bin:$PATH
+export LD_LIBRARY_PATH=/opt/parmetis/ROLLCOMPILER/ROLLMPI/lib:$LD_LIBRARY_PATH
+export LIBPATH=/opt/parmetis/ROLLCOMPILER/ROLLMPI/lib:$LIBPATH
 </file>
 
 <file name="/etc/profile.d/petsc.csh" perms="0644">
-setenv PATH /opt/petsc/ROLLCOMPILER/bin:$PATH
-setenv LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/lib:$LD_LIBRARY_PATH
-setenv LIBPATH /opt/petsc/ROLLCOMPILER/lib:$LIBPATH
+setenv PATH /opt/petsc/ROLLCOMPILER/ROLLMPI/bin:$PATH
+setenv LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/ROLLMPI/lib:$LD_LIBRARY_PATH
+setenv LIBPATH /opt/petsc/ROLLCOMPILER/ROLLMPI/lib:$LIBPATH
 </file>
 <file name="/etc/profile.d/petsc.sh" perms="0644">
 export PATH=/opt/petsc/ROLLCOMPILER/bin:$PATH
