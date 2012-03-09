@@ -91,7 +91,7 @@ build:
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
-          cpus=`ls -d /sys/devices/system/cpu/cpu[0-9] /sys/devices/system/cpu/cpu[1-9][0-9] /sys/devices/system/cpu/cpu[1-9][0-9][0-9]`; \
+          cpus=`ls -d /sys/devices/system/cpu/cpu[0-9] /sys/devices/system/cpu/cpu[1-9][0-9]`; \
           for cpu in $$cpus; do \
                cpu=`basename $$cpu|sed -e 's/cpu//'`; \
  	       cpufreq-set -c $$cpu -g performance; \
