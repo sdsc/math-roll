@@ -200,7 +200,6 @@ if { ! [info exists env(MPIHOME)] } {
   puts stderr "Unknown mpi \$env(MPIHOME)"
   exit
 }
-prepend-path PATH /opt/parmetis/$COMPILER/\$mpiFlavor/bin
 prepend-path LD_LIBRARY_PATH /opt/parmetis/$COMPILER/\$mpiFlavor/lib
 prepend-path LIBPATH /opt/parmetis/$COMPILER/\$mpiFlavor/lib
 END

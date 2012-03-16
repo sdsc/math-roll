@@ -95,12 +95,10 @@ export LD_LIBRARY_PATH=/opt/octave/lib/octave/3.4.2:$LD_LIBRARY_PATH
 </file>
 
 <file name="/etc/profile.d/parmetis.csh" perms="0644">
-setenv PATH /opt/parmetis/ROLLCOMPILER/ROLLMPI/bin:$PATH
 setenv LD_LIBRARY_PATH /opt/parmetis/ROLLCOMPILER/ROLLMPI/lib:$LD_LIBRARY_PATH
 setenv LIBPATH /opt/parmetis/ROLLCOMPILER/ROLLMPI/lib:$LIBPATH
 </file>
 <file name="/etc/profile.d/parmetis.sh" perms="0644">
-export PATH=/opt/parmetis/ROLLCOMPILER/ROLLMPI/bin:$PATH
 export LD_LIBRARY_PATH=/opt/parmetis/ROLLCOMPILER/ROLLMPI/lib:$LD_LIBRARY_PATH
 export LIBPATH=/opt/parmetis/ROLLCOMPILER/ROLLMPI/lib:$LIBPATH
 </file>
