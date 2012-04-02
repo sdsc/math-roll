@@ -16,11 +16,11 @@ PLAT =
 #  desired load options for your machine.
 #
 FORTRAN  = ROLL_FORTRAN
-OPTS     = -O2
+OPTS     = -O2 -fPIC
 DRVOPTS  = $(OPTS)
-NOOPT    =
+NOOPT    = -fPIC
 LOADER   = ROLL_FORTRAN
-LOADOPTS =
+LOADOPTS = 
 #
 #  The archiver and the flag(s) to use when building archive (library)
 #  If you system has no ranlib, set RANLIB = echo.

@@ -89,8 +89,19 @@ build:
 	  $(COMPILERSETUP); \
 	  cd BLAS; \
 	  make; \
-	  cd ../$(SOURCE); \
-	  make \
+          mkdir tmp; \
+          cd tmp; \
+          ar -x ../blas.a; \
+          $(FC) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
+ 	  cd ../../$(SOURCE); \
+          make; \
+          mkdir tmp; \
+          cd tmp; \
+          ar -x ../lapack.a; \
+          $(FC) -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
+          rm *.o; \
+          ar -x ../tmglib.a; \
+          $(FC) -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
 	)
 
 install::
@@ -99,9 +110,12 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/runtests
 	( \
 	  cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
+	  cp BLAS/tmp/libblas.so $(ROOT)/$(PKGROOT)/lib; \
 	  cd $(SOURCE); \
 	  cp lapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
 	  cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
+	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
+	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp ../patch-files/tests TESTING/x* TESTING/*.in \
 	     $(ROOT)/$(PKGROOT)/runtests \
 	)
