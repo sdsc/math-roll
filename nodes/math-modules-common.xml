@@ -185,17 +185,17 @@ if test -f /etc/profile.d/gnuplot.sh; then
 
   /bin/mkdir -m 0755 -p /opt/modulefiles/applications/gnuplot
 
-<file name="/opt/modulefiles/applications/gnuplot/4.6" perms="0644">
+<file name="/opt/modulefiles/applications/gnuplot/4.6.0" perms="0644">
 #%Module1.0
 prepend-path PATH /opt/gnuplot/bin
 </file>
 
-<file name="/opt/modulefiles/applications/gnuplot/.version.4.6">
+<file name="/opt/modulefiles/applications/gnuplot/.version.4.6.0">
 #%Module1.0
-set ModulesVersion "4.6"
+set ModulesVersion "4.6.0"
 </file>
 
-  /bin/ln -s /opt/modulefiles/applications/gnuplot/.version.4.6 \
+  /bin/ln -s /opt/modulefiles/applications/gnuplot/.version.4.6.0 \
              /opt/modulefiles/applications/gnuplot/.version
 
 fi
