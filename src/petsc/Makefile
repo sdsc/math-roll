@@ -111,12 +111,15 @@ SUPERLU_HOME = \
 
 
 build:
+	mkdir -p $(PKGROOT)
+	mkdir -p $(ROOT)/$(PKGROOT)
 	tar zxvf $(SOURCE).tar.gz
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
-	  ./configure --prefix=$(ROOT)/$(PKGROOT) \
+	  ./configure --prefix=$(PKGROOT) \
 	    --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
 	    --with-superlu-dist=1 \
@@ -127,13 +130,17 @@ build:
 	    --with-parmetis-lib="-L$(PARMETIS_HOME)/lib -lparmetis -lmetis"; \
 	  make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
 	)
+        unmount $(PKGROOT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE); \
 	  make install \
 	)
+        unmount $(PKGROOT)
 
 clean::
 	rm -rf $(SOURCE)
