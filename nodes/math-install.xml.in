@@ -33,6 +33,9 @@ http://crd.lbl.gov/~xiaoye/SuperLU/
 
 trilinos
 http://trilinos.sandia.gov/
+
+gnuplot
+http://www.gnuplot.info
 </description>
 
 <copyright>
@@ -47,6 +50,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>gsl_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
 <package>octave</package>
+<package>gnuplot</package>
 <package>parmetis_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>petsc_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>scalapack_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
@@ -92,6 +96,13 @@ setenv LD_LIBRARY_PATH /opt/octave/lib/octave/3.4.2:$LD_LIBRARY_PATH
 <file name="/etc/profile.d/octave.sh" perms="0644">
 export PATH=/opt/octave/bin:$PATH
 export LD_LIBRARY_PATH=/opt/octave/lib/octave/3.4.2:$LD_LIBRARY_PATH
+</file>
+
+<file name="/etc/profile.d/gnuplot.csh" perms="0644">
+setenv PATH /opt/gnuplot/bin:$PATH
+</file>
+<file name="/etc/profile.d/gnuplot.sh" perms="0644">
+export PATH=/opt/gnuplot/bin:$PATH
 </file>
 
 <file name="/etc/profile.d/parmetis.csh" perms="0644">

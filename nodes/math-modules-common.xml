@@ -34,6 +34,9 @@ http://crd.lbl.gov/~xiaoye/SuperLU/
 
 trilinos
 http://trilinos.sandia.gov/
+
+gnuplot
+http://www.gnuplot.info
 </description>
 
 <copyright>
@@ -171,6 +174,29 @@ set ModulesVersion "3.4.2"
 
   /bin/ln -s /opt/modulefiles/applications/octave/.version.3.4.2 \
              /opt/modulefiles/applications/octave/.version
+
+fi
+
+
+<!-- GNUPLOT -->
+if test -f /etc/profile.d/gnuplot.sh; then
+
+  /bin/rm -f /etc/profile.d/gnuplot.*
+
+  /bin/mkdir -m 0755 -p /opt/modulefiles/applications/gnuplot
+
+<file name="/opt/modulefiles/applications/gnuplot/4.6" perms="0644">
+#%Module1.0
+prepend-path PATH /opt/gnuplot/bin
+</file>
+
+<file name="/opt/modulefiles/applications/gnuplot/.version.4.6">
+#%Module1.0
+set ModulesVersion "4.6"
+</file>
+
+  /bin/ln -s /opt/modulefiles/applications/gnuplot/.version.4.6 \
+             /opt/modulefiles/applications/gnuplot/.version
 
 fi
 

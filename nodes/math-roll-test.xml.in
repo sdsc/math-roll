@@ -31,7 +31,7 @@ my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = 'Compute';
 my @packages = ('atlas', 'gsl', 'lapack', 'octave', 'parmetis', 'petsc',
-                'scalapack', 'sprng', 'superlu', 'trilinos');
+                'scalapack', 'sprng', 'superlu', 'trilinos','gnuplot');
 my $output;
 my @COMPILERS = (
   'ROLLCOMPILER',
