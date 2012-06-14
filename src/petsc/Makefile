@@ -119,8 +119,11 @@ build:
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
+          export PATH=/opt/valgrind/bin:$${PATH}; \
 	  ./configure --prefix=$(PKGROOT) \
 	    --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 \
+            --download-pastix=1 \
+            --download-ptscotch \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
 	    --with-superlu-dist=1 \
 	    --with-superlu_dist-include=$(SUPERLU_HOME)/include \
@@ -130,7 +133,7 @@ build:
 	    --with-parmetis-lib="-L$(PARMETIS_HOME)/lib -lparmetis -lmetis"; \
 	  make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
 	)
-        unmount $(PKGROOT)
+	umount $(PKGROOT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
@@ -140,7 +143,7 @@ install::
 	  cd $(SOURCE); \
 	  make install \
 	)
-        unmount $(PKGROOT)
+	umount $(PKGROOT)
 
 clean::
 	rm -rf $(SOURCE)
