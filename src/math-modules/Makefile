@@ -1,3 +1,4 @@
+#
 # $Id$
 #
 # @Copyright@
@@ -52,17 +53,25 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # 
 # @Copyright@
-#
+
+REDHAT.ROOT     = $(PWD)/../../
+
+-include $(ROCKSROOT)/etc/Rules.mk
+include Rules.mk
 
 
-SRCDIRS = `find . -maxdepth 1 -type d \
-        -not -name CVS \
-        -not -name lapack \
-        -not -name scalapack \
-        -not -name superlu \
-        -not -name parmetis \
-        -not -name petsc \
-        -not -name atlas \
-        -not -name math-modules \
-        -not -name build-\* \
-        -not -name .` lapack atlas scalapack parmetis superlu petsc math-modules
+build:
+
+install::
+	( \
+           modulefiles=`ls $(REDHAT.ROOT)/src/build-mpi-modules/*.module 2>/dev/null`; \
+           if test  -n "$${modulefiles}"; then \
+                for modulefile in $${modulefiles}; do \
+                    perl -pi -e "s!ROOT_PKGROOT!$(ROOT)!g" $${modulefile}; \
+                    bash $${modulefile}; \
+                done; \
+           fi \
+        )
+
+
+clean::

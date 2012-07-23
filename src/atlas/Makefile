@@ -107,11 +107,14 @@ build:
 
 install::
 #	if test $(ROLLCOMPILER) = "pgi"; then exit; fi
+	mkdir -p $(REDHAT.ROOT)/src/build-mpi-modules
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
 	  make prefix=$(ROOT)/$(PKGROOT) install \
 	)
+	cat atlas.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/mpi/.$(ROLLCOMPILER)/atlas!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+          > $(REDHAT.ROOT)/src/build-mpi-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE)

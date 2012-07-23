@@ -51,13 +51,6 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
   <tail>math-install</tail>
 </order>
 
-<edge from="envmodules-common">
-  <to>math-modules-common</to>
-</edge>
-<order head="envmodules-common">
-  <tail>math-modules-common</tail>
-</order>
-
 <order head="math-install">
   <tail>math-modules-common</tail>
 </order>
