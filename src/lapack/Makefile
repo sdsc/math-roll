@@ -123,7 +123,7 @@ install::
 	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 	cat lapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/lapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-lapack-modules/$(NAME).module
+          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE) BLAS

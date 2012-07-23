@@ -114,7 +114,7 @@ install::
 	  make prefix=$(ROOT)/$(PKGROOT) install \
 	)
 	cat atlas.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/atlas!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-atlas-modules/$(NAME).module
+          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE)
