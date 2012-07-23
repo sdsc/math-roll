@@ -78,10 +78,10 @@ CONFIGURE_OPTIONS = \
 ifeq ("$(ROLLCOMPILER)", "gnu")
   CONFIGURE_OPTIONS += -F ic '-O2 -mavx' -F if '-O2 -mavx'
 else ifeq ("$(ROLLCOMPILER)", "intel")
-  CONFIGURE_OPTIONS += -C ic icc -F ic '-O2' -C if ifort \
+  CONFIGURE_OPTIONS += -C ic icc -F ic '-O2 -xHOST' -C if ifort \
                        -F if '-O2 -fltconsistency -xHOST' -Fa alg -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CONFIGURE_OPTIONS += -C ic pgcc -F ic '-fast' -C if pgf77 -F if '-fast'
+  CONFIGURE_OPTIONS += -C ic pgcc -F ic "-fast" -C if pgf77 -F if "-fast"
 endif
 
 build:
@@ -114,7 +114,7 @@ install::
 	  make prefix=$(ROOT)/$(PKGROOT) install \
 	)
 	cat atlas.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/mpi/.$(ROLLCOMPILER)/atlas!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-mpi-modules/$(NAME).module
+          > $(REDHAT.ROOT)/src/build-atlas-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE)
