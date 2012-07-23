@@ -76,12 +76,12 @@ CONFIGURE_OPTIONS = \
   --prefix=$(ROOT)/$(PKGROOT) \
   --with-netlib-lapack=$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)/lib/liblapack.a
 ifeq ("$(ROLLCOMPILER)", "gnu")
-  CONFIGURE_OPTIONS += -F ic '-O2' -F if '-O2'
+  CONFIGURE_OPTIONS += -F ic '-O2 -mavx' -F if '-O2 -mavx'
 else ifeq ("$(ROLLCOMPILER)", "intel")
   CONFIGURE_OPTIONS += -C ic icc -F ic '-O2' -C if ifort \
-                       -F if '-O2 -fltconsistency' -Fa alg -fPIC
+                       -F if '-O2 -fltconsistency -xHOST' -Fa alg -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CONFIGURE_OPTIONS += -C ic pgcc -F ic '-O2' -C if pgf77 -F if '-O2'
+  CONFIGURE_OPTIONS += -C ic pgcc -F ic '-fast' -C if pgf77 -F if '-fast'
 endif
 
 build:
