@@ -113,7 +113,7 @@ install::
 	  cd $(SOURCE)/build; \
 	  make prefix=$(ROOT)/$(PKGROOT) install \
 	)
-	cat atlas.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/mpi/.$(ROLLCOMPILER)/atlas!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+	cat atlas.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/atlas!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
           > $(REDHAT.ROOT)/src/build-atlas-modules/$(NAME).module
 
 clean::
