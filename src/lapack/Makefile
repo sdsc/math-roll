@@ -108,7 +108,7 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/runtests
-	mkdir -p $(REDHAT.ROOT)/src/build-mpi-modules
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	( \
 	  cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
 	  cp BLAS/tmp/libblas.so $(ROOT)/$(PKGROOT)/lib; \

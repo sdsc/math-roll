@@ -107,7 +107,7 @@ build:
 
 install::
 #	if test $(ROLLCOMPILER) = "pgi"; then exit; fi
-	mkdir -p $(REDHAT.ROOT)/src/build-mpi-modules
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
