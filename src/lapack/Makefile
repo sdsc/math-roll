@@ -71,11 +71,11 @@ COMPILERSETUP = \
     module load $(ROLLCOMPILER); \
   fi
 
-FC = gfortran -implicit-none
+FC = gfortran -implicit-none -O2 -mavx
 ifeq ("$(ROLLCOMPILER)", "intel")
-  FC = ifort
+  FC = ifort -O2 -xHOST
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  FC = pgf90
+  FC = pgf90 -fast
 endif
 
 build:
@@ -108,6 +108,7 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/runtests
+	mkdir -p $(REDHAT.ROOT)/src/build-mpi-modules
 	( \
 	  cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
 	  cp BLAS/tmp/libblas.so $(ROOT)/$(PKGROOT)/lib; \
@@ -121,6 +122,8 @@ install::
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
+	cat lapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/lapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+          > $(REDHAT.ROOT)/src/build-lapack-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE) BLAS
