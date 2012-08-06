@@ -7,7 +7,7 @@ module-whatis "atlas_ROLLCOMPILER"
 module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/atlas/ROLLCOMPILER/lib
 prepend-path LIBPATH /opt/atlas/ROLLCOMPILER/lib
-setenv-path ATLASHOME /opt/atlas/ROLLCOMPILER
+setenv ATLASHOME /opt/atlas/ROLLCOMPILER
 END
 
 chmod 0644  ROOT_PKGROOTMODULEROOT/VERSION
