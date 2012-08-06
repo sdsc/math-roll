@@ -92,6 +92,7 @@ build:
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	( \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
@@ -105,6 +106,8 @@ install::
 	  cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns; \
 	  cp gsl-histogram $(ROOT)/$(PKGROOT)/testruns \
 	)
+	cat gsl.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/gsl!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE)
