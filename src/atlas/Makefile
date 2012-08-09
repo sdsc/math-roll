@@ -76,7 +76,7 @@ CONFIGURE_OPTIONS = \
   --prefix=$(ROOT)/$(PKGROOT) \
   --with-netlib-lapack-tarfile=`ls $(REDHAT.ROOT)/src/lapack*z`
 ifeq ("$(ROLLCOMPILER)", "gnu")
-  CONFIGURE_OPTIONS += -F ic '-O2 -mavx' -F if '-O2 -mavx'
+  CONFIGURE_OPTIONS += -F ic '-mavx -O2' -F if '-mavx -O2'
 else ifeq ("$(ROLLCOMPILER)", "intel")
   CONFIGURE_OPTIONS += -C ic icc -F ic '-O2 -xHOST' -C if ifort \
                        -F if '-O2 -fltconsistency -xHOST' -Fa alg -fPIC
@@ -97,6 +97,13 @@ build:
                cpu=`basename $$cpu|sed -e 's/cpu//'`; \
  	       cpufreq-set -c $$cpu -g performance; \
           done; \
+          CONFIGURE_OPTIONS="$(CONFIGURE_OPTIONS)"; \
+          if test "$(ROLLCOMPILER)" = "gnu"; then \
+             version=`gcc -v 2>&1 |grep version|awk '{print $$3}'|sed 's/\.//g'`; \
+             if test "$${version}" -lt 461; then \
+                CONFIGURE_OPTIONS="`echo "$${COMPILE_FLAGS}"|sed 's/\-mavx //g'`"; \
+             fi; \
+          fi; \
 	  ../configure $(CONFIGURE_OPTIONS); \
  	  if test "$(ROLLCOMPILER)" = "pgi"; then \
  	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
