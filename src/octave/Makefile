@@ -79,10 +79,10 @@ COMPILERSETUP = \
   fi
 
 CC = gcc
-CFLAGS = -O2
+CFLAGS = -mavx -O2
 CXX = g++
 F77 = gfortran
-FFLAGS = -O2
+FFLAGS = -mavx -O2
 
 build:
 	tar zxvf $(SOURCE).tar.gz
@@ -90,12 +90,19 @@ build:
 	( \
 	  $(COMPILERSETUP); \
 	  trap " " EXIT; \
+          CFLAGS="$(CFLAGS)"; \
+          FFLAGS="$(FFLAGS)"; \
+          version=`gcc -v 2>&1 |grep version|awk '{print $$3}'|sed 's/\.//g'`; \
+          if test "$${version}" -lt 461; then \
+             CFLAGS="`echo "$${CFLAGS}"|sed 's/\-mavx //'`"; \
+             FFLAGS="`echo "$${FFLAGS}"|sed 's/\-mavx //'`"; \
+          fi; \
 	  export CPPFLAGS=-I$${HDF5HOME}/include; \
 	  export CC=$(CC); \
-	  export CFLAGS=$(CFLAGS); \
+	  export CFLAGS=$${CFLAGS}; \
 	  export CXX=$(CXX); \
 	  export F77=$(F77); \
-	  export FFLAGS="$(FFLAGS)"; \
+	  export FFLAGS="$${FFLAGS}"; \
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
