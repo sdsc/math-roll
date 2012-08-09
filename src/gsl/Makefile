@@ -93,8 +93,7 @@ build:
                 CFLAGS="`echo "$${CFLAGS}"|sed 's/\-mavx //'`"; \
              fi; \
           fi; \
-
-	  ./configure CC=$(CC) CFLAGS="$(CFLAGS)" --prefix=$(ROOT)/$(PKGROOT); \
+	  ./configure CC=$(CC) CFLAGS="$${CFLAGS}" --prefix=$(ROOT)/$(PKGROOT); \
 	  make \
 	)
 

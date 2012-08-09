@@ -16,9 +16,9 @@ PLAT =
 #  desired load options for your machine.
 #
 FORTRAN  = ROLL_FORTRAN
-OPTS     = -O2 -fPIC
+OPTS     = 
 DRVOPTS  = $(OPTS)
-NOOPT    = -fPIC
+NOOPT    = 
 LOADER   = ROLL_FORTRAN
 LOADOPTS = 
 #

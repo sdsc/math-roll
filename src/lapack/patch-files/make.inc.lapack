@@ -20,10 +20,10 @@ PLAT =
 #  and desired load options for your machine.
 #
 FORTRAN  = ROLL_FORTRAN
-OPTS     = -O2 -fPIC
+OPTS     = 
 DRVOPTS  = $(OPTS)
-NOOPT    = -g -O0 -fPIC
-LOADER   = ROLL_FORTRAN -g
+NOOPT    = 
+LOADER   = ROLL_FORTRAN
 LOADOPTS = 
 #
 # Timer for the SECOND and DSECND routines

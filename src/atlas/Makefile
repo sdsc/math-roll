@@ -104,7 +104,7 @@ build:
                 CONFIGURE_OPTIONS="`echo "$${COMPILE_FLAGS}"|sed 's/\-mavx //g'`"; \
              fi; \
           fi; \
-	  ../configure $(CONFIGURE_OPTIONS); \
+	  ../configure $${CONFIGURE_OPTIONS}; \
  	  if test "$(ROLLCOMPILER)" = "pgi"; then \
  	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
  	    mv -f tmp bin/Makefile; \

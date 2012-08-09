@@ -71,7 +71,7 @@ COMPILERSETUP = \
     module load $(ROLLCOMPILER); \
   fi
 
-FC = gfortran -implicit-none -O2 -mavx
+FC = gfortran -implicit-none -mavx -O2
 ifeq ("$(ROLLCOMPILER)", "intel")
   FC = ifort -O2 -xHOST
 else ifeq ("$(ROLLCOMPILER)", "pgi")
@@ -81,27 +81,34 @@ endif
 build:
 	tar zxvf $(SOURCE).tgz
 	cp patch-files/make.inc.lapack $(SOURCE)/make.inc
-	perl -pi -e "s!ROLL_FORTRAN!$(FC)!" $(SOURCE)/make.inc
 	tar zvxf blas.tgz
 	cp patch-files/make.inc.blas BLAS/make.inc
-	perl -pi -e "s!ROLL_FORTRAN!$(FC)!" BLAS/make.inc
 	( \
+          FC="$(FC)"; \
+          if test "$(ROLLCOMPILER)" = "gnu"; then \
+             version=`gcc -v 2>&1 |grep version|awk '{print $$3}'|sed 's/\.//g'`; \
+             if test "$${version}" -lt 461; then \
+                FC="`echo "$${CFLAGS}"|sed 's/\-mavx //'`"; \
+             fi; \
+          fi; \
+	  perl -pi -e "s!ROLL_FORTRAN!$${FC}!" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!ROLL_FORTRAN!$${FC}!" BLAS/make.inc; \
 	  $(COMPILERSETUP); \
 	  cd BLAS; \
 	  make; \
           mkdir tmp; \
           cd tmp; \
           ar -x ../blas.a; \
-          $(FC) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
+          $${FC} -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
  	  cd ../../$(SOURCE); \
           make; \
           mkdir tmp; \
           cd tmp; \
           ar -x ../lapack.a; \
-          $(FC) -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
+          $${FC} -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
           rm *.o; \
           ar -x ../tmglib.a; \
-          $(FC) -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
+          $${FC} -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
 	)
 
 install::
