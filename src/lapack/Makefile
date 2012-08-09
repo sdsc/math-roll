@@ -88,7 +88,7 @@ build:
           if test "$(ROLLCOMPILER)" = "gnu"; then \
              version=`gcc -v 2>&1 |grep version|awk '{print $$3}'|sed 's/\.//g'`; \
              if test "$${version}" -lt 461; then \
-                FC="`echo "$${CFLAGS}"|sed 's/\-mavx //'`"; \
+                FC="`echo "$${FC}"|sed 's/\-mavx //'`"; \
              fi; \
           fi; \
 	  perl -pi -e "s!ROLL_FORTRAN!$${FC}!" $(SOURCE)/make.inc; \
