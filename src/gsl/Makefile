@@ -1,4 +1,4 @@
-#
+
 # $Id$
 #
 # @Copyright@
@@ -72,7 +72,7 @@ COMPILERSETUP = \
   fi
 
 CC = gcc
-CFLAGS = -O2
+CFLAGS = -mavx -O2
 ifeq ("$(ROLLCOMPILER)", "intel")
   CC = icc
   CFLAGS = -O2 -fp-model precise
@@ -86,6 +86,14 @@ build:
 	( \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
+          CFLAGS="$(CFLAGS)"; \
+          if test "$(ROLLCOMPILER)" = "gnu"; then \
+             version=`gcc -v 2>&1 |grep version|awk '{print $$3}'|sed 's/\.//g'`; \
+             if test "$${version}" -lt 461; then \
+                CFLAGS="`echo "$${CFLAGS}"|sed 's/\-mavx //'`"; \
+             fi; \
+          fi; \
+
 	  ./configure CC=$(CC) CFLAGS="$(CFLAGS)" --prefix=$(ROOT)/$(PKGROOT); \
 	  make \
 	)
