@@ -115,11 +115,15 @@ build:
 	)
 
 install::
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
 	  make -i install \
 	)
+	cat octave.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/octave!g;s!VERSION!$(VERSION)!g" \
+          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+
 
 clean::
 	rm -rf $(SOURCE)

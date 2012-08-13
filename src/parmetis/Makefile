@@ -108,12 +108,15 @@ build:
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	( \
 	  cp $(SOURCE)/*.a $(ROOT)/$(PKGROOT)/lib; \
 	  cp $(SOURCE)/*.h $(ROOT)/$(PKGROOT)/include; \
 	  cp patch-files/metis.h $(ROOT)/$(PKGROOT)/include; \
 	  cp $(SOURCE)/ParMETISLib/*.h $(ROOT)/$(PKGROOT)/include; \
         )
+	cat parmetis.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/parmetis!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 

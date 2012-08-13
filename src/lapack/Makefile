@@ -72,10 +72,13 @@ COMPILERSETUP = \
   fi
 
 FC = gfortran -implicit-none -mavx -O2
+CC = gcc -mavx -O2
 ifeq ("$(ROLLCOMPILER)", "intel")
   FC = ifort -O2 -xHOST
+  CC = icc -O2 -xHOST
 else ifeq ("$(ROLLCOMPILER)", "pgi")
   FC = pgf90 -fast
+  CC = pcc -fast
 endif
 
 build:
@@ -85,13 +88,16 @@ build:
 	cp patch-files/make.inc.blas BLAS/make.inc
 	( \
           FC="$(FC)"; \
+          CC="$(CC)"; \
           if test "$(ROLLCOMPILER)" = "gnu"; then \
              version=`gcc -v 2>&1 |grep version|awk '{print $$3}'|sed 's/\.//g'`; \
              if test "$${version}" -lt 461; then \
                 FC="`echo "$${FC}"|sed 's/\-mavx //'`"; \
+                CC="`echo "$${CC}"|sed 's/\-mavx //'`"; \
              fi; \
           fi; \
 	  perl -pi -e "s!ROLL_FORTRAN!$${FC}!" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!ROLL_CC!$${CC}!" $(SOURCE)/make.inc; \
 	  perl -pi -e "s!ROLL_FORTRAN!$${FC}!" BLAS/make.inc; \
 	  $(COMPILERSETUP); \
 	  cd BLAS; \
