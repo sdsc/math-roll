@@ -96,16 +96,16 @@ build:
           mkdir tmp; \
           cd tmp; \
           ar -x ../blas.a; \
-          $${FC} -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
+          $(FC) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
  	  cd ../../$(SOURCE); \
           make; \
           mkdir tmp; \
           cd tmp; \
           ar -x ../lapack.a; \
-          $${FC} -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
+          $(FC) -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
           rm *.o; \
           ar -x ../tmglib.a; \
-          $${FC} -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
+          $(FC) -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
 	)
 
 install::
