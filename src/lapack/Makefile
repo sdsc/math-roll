@@ -87,18 +87,9 @@ build:
 	tar zvxf blas.tgz
 	cp patch-files/make.inc.blas BLAS/make.inc
 	( \
-          FC="$(FC)"; \
-          CC="$(CC)"; \
-          if test "$(ROLLCOMPILER)" = "gnu"; then \
-             version=`gcc -v 2>&1 |grep version|awk '{print $$3}'|sed 's/\.//g'`; \
-             if test "$${version}" -lt 461; then \
-                FC="`echo "$${FC}"|sed 's/\-mavx //'`"; \
-                CC="`echo "$${CC}"|sed 's/\-mavx //'`"; \
-             fi; \
-          fi; \
-	  perl -pi -e "s!ROLL_FORTRAN!$${FC}!" $(SOURCE)/make.inc; \
-	  perl -pi -e "s!ROLL_CC!$${CC}!" $(SOURCE)/make.inc; \
-	  perl -pi -e "s!ROLL_FORTRAN!$${FC}!" BLAS/make.inc; \
+	  perl -pi -e "s!ROLL_FORTRAN!$(FC)!" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!ROLL_CC!$(CC)!" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!ROLL_FORTRAN!$(FC)!" BLAS/make.inc; \
 	  $(COMPILERSETUP); \
 	  cd BLAS; \
 	  make; \

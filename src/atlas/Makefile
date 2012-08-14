@@ -97,14 +97,7 @@ build:
                cpu=`basename $$cpu|sed -e 's/cpu//'`; \
  	       cpufreq-set -c $$cpu -g performance; \
           done; \
-          CONFIGURE_OPTIONS="$(CONFIGURE_OPTIONS)"; \
-          if test "$(ROLLCOMPILER)" = "gnu"; then \
-             version=`gcc -v 2>&1 |grep version|awk '{print $$3}'|sed 's/\.//g'`; \
-             if test "$${version}" -lt 461; then \
-                CONFIGURE_OPTIONS="`echo "$${COMPILE_FLAGS}"|sed 's/\-mavx //g'`"; \
-             fi; \
-          fi; \
-	  ../configure $${CONFIGURE_OPTIONS}; \
+	  ../configure $(CONFIGURE_OPTIONS); \
  	  if test "$(ROLLCOMPILER)" = "pgi"; then \
  	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
  	    mv -f tmp bin/Makefile; \
