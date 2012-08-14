@@ -71,14 +71,14 @@ COMPILERSETUP = \
     module load $(ROLLCOMPILER); \
   fi
 
-FC = gfortran -implicit-none -mavx -O2
-CC = gcc -mavx -O2
+FC = gfortran -implicit-none -mavx -O2 -fPIC
+CC = gcc -mavx -O2 -fPIC
 ifeq ("$(ROLLCOMPILER)", "intel")
-  FC = ifort -O2 -xHOST
-  CC = icc -O2 -xHOST
+  FC = ifort -O2 -xHOST -fPIC
+  CC = icc -O2 -xHOST -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  FC = pgf90 -fast
-  CC = pcc -fast
+  FC = pgf90 -fast -fPIC
+  CC = pcc -fast -fPIC
 endif
 
 build:
@@ -101,10 +101,10 @@ build:
           make; \
           mkdir tmp; \
           cd tmp; \
-          ar -x ../lapack.a; \
+          ar -x ../liblapack.a; \
           $(FC) -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
           rm *.o; \
-          ar -x ../tmglib.a; \
+          ar -x ../libtmglib.a; \
           $(FC) -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
 	)
 
@@ -117,8 +117,8 @@ install::
 	  cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
 	  cp BLAS/tmp/libblas.so $(ROOT)/$(PKGROOT)/lib; \
 	  cd $(SOURCE); \
-	  cp lapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
-	  cp tmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
+	  cp liblapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
+	  cp libtmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp ../patch-files/tests TESTING/x* TESTING/*.in \
