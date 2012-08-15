@@ -64,7 +64,7 @@ build:
 
 install::
 	( \
-           modulefiles=`ls $(REDHAT.ROOT)/src/build-mpi-modules/*.module 2>/dev/null`; \
+           modulefiles=`ls $(REDHAT.ROOT)/src/build-math-modules/*.module 2>/dev/null`; \
            if test  -n "$${modulefiles}"; then \
                 for modulefile in $${modulefiles}; do \
                     perl -pi -e "s!ROOT_PKGROOT!$(ROOT)!g" $${modulefile}; \
