@@ -71,7 +71,7 @@ COMPILERSETUP = \
     module load $(ROLLCOMPILER); \
   fi
 
-FC = gfortran -implicit-none -mavx -O2 -fPIC
+FC = gfortran -fimplicit-none -mavx -O2 -fPIC
 CC = gcc -mavx -O2 -fPIC
 ifeq ("$(ROLLCOMPILER)", "intel")
   FC = ifort -O2 -xHOST -fPIC
