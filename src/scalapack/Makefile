@@ -116,9 +116,12 @@ build:
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cp $(SOURCE)/libscalapack.a $(ROOT)/$(PKGROOT)/lib
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
+	cat scalapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/scalapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE) BLACS

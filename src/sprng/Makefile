@@ -111,8 +111,11 @@ build:
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cp $(SOURCE)/lib/*.a $(ROOT)/$(PKGROOT)/lib
 	cp $(SOURCE)/include/* $(ROOT)/$(PKGROOT)/include
+	cat sprng.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/sprng!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE)
