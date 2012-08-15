@@ -64,7 +64,7 @@ ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
 
-PKGROOT = /opt/superlu/$(ROLLCOMPILER)/$(ROLLMPI)
+PKGROOT = /opt/superlu/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 SOURCE = superlu-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
@@ -113,8 +113,7 @@ build:
 	)
 
 install::
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	( \
 	  cd $(SOURCE); \
 	  make install; \
@@ -122,6 +121,8 @@ install::
 	  cp SRC/*.h $(ROOT)$(PKGROOT)/include; \
 	  cp CBLAS/*.h $(ROOT)$(PKGROOT)/include; \
 	)
+	cat superlu.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/superlu!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
 

@@ -1,0 +1,55 @@
+#!/bin/bash
+/bin/mkdir -m 0755 -p ROOT_PKGROOTMODULEROOT
+
+cat > ROOT_PKGROOTMODULEROOT/VERSION <<END
+if {! [info exists ::env(MPIHOME)]} {
+  puts stderr "Need to load an mpi module before loading superlu"
+  exit 1
+}
+foreach {x} [glob -directory /opt/superlu/COMPILER -tails *] {
+  if {[regexp \$x \$::env(MPIHOME)]} {
+    set mpi \$x
+    break
+  }
+}
+if {! [info exists mpi]} {
+  if {[ regexp ScaleMP \$::env(MPIHOME)]} {
+      set mpi vsmp
+  }
+}
+if {! [info exists mpi]} {
+  puts stderr "No supported MPI flavor found"
+  exit 1
+}
+foreach {x} [glob -directory /opt/superlu/COMPILER/\$mpi -tails *] {
+  if {[regexp \$x \$::env(MPIHOME)]} {
+    set network \$x
+    break
+  }
+}
+if {! [info exists network]} {
+  if {[ regexp ScaleMP \$::env(MPIHOME)]} {
+      set network ib
+  }
+}
+if {! [info exists network]} {
+  puts stderr "No supported network found"
+  exit 1
+}
+module-whatis "superlu_ROLLCOMPILER_\$mpi_\$network"
+module-whatis "Version: VERSION"
+prepend-path LD_LIBRARY_PATH /opt/superlu/ROLLCOMPILER/\$mpi/\$network/lib
+prepend-path LIBPATH /opt/superlu/ROLLCOMPILER/\$mpi/\$network/lib
+prepend-path SUPERLUHOME /opt/superlu/ROLLCOMPILER/\$mpi/\$network
+
+END
+
+chmod 0644  ROOT_PKGROOTMODULEROOT/VERSION
+
+cat > ROOT_PKGROOTMODULEROOT/.version.VERSION <<END
+#%Module1.0
+set ModulesVersion "VERSION"
+END
+
+(cd ROOT_PKGROOTMODULEROOT; /bin/ln -s .version.VERSION .version )
+
