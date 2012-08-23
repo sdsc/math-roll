@@ -74,7 +74,7 @@ COMPILERSETUP = \
 
 CONFIGURE_OPTIONS = \
   --prefix=$(ROOT)/$(PKGROOT) \
-  --with-netlib-lapack-tarfile=`ls $(REDHAT.ROOT)/src/lapack*z`
+  --with-netlib-lapack-tarfile=`ls $(REDHAT.ROOT)/src/lapack/lapack*z`
 ifeq ("$(ROLLCOMPILER)", "gnu")
   CONFIGURE_OPTIONS += -F ic '-mavx -O2' -F if '-mavx -O2'
 else ifeq ("$(ROLLCOMPILER)", "intel")
