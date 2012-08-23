@@ -81,7 +81,7 @@ else ifeq ("$(ROLLCOMPILER)", "intel")
   CONFIGURE_OPTIONS += -C ic icc -F ic '-O2 -xHOST' -C if ifort \
                        -F if '-O2 -fltconsistency -xHOST' -Fa alg -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-  CONFIGURE_OPTIONS += -C ic pgcc -F ic "-fast" -C if pgf77 -F if "-fast"
+  CONFIGURE_OPTIONS += -C ic pgcc -F ic "-fast -noswitcherror" -C if pgf77 -F if "-fast -noswitcherror"
 endif
 
 build:
