@@ -4,36 +4,16 @@
 
 <description>
 math libraries
-
-Automatically Tuned Linear Algebra Package (ATLAS)
-http://math-atlas.sourceforge.net
-
-gsl
-http://www.gnu.org/software/gsl/
-
-LAPACK (LINEAR ALGEBRA PACKAGE)
-http://www.netlib.org/lapack
-
-octave
-http://www.gnu.org/software/octave
-
-par/metis
-http://glaros.dtc.umn.edu/gkhome/views/metis
-
-petsc
-http://www.mcs.anl.gov/petsc/petsc-2/index.html
-
-scalapack
-http://www.netlib.org/scalapack
-
-sprng 
-http://sprng.cs.fsu.edu/
-
-SuperLU
-http://crd.lbl.gov/~xiaoye/SuperLU/
-
-trilinos
-http://trilinos.sandia.gov/
+Auto Tuned Linear Algebra Package (ATLAS) - http://math-atlas.sourceforge.net
+gsl - http://www.gnu.org/software/gsl/
+LAPACK (LINEAR ALGEBRA PACKAGE) - http://www.netlib.org/lapack
+octave - http://www.gnu.org/software/octave
+par/metis - http://glaros.dtc.umn.edu/gkhome/views/metis
+petsc - http://www.mcs.anl.gov/petsc/petsc-2/index.html
+scalapack - http://www.netlib.org/scalapack
+sprng - http://sprng.cs.fsu.edu/
+SuperLU - http://crd.lbl.gov/~xiaoye/SuperLU/
+trilinos - http://trilinos.sandia.gov/
 </description>
 
 <copyright>
