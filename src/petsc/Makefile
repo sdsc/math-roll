@@ -82,7 +82,7 @@ COMPILERSETUP = \
                     $${MKLLIB}/libmkl_sequential.a \
                     $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread"; \
     module unload intel; \
-    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sort -V | tail -1`; \
+    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
     module load $${latestModule}; \
   fi
 

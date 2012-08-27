@@ -78,7 +78,7 @@ COMPILERSETUP = \
     export MKLLINK="-L$${MKLLIB} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core \
                     -lpthread"; \
     module unload intel; \
-    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sort -V | tail -1`; \
+    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
     module load $${latestModule}; \
   fi
 
@@ -119,7 +119,7 @@ build:
   	  cd $(SOURCE); \
   	  mkdir build; \
   	  cd build; \
-  	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(ROOT)/$(PKGROOT) \
+  	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) \
   	        -DCMAKE_BUILD_TYPE:STRING=DEBUG \
   	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpif90 \
   	        -DCMAKE_CXX_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicxx \
@@ -156,7 +156,7 @@ install::
               exit; \
           fi; \
 	  cd $(SOURCE)/build; \
-	  make install \
+	  make prefix=$(ROOT)/$(PKGROOT) install \
 	)
 
 clean::
