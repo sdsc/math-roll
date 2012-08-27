@@ -77,7 +77,7 @@ CONFIGURE_OPTIONS = \
   --prefix=$(ROOT)/$(PKGROOT) \
   --with-netlib-lapack-tarfile=`ls $(REDHAT.ROOT)/src/lapack/lapack*z`
 ifeq ("$(ROLLCOMPILER)", "gnu")
-  CONFIGURE_OPTIONS += -F ic '-mavx -O2' -F if '-mavx -O2'
+  CONFIGURE_OPTIONS += -F ic '-O2' -F if '-O2'
 else ifeq ("$(ROLLCOMPILER)", "intel")
   CONFIGURE_OPTIONS += -C ic icc -F ic '-O2 -xHOST' -C if ifort \
                        -F if '-O2 -fltconsistency -xHOST' -Fa alg -fPIC
