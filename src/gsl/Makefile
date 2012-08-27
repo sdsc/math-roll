@@ -87,7 +87,7 @@ build:
 	( \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
-	  ./configure CC=$(CC) CFLAGS="$(CFLAGS)" --prefix=$(ROOT)/$(PKGROOT); \
+	  ./configure CC=$(CC) CFLAGS="$(CFLAGS)" --prefix=$(PKGROOT); \
 	  make \
 	)
 
@@ -97,7 +97,7 @@ install::
 	( \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
-	  make install; \
+	  make prefix=$(ROOT)/$(PKGROOT) install; \
 	  make check; \
 	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/testruns; \
 	  for file in `cat ../patch-files/tests`; do \
