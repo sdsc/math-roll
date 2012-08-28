@@ -73,13 +73,15 @@ COMPILERSETUP = \
   fi
 
 CC = gcc
-CFLAGS = -mavx -O2
+COMPILE_FLAGS = -O2
 ifeq ("$(ROLLCOMPILER)", "intel")
   CC = icc
-  CFLAGS = -O2 -fp-model precise
+  COMPILE_FLAGS = -O2 -fp-model precise
 else ifeq ("$(ROLLCOMPILER)", "pgi")
   CC = pgcc
-  CFLAGS = -fast
+  COMPILE_FLAGS = -fast
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  COMPILE_FLAGS += -mavx
 endif
 
 build:
@@ -87,7 +89,7 @@ build:
 	( \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
-	  ./configure CC=$(CC) CFLAGS="$(CFLAGS)" --prefix=$(PKGROOT); \
+	  ./configure CC=$(CC) CFLAGS="$(COMPILE_FLAGS)" --prefix=$(PKGROOT); \
 	  make \
 	)
 

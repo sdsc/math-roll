@@ -80,10 +80,12 @@ COMPILERSETUP = \
   fi
 
 CC = gcc
-CFLAGS = -mavx -O2
 CXX = g++
 F77 = gfortran
-FFLAGS = -mavx -O2
+COMPILE_FLAGS = -O2
+ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  COMPILE_FLAGS += -mavx
+endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
@@ -91,14 +93,12 @@ build:
 	( \
 	  $(COMPILERSETUP); \
 	  trap " " EXIT; \
-          CFLAGS="$(CFLAGS)"; \
-          FFLAGS="$(FFLAGS)"; \
 	  export CPPFLAGS=-I$${HDF5HOME}/include; \
 	  export CC=$(CC); \
-	  export CFLAGS=$(CFLAGS); \
+	  export CFLAGS=$(COMPILE_FLAGS); \
 	  export CXX=$(CXX); \
 	  export F77=$(F77); \
-	  export FFLAGS="$(FFLAGS)"; \
+	  export FFLAGS="$(COMPILE_FLAGS)"; \
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
