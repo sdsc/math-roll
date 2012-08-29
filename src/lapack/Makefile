@@ -122,7 +122,7 @@ install::
 	  cp libtmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
-	  if test "$(ROLLCOMPILER)" != "gnu"; then \
+	  if test -e TESTING/xeigtstd; then \
 	    cp ../patch-files/tests TESTING/x* TESTING/*.in \
 	       $(ROOT)/$(PKGROOT)/runtests; \
 	  fi \
