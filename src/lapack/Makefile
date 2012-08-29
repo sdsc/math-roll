@@ -122,8 +122,10 @@ install::
 	  cp libtmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
-	  cp ../patch-files/tests TESTING/x* TESTING/*.in \
-	     $(ROOT)/$(PKGROOT)/runtests \
+	  if test "$(ROLLCOMPILER)" != "gnu"; then \
+	    cp ../patch-files/tests TESTING/x* TESTING/*.in \
+	       $(ROOT)/$(PKGROOT)/runtests; \
+	  fi \
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
