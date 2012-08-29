@@ -102,7 +102,7 @@ build:
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
-	  ../configure --prefix=$(ROOT)/$(PKGROOT) \
+	  ../configure --prefix=$(PKGROOT) \
 	    --without-curl --enable-64 --disable-docs \
 	    --with-blas="$${MKLLINK}" --with-lapack="$${MKLLINK}" \
 	    --with-fftw3=$${FFTWHOME} \
@@ -115,7 +115,7 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
-	  make -i install \
+	  make prefix=$(ROOT)/$(PKGROOT) -i install \
 	)
 	cat octave.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/octave!g;s!VERSION!$(VERSION)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
