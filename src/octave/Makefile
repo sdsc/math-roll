@@ -95,7 +95,7 @@ build:
 	  trap " " EXIT; \
 	  export CPPFLAGS=-I$${HDF5HOME}/include; \
 	  export CC=$(CC); \
-	  export CFLAGS=$(COMPILE_FLAGS); \
+	  export CFLAGS="$(COMPILE_FLAGS)"; \
 	  export CXX=$(CXX); \
 	  export F77=$(F77); \
 	  export FFLAGS="$(COMPILE_FLAGS)"; \
