@@ -76,13 +76,15 @@ COMPILERSETUP = \
 CONFIGURE_OPTIONS = \
   --prefix=$(ROOT)/$(PKGROOT) \
   --with-netlib-lapack-tarfile=`ls $(REDHAT.ROOT)/src/lapack/lapack*z`
-ifeq ("$(ROLLCOMPILER)", "gnu")
-  CONFIGURE_OPTIONS += -F ic '-O2' -F if '-O2'
-else ifeq ("$(ROLLCOMPILER)", "intel")
+ifeq ("$(ROLLCOMPILER)", "intel")
   CONFIGURE_OPTIONS += -C ic icc -F ic '-O2 -xHOST' -C if ifort \
                        -F if '-O2 -fltconsistency -xHOST' -Fa alg -fPIC
 else ifeq ("$(ROLLCOMPILER)", "pgi")
   CONFIGURE_OPTIONS += -C ic pgcc -F ic "-fast -noswitcherror" -C if pgf77 -F if "-fast -noswitcherror"
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  CONFIGURE_OPTIONS += -C ic gcc -F ic "-O2 -mavx" -C if gfortran -F if "-O2 -mavx"
+else
+  CONFIGURE_OPTIONS += -C ic gcc -F ic "-O2" -C if gfortran -F if "-O2"
 endif
 
 build:
