@@ -111,14 +111,9 @@ build:
         )
 
 install::
-<<<<<<< Makefile
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-=======
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
->>>>>>> 1.23
 	( \
           . /etc/profile.d/modules.sh; \
           module load cmake; \
@@ -129,15 +124,8 @@ install::
            cp build/Linux-x86_64/libmetis/libmetis.a $(REDHAT.ROOT)/src/build-$(NAME)/lib; \
            cp -r  $(REDHAT.ROOT)/src/build-$(NAME)/* $(ROOT)/$(PKGROOT) \
         )
-<<<<<<< Makefile
 	cat parmetis.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/parmetis!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
-=======
-	cat parmetis.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/parmetis!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
-	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
-	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
->>>>>>> 1.23
 
 clean::
 	rm -rf $(SOURCE) BLAS
