@@ -80,6 +80,9 @@ ifeq ("$(ROLLCOMPILER)", "intel")
 else ifeq ("$(ROLLCOMPILER)", "pgi")
   FC = pgf90 -fast -fPIC
   CC = pcc -fast -fPIC
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+   CC += -mavx
+   FC += -mavx
 endif
 
 build:
