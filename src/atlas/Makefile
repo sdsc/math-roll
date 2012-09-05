@@ -90,22 +90,23 @@ endif
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
+	  gov=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor`; \
+	  for cpu in `grep '^ *processor' /proc/cpuinfo | sed 's/[^0-9]*//'`; do \
+	    cpufreq-selector -c $$cpu -g performance; \
+	  done; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
-          yum -y install cpufreq-utils.x86_64; \
 	  mkdir build; \
 	  cd build; \
-          cpus=`ls -d /sys/devices/system/cpu/cpu[0-9] /sys/devices/system/cpu/cpu[1-9][0-9]`; \
-          for cpu in $$cpus; do \
-               cpu=`basename $$cpu|sed -e 's/cpu//'`; \
- 	       cpufreq-set -c $$cpu -g performance; \
-          done; \
 	  ../configure $(CONFIGURE_OPTIONS); \
  	  if test "$(ROLLCOMPILER)" = "pgi"; then \
  	    cat bin/Makefile | sed 's/(FLINKER)/(FLINKER) -Mnomain/' >tmp; \
  	    mv -f tmp bin/Makefile; \
  	  fi; \
- 	  make build \
+	  make build; \
+	  for cpu in `grep '^ *processor' /proc/cpuinfo | sed 's/[^0-9]*//'`; do \
+	    cpufreq-selector -c $$cpu -g $$gov; \
+	  done \
 	)
 
 install::
