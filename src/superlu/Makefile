@@ -114,14 +114,16 @@ build:
 	)
 
 install::
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
+	mkdir -p -m 755 $(ROOT/$(PKGROOT)/lib
+	mkdir -p -m 755 $(ROOT/$(PKGROOT)/include
 	( \
 	  cd $(SOURCE); \
 	  make install; \
-	  cp lib/*.a $(ROOT)$(PKGROOT)/lib/libsuperlu.a; \
-	  cp SRC/*.h $(ROOT)$(PKGROOT)/include; \
-	  cp CBLAS/*.h $(ROOT)$(PKGROOT)/include; \
+	  cp lib/*.a $(ROOT)/$(PKGROOT)/lib/libsuperlu.a; \
+	  cp SRC/*.h $(ROOT)/$(PKGROOT)/include; \
+	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include; \
 	)
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat superlu.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/superlu!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
