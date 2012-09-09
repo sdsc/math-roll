@@ -74,8 +74,8 @@ COMPILERSETUP = \
                     $${MKLLIB}/libmkl_gnu_thread.a \
                     $${MKLLIB}/libmkl_core.a -Wl,--end-group -fopenmp -lpthread"; \
     module unload intel; \
-    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
-    module load $${latestModule}; \
+    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
+    module load $(ROLLCOMPILER)/$${latestModule}; \
     module load fftw hdf5; \
   fi
 
