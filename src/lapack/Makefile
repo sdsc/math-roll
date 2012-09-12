@@ -69,7 +69,7 @@ COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
     latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
-    module load $(ROLLCOMPILER)/$(ROLLCOMPILER); \
+    module load $(ROLLCOMPILER)/$${latestModule}; \
   fi
 
 FC = gfortran -fimplicit-none -O2 -fPIC
