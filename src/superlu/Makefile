@@ -114,8 +114,8 @@ build:
 	)
 
 install::
-	mkdir -p -m 755 $(ROOT/$(PKGROOT)/lib
-	mkdir -p -m 755 $(ROOT/$(PKGROOT)/include
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	( \
 	  cd $(SOURCE); \
 	  make install; \
