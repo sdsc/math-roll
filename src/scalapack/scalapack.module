@@ -51,5 +51,4 @@ cat > ROOT_PKGROOTMODULEROOT/.version.VERSION <<END
 set ModulesVersion "VERSION"
 END
 
-(cd ROOT_PKGROOTMODULEROOT; /bin/ln -s .version.VERSION .version )
-
+(cd ROOT_PKGROOTMODULEROOT; if test ! -e .version; then /bin/ln -s .version.VERSION .version; fi )
