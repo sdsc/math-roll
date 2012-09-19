@@ -2,6 +2,7 @@
 /bin/mkdir -m 0755 -p ROOT_PKGROOTMODULEROOT
 
 cat > ROOT_PKGROOTMODULEROOT/VERSION <<END
+#%Module1.0
 if {! [info exists ::env(MPIHOME)]} {
   puts stderr "Need to load an mpi module before loading superlu"
   exit 1
