@@ -22,10 +22,11 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <changelog>
 </changelog>
 
+<package>gnuplot.x86_64</package>
+
 <package>gsl_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
 <package>octave</package>
-<package>gnuplot</package>
 <package>parmetis_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>petsc_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>scalapack_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
