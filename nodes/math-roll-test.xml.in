@@ -29,9 +29,9 @@ use Test::More qw(no_plan);
 
 my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
-my $installedOnAppliancesPattern = 'Compute';
+my $installedOnAppliancesPattern = '.';
 my @packages = ('gsl', 'lapack', 'octave', 'parmetis', 'petsc',
-                'scalapack', 'sprng', 'superlu', 'trilinos','gnuplot');
+                'scalapack', 'sprng', 'superlu', 'trilinos');
 my $output;
 my @COMPILERS = (
   'ROLLCOMPILER',
@@ -47,13 +47,36 @@ foreach my $package(@packages) {
   }
 }
 
+SKIP: {
+
+  skip 'modules not installed', 1 if ! -f '/etc/profile.d/modules.sh';
+
+  foreach my $package(@packages) {
+    skip "$package not installed", 3 if ! -d "/opt/$package";
+    foreach my $compiler(@COMPILERS) {
+      my $path = '/opt/modulefiles/applications' .
+                 ($package eq 'octave' ? '' : "/.$compiler");
+      my $subpackage = $package eq 'octave' ? $package : "$package/$compiler";
+      `/bin/ls $path/$package/[0-9]* 2>&1`;
+      ok($? == 0, "$subpackage module installed");
+      `/bin/ls $path/$package/.version.[0-9]* 2>&1`;
+      ok($? == 0, "$subpackage version module installed");
+      ok(-l "$path/$package/.version",
+         "$subpackage version module link created");
+      last if $package eq 'octave';
+    }
+  }
+
+}
+
+
 # gsl
 foreach my $c (@COMPILERS) {
   my $packageHome = '/opt/gsl/$c';
   my $testDir = '/opt/gsl/$c/testruns';
   SKIP: {
-    skip "gsl $c not installed", 1 if ! -d $packageHome;
-    skip "gsl $c test not installed", 1 if ! -d $testDir;
+    skip "gsl/$c not installed", 1 if ! -d $packageHome;
+    skip "gsl/$c test not installed", 1 if ! -d $testDir;
     open(OUT, ">$TESTFILE.sh");
     print OUT <<END;
 #!/bin/bash
@@ -63,7 +86,8 @@ cd $packageHome/testruns
 tests=`ls`
 for test in \$tests; do
 if test -d \$test; then
-\$test/test
+  cd $packageHome/testruns
+  \$test/test
 fi
 done
 ./test_gsl_histogram.sh
@@ -77,8 +101,8 @@ END
 
 # lapack
 foreach my $c (@COMPILERS) {
-  my $packageHome = '/opt/lapack/$c';
-  my $testDir = '/opt/lapack/$c/testruns';
+  my $packageHome = "/opt/lapack/$c";
+  my $testDir = "/opt/lapack/$c/testruns";
 SKIP: {
   skip "lapack $c not installed", 1 if ! -d $packageHome;
   skip "lapack $c test not installed", 1 if ! -d $testDir;
@@ -94,35 +118,6 @@ END
     $output = `/bin/bash $TESTFILE.sh|grep -c -i fail`;
     ok($output <= 19, "lapack $c tests");
   }
-}
-
-# math-modules-common
-SKIP: {
-
-  skip 'math not installed', 1
-    if $appliance !~ /$installedOnAppliancesPattern/;
-  my $modulesInstalled = -f '/etc/profile.d/modules.sh';
-  if($modulesInstalled) {
-    like($ENV{MODULEPATH}, qr#/opt/modulefiles/applications#,
-         'MODULEPATH set for applications');
-  }
-  foreach my $package(@packages) {
-    my ($noVersion) = $package =~ m#([^/]+)#;
-    if($modulesInstalled) {
-      ok(! -f "/etc/profile.d/$noVersion.csh" &&
-         ! -f "/etc/profile.d/$noVersion.sh", "$package profile.d removed");
-      `/bin/ls /opt/modulefiles/applications/$noVersion/[0-9]* 2>&1`;
-      ok($? == 0, "$package module installed");
-      `/bin/ls /opt/modulefiles/applications/$noVersion/.version.[0-9]* 2>&1`;
-      ok($? == 0, "$package version module installed");
-      ok(-l "/opt/modulefiles/applications/$noVersion/.version",
-         "$package version module link created");
-    } else {
-      ok(-f "/etc/profile.d/$noVersion.csh" &&
-         -f "/etc/profile.d/$noVersion.sh", "$package profile.d created");
-    }
-  }
-
 }
 
 `rm -f $TESTFILE*`;
