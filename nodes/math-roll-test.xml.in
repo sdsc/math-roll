@@ -72,8 +72,8 @@ SKIP: {
 
 # gsl
 foreach my $c (@COMPILERS) {
-  my $packageHome = '/opt/gsl/$c';
-  my $testDir = '/opt/gsl/$c/testruns';
+  my $packageHome = "/opt/gsl/$c";
+  my $testDir = "/opt/gsl/$c/testruns";
   SKIP: {
     skip "gsl/$c not installed", 1 if ! -d $packageHome;
     skip "gsl/$c test not installed", 1 if ! -d $testDir;
