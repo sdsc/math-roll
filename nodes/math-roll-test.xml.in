@@ -83,18 +83,34 @@ foreach my $c (@COMPILERS) {
 . /etc/profile.d/modules.sh
 module load $c gsl
 cd $packageHome/tests
-tests=`ls`
-for test in \$tests; do
+for test in *; do
 if test -d \$test; then
   cd $packageHome/tests
-  \$test/test
+  echo === \$test: `\$test/test`
 fi
 done
-./test_gsl_histogram.sh
 END
     close(OUT);
     $output = `/bin/bash $TESTFILE.sh`;
-    ok($output =~ /^(?!.*(?:FAIL))/, "gsl $c tests");
+    my (@crashes, @failures, @successes);
+    while ($output =~ s/=== (\w+): (.*)//) {
+      my ($testname, $testout) = ($1, $2);
+      if ($testout !~ /^Completed \[(\d+)\/(\d+)\]/) {
+        push(@crashes, $testname);
+      } elsif ($1 != $2) {
+        push(@failures, $testname);
+      } else {
+        push(@successes, $testname);
+      }
+    }
+    my $testcount = scalar(@crashes) + scalar(@failures) + scalar(@successes);
+    if(scalar(@successes) == $testcount) {
+      pass("$testcount/$testcount gsl/$c tests passed");
+    } else {
+      fail(scalar(@successes) . "/$testcount gsl/$c tests passed; " .
+           scalar(@crashes) . ' (' . join(',', @crashes) . ') crashed; ' .
+           scalar(@failures) . ' (' . join(',', @failures) . ') failed');
+    }
   }
 }
 
