@@ -73,7 +73,7 @@ SKIP: {
 # gsl
 foreach my $c (@COMPILERS) {
   my $packageHome = "/opt/gsl/$c";
-  my $testDir = "/opt/gsl/$c/testruns";
+  my $testDir = "/opt/gsl/$c/tests";
   SKIP: {
     skip "gsl/$c not installed", 1 if ! -d $packageHome;
     skip "gsl/$c test not installed", 1 if ! -d $testDir;
@@ -82,11 +82,11 @@ foreach my $c (@COMPILERS) {
 #!/bin/bash
 . /etc/profile.d/modules.sh
 module load $c gsl
-cd $packageHome/testruns
+cd $packageHome/tests
 tests=`ls`
 for test in \$tests; do
 if test -d \$test; then
-  cd $packageHome/testruns
+  cd $packageHome/tests
   \$test/test
 fi
 done
@@ -102,7 +102,7 @@ END
 # lapack
 foreach my $c (@COMPILERS) {
   my $packageHome = "/opt/lapack/$c";
-  my $testDir = "/opt/lapack/$c/testruns";
+  my $testDir = "/opt/lapack/$c/tests";
 SKIP: {
   skip "lapack $c not installed", 1 if ! -d $packageHome;
   skip "lapack $c test not installed", 1 if ! -d $testDir;
@@ -111,7 +111,7 @@ SKIP: {
 #!/bin/bash
 . /etc/profile.d/modules.sh
 module load ROLLCOMPILER lapack
-cd $packageHome/testruns
+cd $packageHome/tests
 sh ./tests
 END
     close(OUT);

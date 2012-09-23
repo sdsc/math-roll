@@ -100,14 +100,12 @@ install::
 	  cd $(SOURCE); \
 	  make install prefix=$(ROOT)/$(PKGROOT); \
 	  make check; \
-	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/testruns; \
+	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/tests; \
 	  for file in `cat ../patch-files/tests`; do \
-	    mkdir $(ROOT)/$(PKGROOT)/testruns/$$file; \
-	    cp $$file/test $(ROOT)/$(PKGROOT)/testruns/$$file; \
+	    cp -r $$file $(ROOT)/$(PKGROOT)/tests; \
 	  done; \
-	  perl -pi -e 's#$(ROOT)/##g' $(ROOT)/$(PKGROOT)/testruns/*/*; \
-	  cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/testruns; \
-	  cp gsl-histogram $(ROOT)/$(PKGROOT)/testruns \
+	  cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/tests; \
+	  cp gsl-histogram $(ROOT)/$(PKGROOT)/tests \
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat gsl.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/gsl!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
