@@ -104,8 +104,6 @@ install::
 	  for file in `cat ../patch-files/tests`; do \
 	    cp -r $$file $(ROOT)/$(PKGROOT)/tests; \
 	  done; \
-	  cp test_gsl_histogram.sh $(ROOT)/$(PKGROOT)/tests; \
-	  cp gsl-histogram $(ROOT)/$(PKGROOT)/tests \
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat gsl.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/gsl!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
