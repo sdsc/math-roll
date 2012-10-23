@@ -54,12 +54,28 @@
 #
 # @Copyright@
 
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+ifndef ROLLNETWORK
+  ROLLNETWORK = eth
+endif
+ifndef ROLLMPI
+  ROLLMPI = openmpi
+endif
+
 PKGROOT = /opt/octave
 SOURCE = octave-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
+
+ifeq ("$(ROLLNETWORK)", "eth")
+  MPIMODULE = $(ROLLMPI)
+else
+  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
+endif
 
 # The different structure of this Makefile reflects the fact that we've only
 # been able to compile octave using the gnu compilers combined with the intel
@@ -69,14 +85,15 @@ COMPILERSETUP = \
     . /etc/profile.d/modules.sh; \
     module load intel; \
     export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-    export MKLLINK="$${MKLLIB}/libmkl_solver_ilp64.a -Wl,--start-group \
-                    $${MKLLIB}/libmkl_gf_ilp64.a \
-                    $${MKLLIB}/libmkl_gnu_thread.a \
-                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -fopenmp -lpthread"; \
     module unload intel; \
+    export LDFLAGS="-L$${MKLLIB}"; \
+    export LD_LIBRARY_PATH="$${MKLLIB}:$${LD_LIBRARY_PATH}"; \
+    export MKLLINK="-lmkl_solver_ilp64 \
+                    -Wl,--start-group -lmkl_gf_ilp64 -lmkl_core \
+                    -lmkl_gnu_thread -Wl,--end-group -fopenmp -lpthread"; \
     latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
     module load $(ROLLCOMPILER)/$${latestModule}; \
-    module load fftw hdf5; \
+    module load $(MPIMODULE) fftw hdf5; \
   fi
 
 CC = gcc
@@ -92,7 +109,6 @@ build:
 	cp patch-files/sighandlers.cc $(SOURCE)/src
 	( \
 	  $(COMPILERSETUP); \
-	  trap " " EXIT; \
 	  export CPPFLAGS=-I$${HDF5HOME}/include; \
 	  export CC=$(CC); \
 	  export CFLAGS="$(COMPILE_FLAGS)"; \
@@ -103,7 +119,7 @@ build:
 	  mkdir build; \
 	  cd build; \
 	  ../configure --prefix=$(PKGROOT) \
-	    --without-curl --enable-64 --disable-docs \
+	    --enable-64 --enable-docs=no \
 	    --with-blas="$${MKLLINK}" --with-lapack="$${MKLLINK}" \
 	    --with-fftw3=$${FFTWHOME} \
 	    --with-hdf5=$${HDF5HOME}; \
@@ -115,6 +131,7 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
+	  $(COMPILERSETUP); \
 	  make prefix=$(ROOT)/$(PKGROOT) -i install \
 	)
 	cat octave.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/octave!g;s!VERSION!$(VERSION)!g" \
