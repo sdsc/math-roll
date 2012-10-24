@@ -5,6 +5,7 @@ cat > ROOT_PKGROOTMODULEROOT/VERSION <<END
 #%Module1.0
 module-whatis "octave"
 module-whatis "Version: VERSION"
+prepend-path PATH /opt/octave/bin
 prepend-path LD_LIBRARY_PATH /opt/octave/lib/octave/VERSION
 prepend-path LIBPATH /opt/octave/lib/octave/VERSION
 

@@ -34,5 +34,6 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>superlu_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>trilinos_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
 <package>math-modules</package>
+<package>math-roll-test</package>
 
 </kickstart>

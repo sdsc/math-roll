@@ -1,4 +1,4 @@
-ROLLNAME = math$(ROLLSUFFIX)
+ROLLNAME = math
 RELEASE  = 5
 COLOR    = orange
 

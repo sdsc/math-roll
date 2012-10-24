@@ -25,13 +25,9 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 
 <edge from="base">
   <to>math-install</to>
-  <to>math-roll-test</to>
 </edge>
 <order head="common">
   <tail>math-install</tail>
-</order>
-<order head="base">
-  <tail>math-roll-test</tail>
 </order>
 
 </graph>
