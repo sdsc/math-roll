@@ -122,8 +122,10 @@ build:
 	    --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 \
 	    --download-pastix=1 --download-ptscotch \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
-	    --with-superlu_dist-dir=$(SUPERLU_HOME) \
+	    --with-superlu_dist-include=$(SUPERLU_HOME)/include \
+	    --with-superlu_dist-lib="-L$(SUPERLU_HOME)/lib -lsuperlu" \
 	    --with-parmetis-dir=$(PARMETIS_HOME) \
+	    --with-metis-dir=$(PARMETIS_HOME) \
 	  make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
 	)
 
