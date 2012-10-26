@@ -5,6 +5,7 @@ cat > ROOT_PKGROOTMODULEROOT/VERSION <<END
 #%Module1.0
 module-whatis "gsl_ROLLCOMPILER"
 module-whatis "Version: VERSION"
+prepend-path PATH /opt/gsl/ROLLCOMPILER/bin
 prepend-path LD_LIBRARY_PATH /opt/gsl/ROLLCOMPILER/lib
 prepend-path LIBPATH /opt/gsl/ROLLCOMPILER/lib
 setenv GSLHOME /opt/gsl/ROLLCOMPILER
