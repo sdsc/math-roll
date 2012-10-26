@@ -7,7 +7,7 @@ if {! [info exists ::env(MPIHOME)]} {
   puts stderr "Need to load an mpi module before loading petsc"
   exit 1
 }
-foreach {x} [glob -directory /opt/petsc/COMPILER -tails *] {
+foreach {x} [glob -directory /opt/petsc/ROLLCOMPILER -tails *] {
   if {[regexp \$x \$::env(MPIHOME)]} {
     set mpi \$x
     break
@@ -22,7 +22,7 @@ if {! [info exists mpi]} {
   puts stderr "No supported MPI flavor found"
   exit 1
 }
-foreach {x} [glob -directory /opt/petsc/COMPILER/\$mpi -tails *] {
+foreach {x} [glob -directory /opt/petsc/ROLLCOMPILER/\$mpi -tails *] {
   if {[regexp \$x \$::env(MPIHOME)]} {
     set network \$x
     break
@@ -37,7 +37,7 @@ if {! [info exists network]} {
   puts stderr "No supported network found"
   exit 1
 }
-module-whatis "petsc_ROLLCOMPILER_\$mpi_\$network"
+module-whatis "petsc_ROLLCOMPILER_\${mpi}_\$network"
 module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/\$mpi/\$network/lib
 prepend-path LIBPATH /opt/petsc/ROLLCOMPILER/\$mpi/\$network/lib
