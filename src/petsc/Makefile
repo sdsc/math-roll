@@ -106,35 +106,26 @@ MPISETUP = \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
 PARMETIS_HOME = \
-  $(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)
+  $(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 SUPERLU_HOME = \
-  $(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)
+  $(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 
 
 build:
-	mkdir -p $(PKGROOT)
-	mkdir -p $(ROOT)/$(PKGROOT)
 	tar zxvf $(SOURCE).tar.gz
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
-          export PATH=/opt/valgrind/bin:$${PATH}; \
+	  export PATH=/opt/valgrind/bin:$${PATH}; \
 	  ./configure --prefix=$(PKGROOT) \
 	    --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 \
-            --download-pastix=1 \
-            --download-ptscotch \
+	    --download-pastix=1 --download-ptscotch \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
-	    --with-superlu-dist=1 \
-	    --with-superlu_dist-include=$(SUPERLU_HOME)/include \
-	    --with-superlu_dist-lib=$(SUPERLU_HOME)/lib/libsuperlu.a \
-	    --with-parmetis-dist=1 \
-	    --with-parmetis-include=$(PARMETIS_HOME)/include \
-	    --with-parmetis-lib="-L$(PARMETIS_HOME)/lib -lparmetis -lmetis"; \
+	    --with-superlu_dist-dir=$(SUPERLU_HOME) \
+	    --with-parmetis-dir=$(PARMETIS_HOME) \
 	  make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
 	)
-	umount $(PKGROOT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
@@ -147,7 +138,7 @@ install::
 	)
 	umount $(PKGROOT)
 	cat petsc.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/petsc!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE)

@@ -27,12 +27,12 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>gsl_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
 <package>octave</package>
-<package>parmetis_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>petsc_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>scalapack_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>sprng_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>superlu_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
-<package>trilinos_ROLLCOMPILER_ROLLNETWORK_ROLLMPI</package>
+<package>parmetis_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>petsc_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>scalapack_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>sprng_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>superlu_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>trilinos_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>math-modules</package>
 <package>math-roll-test</package>
 

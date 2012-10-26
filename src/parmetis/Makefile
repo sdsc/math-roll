@@ -64,7 +64,7 @@ ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
 
-PKGROOT = /opt/parmetis/$(ROLLCOMPILER)/$(ROLLMPI)
+PKGROOT = /opt/parmetis/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 SOURCE = parmetis-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
@@ -99,15 +99,15 @@ MPISETUP = \
 
 build:
 	tar zxvf $(SOURCE).tar.gz
+	cp patch-files/Makefile.parmetis $(SOURCE)
+	cp patch-files/Makefile.metis $(SOURCE)/metis
 	( \
-          . /etc/profile.d/modules.sh; \
-          module load cmake; \
+	  . /etc/profile.d/modules.sh; \
+	  module load cmake; \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
-          cp patch-files/Makefile.parmetis $(SOURCE); \
-          cp patch-files/Makefile.metis $(SOURCE)/metis; \
 	  cd $(SOURCE); \
-          make config prefix=$(REDHAT.ROOT)/src/build-$(NAME); \
+	  make config prefix=$(REDHAT.ROOT)/src/build-$(NAME); \
         )
 
 install::
@@ -115,17 +115,17 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	( \
-          . /etc/profile.d/modules.sh; \
-          module load cmake; \
+	  . /etc/profile.d/modules.sh; \
+	  module load cmake; \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
-           make install; \
-           cp build/Linux-x86_64/libmetis/libmetis.a $(REDHAT.ROOT)/src/build-$(NAME)/lib; \
-           cp -r  $(REDHAT.ROOT)/src/build-$(NAME)/* $(ROOT)/$(PKGROOT) \
-        )
+	  make install; \
+	  cp build/Linux-x86_64/libmetis/libmetis.a $(REDHAT.ROOT)/src/build-$(NAME)/lib; \
+	  cp -r $(REDHAT.ROOT)/src/build-$(NAME)/* $(ROOT)/$(PKGROOT) \
+	)
 	cat parmetis.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/parmetis!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE) BLAS

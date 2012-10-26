@@ -63,7 +63,7 @@ ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
 
-PKGROOT = /opt/scalapack/$(ROLLCOMPILER)/$(ROLLMPI)
+PKGROOT = /opt/scalapack/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 SOURCE = scalapack-$(VERSION)
 REDHAT.ROOT = $(PWD)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress

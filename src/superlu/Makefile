@@ -107,7 +107,7 @@ build:
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE)!" $(SOURCE)/make.inc; \
-	  perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLNETWORK)_$(ROLLMPI)/lib!" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib!" $(SOURCE)/make.inc; \
 	  perl -pi -e "s!MKLROOT!$${MKL_HOME}!g" $(SOURCE)/make.inc; \
 	  cd $(SOURCE); \
 	  make \
