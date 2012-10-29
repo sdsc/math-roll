@@ -1,5 +1,0 @@
-#!/bin/bash
-tests='xcbrd xcdblu xcdtlu xcevc xcgblu xcgsep xcheevr xchrd xcinv xcllt xcls xclu xcnep xcpbllt xcptllt xcqr xcsep xctrd xdbrd xddblu xddtlu xdgblu xdgsep xdhrd xdhseqr xdinv xdllt xdls xdlu xdnep xdpbllt xdptllt xdqr xdsep xdsvd xdsyevr xdtrd xsbrd xsdblu xsdtlu xsgblu xsgsep xshrd xshseqr xsinv xsllt xsls xslu xsnep xspbllt xsptllt xsqr xssep xssvd xssyevr xstrd xzbrd xzdblu xzdtlu xzevc xzgblu xzgsep xzheevr xzhrd xzinv xzllt xzls xzlu xznep xzpbllt xzptllt xzqr xzsep xztrd'
-for test in $tests; do
-mpirun -np 16 -machinefile $PBS_NODEFILE ./$test >& $test.out
-done
