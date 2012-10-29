@@ -41,7 +41,7 @@ module-whatis "scalapack_ROLLCOMPILER_\${mpi}_\$network"
 module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/scalapack/ROLLCOMPILER/\$mpi/\$network/lib
 prepend-path LIBPATH /opt/scalapack/ROLLCOMPILER/\$mpi/\$network/lib
-prepend-path SCALAPACKHOME /opt/scalapack/ROLLCOMPILER/\$mpi/\$network
+setenv SCALAPACKHOME /opt/scalapack/ROLLCOMPILER/\$mpi/\$network
 
 END
 

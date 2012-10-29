@@ -41,7 +41,7 @@ module-whatis "parmetis_ROLLCOMPILER_\${mpi}_\$network"
 module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/parmetis/ROLLCOMPILER/\$mpi/\$network/lib
 prepend-path LIBPATH /opt/parmetis/ROLLCOMPILER/\$mpi/\$network/lib
-prepend-path PARMETISHOME /opt/parmetis/ROLLCOMPILER/\$mpi/\$network
+setenv PARMETISHOME /opt/parmetis/ROLLCOMPILER/\$mpi/\$network
 
 END
 

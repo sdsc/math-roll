@@ -7,7 +7,7 @@ module-whatis "lapack_ROLLCOMPILER"
 module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/lapack/ROLLCOMPILER/lib
 prepend-path LIBPATH /opt/lapack/ROLLCOMPILER/lib
-prepend-path LAPACKHOME /opt/lapack/ROLLCOMPILER
+setenv LAPACKHOME /opt/lapack/ROLLCOMPILER
 
 END
 

@@ -41,7 +41,7 @@ module-whatis "superlu_ROLLCOMPILER_\${mpi}_\$network"
 module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/superlu/ROLLCOMPILER/\$mpi/\$network/lib
 prepend-path LIBPATH /opt/superlu/ROLLCOMPILER/\$mpi/\$network/lib
-prepend-path SUPERLUHOME /opt/superlu/ROLLCOMPILER/\$mpi/\$network
+setenv SUPERLUHOME /opt/superlu/ROLLCOMPILER/\$mpi/\$network
 
 END
 

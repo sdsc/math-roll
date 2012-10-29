@@ -41,7 +41,7 @@ module-whatis "sprng_ROLLCOMPILER_\${mpi}_\$network"
 module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/sprng/ROLLCOMPILER/\$mpi/\$network/lib
 prepend-path LIBPATH /opt/sprng/ROLLCOMPILER/\$mpi/\$network/lib
-prepend-path SPRNGHOME /opt/sprng/ROLLCOMPILER/\$mpi/\$network
+setenv SPRNGHOME /opt/sprng/ROLLCOMPILER/\$mpi/\$network
 
 END
 

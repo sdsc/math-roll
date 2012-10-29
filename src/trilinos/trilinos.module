@@ -42,7 +42,7 @@ module-whatis "Version: VERSION"
 prepend-path PATH /opt/trilinos/ROLLCOMPILER/\$mpi/\$network/bin
 prepend-path LD_LIBRARY_PATH /opt/trilinos/ROLLCOMPILER/\$mpi/\$network/lib
 prepend-path LIBPATH /opt/trilinos/ROLLCOMPILER/\$mpi/\$network/lib
-prepend-path TRILINOSHOME /opt/trilinos/ROLLCOMPILER/\$mpi/\$network
+setenv TRILINOSHOME /opt/trilinos/ROLLCOMPILER/\$mpi/\$network
 
 END
 

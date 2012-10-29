@@ -41,7 +41,7 @@ module-whatis "petsc_ROLLCOMPILER_\${mpi}_\$network"
 module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/\$mpi/\$network/lib
 prepend-path LIBPATH /opt/petsc/ROLLCOMPILER/\$mpi/\$network/lib
-prepend-path PETSCHOME /opt/petsc/ROLLCOMPILER/\$mpi/\$network
+setenv PETSCHOME /opt/petsc/ROLLCOMPILER/\$mpi/\$network
 
 END
 
