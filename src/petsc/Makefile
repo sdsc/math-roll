@@ -125,7 +125,7 @@ build:
 	    --with-superlu_dist-include=$(SUPERLU_HOME)/include \
 	    --with-superlu_dist-lib="-L$(SUPERLU_HOME)/lib -lsuperlu" \
 	    --with-parmetis-dir=$(PARMETIS_HOME) \
-	    --with-metis-dir=$(PARMETIS_HOME) \
+	    --with-metis-dir=$(PARMETIS_HOME); \
 	  make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
 	)
 
