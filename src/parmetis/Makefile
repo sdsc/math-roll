@@ -121,6 +121,7 @@ install::
 	  make install; \
 	  cp metis/include/metis.h $(ROOT)/$(PKGROOT)/include; \
 	  cp build/Linux-x86_64/libmetis/libmetis.a $(ROOT)/$(PKGROOT)/lib; \
+	  cp -r Graphs $(ROOT)/$(PKGROOT) \
 	)
 	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-$(NAME)
 	cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)/
