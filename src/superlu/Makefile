@@ -122,6 +122,7 @@ install::
 	  cp lib/*.a $(ROOT)/$(PKGROOT)/lib/libsuperlu.a; \
 	  cp SRC/*.h $(ROOT)/$(PKGROOT)/include; \
 	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include; \
+	  cp -r EXAMPLE $(ROOT)/$(PKGROOT) \
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat superlu.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/superlu!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
