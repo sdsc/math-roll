@@ -197,7 +197,7 @@ foreach my $compiler(@COMPILERS) {
 #!/bin/bash
 . /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} sprng
-mpicc -I -o $TESTFILE.sprng.exe \$SPRNGHOME/include $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -lgmp
+mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -lgmp
 ls -l *.exe
 mpirun -np 1 $TESTFILE.sprng.exe
 END
