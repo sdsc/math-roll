@@ -165,10 +165,27 @@ SKIP: {
 }
 
 # scalapack
-$packageHome = '/opt/scalapack';
-SKIP: {
-  skip 'scalapack not installed', 1 if ! -d $packageHome;
-  fail('Need to write scalapack test');
+foreach my $compiler(@COMPILERS) {
+  foreach my $mpi(@MPIS) {
+    foreach my $network(@NETWORKS) {
+      $packageHome = "/opt/scalapack/$compiler";
+      SKIP: {
+        skip "scalapack/$compiler not installed", 1 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler ${mpi}_${network} scalapack
+pushd \$SCALAPACKHOME/EXAMPLE
+mpirun -np 16 ./xcscaex
+END
+        close(OUT);
+        $output = `/bin/bash $TESTFILE.sh 2>&1`;
+        like($output, qr/The answer is correct\./,
+        "scalapack/$compiler/$mpi/$network example run");
+      }
+    }
+  }
 }
 
 # sprng
