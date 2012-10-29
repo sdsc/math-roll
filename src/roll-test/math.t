@@ -13,6 +13,8 @@ my @packages = ('gsl', 'lapack', 'octave', 'parmetis', 'petsc',
                 'scalapack', 'sprng', 'superlu', 'trilinos');
 my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
+my @MPIS = split(/\s+/, 'ROLLMPI');
+my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
 my $TESTFILE = 'tmpmath';
 
 # math-install.xml
@@ -160,17 +162,62 @@ SKIP: {
 }
 
 # superlu
-$packageHome = '/opt/superlu';
-SKIP: {
-  skip 'superlu not installed', 1 if ! -d $packageHome;
-  fail('Need to write superlu test');
+foreach my $compiler(@COMPILERS) {
+  foreach my $mpi(@MPIS) {
+    foreach my $network(@NETWORKS) {
+      $packageHome = "/opt/superlu/$compiler";
+      SKIP: {
+        skip "superlu/$compiler not installed", 1 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler ${mpi}_${network} superlu
+mpirun -np 1 \$SUPERLUHOME/EXAMPLE/pddrive \$SUPERLUHOME/EXAMPLE/g20.rua
+END
+        close(OUT);
+        $output = `/bin/bash $TESTFILE.sh`;
+        like($output, qr/Sol  0.*=\s*1.332268e-15/,
+             "Superlu/$compiler/$mpi/$network test run");
+      }
+    }
+  }
 }
 
 # trilinos
-$packageHome = '/opt/trilinos';
-SKIP: {
-  skip 'trilinos not installed', 1 if ! -d $packageHome;
-  fail('Need to write trilinos test');
+open(OUT, ">$TESTFILE.tril.cxx");
+print OUT <<END;
+#include "Teuchos_Version.hpp"
+using namespace Teuchos;
+int main(int argc, char* argv[]) {
+  std::cout << Teuchos::Teuchos_Version() << std::endl;
+  return 0;
+}
+END
+foreach my $compiler(@COMPILERS) {
+  foreach my $mpi(@MPIS) {
+    foreach my $network(@NETWORKS) {
+      $packageHome = "/opt/trilinos/$compiler";
+      SKIP: {
+        skip "trilinos/$compiler not installed", 2 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler ${mpi}_${network} trilinos
+mpicxx -I\${TRILINOSHOME}/include -o $TESTFILE.tril.exe $TESTFILE.tril.cxx -L\${TRILINOSHOME}/lib -lteuchos
+ls -l *.exe
+./$TESTFILE.tril.exe
+END
+        close(OUT);
+        $output = `/bin/bash $TESTFILE.sh`;
+        like($output, qr/$TESTFILE.tril.exe/,
+             "Trilinos/$compiler/$mpi/$network compilation");
+        like($output, qr/Teuchos in Trilinos [\d\.]+/,
+             "Trilinos/$compiler/$mpi/$network run");
+      }
+    }
+  }
 }
 
 `rm -f $TESTFILE*`;
