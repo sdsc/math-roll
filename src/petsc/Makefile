@@ -136,7 +136,8 @@ install::
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE); \
-	  make install \
+	  make install; \
+	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/ \
 	)
 	umount $(PKGROOT)
 	cat petsc.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/petsc!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
