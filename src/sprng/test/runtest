@@ -1,2 +1,0 @@
-#!/bin/bash
-mpirun -np 8  ./metropolis.sprng 2 111 0 16 10 10 100 2>/dev/null
