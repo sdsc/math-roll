@@ -158,10 +158,32 @@ END
 }
 
 # petsc
-$packageHome = '/opt/petsc';
-SKIP: {
-  skip 'petsc not installed', 1 if ! -d $packageHome;
-  fail('Need to write petsc test');
+foreach my $compiler(@COMPILERS) {
+  foreach my $mpi(@MPIS) {
+    foreach my $network(@NETWORKS) {
+      $packageHome = "/opt/petsc/$compiler";
+      SKIP: {
+        skip "petsc/$compiler not installed", 1 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler ${mpi}_${network} petsc
+mkdir $TESTFILE.dir
+cd $TESTFILE.dir
+cp -r \$PETSCHOME/examples/* .
+cd tutorials
+make PETSC_ARCH=arch-linux-c-debug PETSC_DIR=\$PETSCHOME ex1
+ls -l ex1
+mpirun -np 1 ./ex1 -ksp_gmres_cgs_refinement_type refine_always -snes_monitor_short
+END
+        close(OUT);
+        $output = `/bin/bash $TESTFILE.sh 2>&1`;
+        like($output, qr/number of SNES iterations = 6/,
+             "petsc/$compiler tutorial run");
+      }
+    }
+  }
 }
 
 # scalapack
