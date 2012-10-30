@@ -23,6 +23,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 </changelog>
 
 <package>gnuplot.x86_64</package>
+<package>gmp-static</package> <!-- Required by sprng examples -->
 
 <package>gsl_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
