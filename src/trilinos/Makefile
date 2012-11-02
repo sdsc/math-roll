@@ -158,6 +158,7 @@ install::
 	  cd $(SOURCE)/build; \
 	  make prefix=$(ROOT)/$(PKGROOT) install \
 	)
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat trilinos.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/trilinos!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
