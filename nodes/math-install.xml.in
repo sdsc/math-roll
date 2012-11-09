@@ -12,6 +12,7 @@ scalapack - http://www.netlib.org/scalapack
 sprng - http://sprng.cs.fsu.edu/
 SuperLU - http://crd.lbl.gov/~xiaoye/SuperLU/
 trilinos - http://trilinos.sandia.gov/
+sundials - http://computation.llnl.gov/casc/sundials/main.html
 </description>
 
 <copyright>
@@ -34,6 +35,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>sprng_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>superlu_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>trilinos_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>sundials_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>math-modules</package>
 <package>math-roll-test</package>
 
