@@ -117,7 +117,6 @@ build:
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
-	  export PATH=/opt/valgrind/bin:$${PATH}; \
 	  ./configure --prefix=$(PKGROOT) \
 	    --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 \
 	    --download-pastix=1 --download-ptscotch \
