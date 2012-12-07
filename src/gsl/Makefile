@@ -79,7 +79,7 @@ ifeq ("$(ROLLCOMPILER)", "intel")
   COMPILE_FLAGS = -O2 -fp-model precise
 else ifeq ("$(ROLLCOMPILER)", "pgi")
   CC = pgcc
-  COMPILE_FLAGS = -fast
+  COMPILE_FLAGS = -O1 -Mdaz 
 else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   COMPILE_FLAGS += -mavx
 endif
@@ -87,15 +87,27 @@ endif
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+              make clean; \
+              exit; \
+          fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
 	  ./configure CC=$(CC) CFLAGS="$(COMPILE_FLAGS)" --prefix=$(PKGROOT); \
+	  if test "$(ROLLCOMPILER)" = "pgi"; then \
+	    perl -pi -e 's!.*#define  *HAVE_INLINE.*!/* #undef HAVE_INLINE */!' config.h; \
+	  fi; \
 	  make \
 	)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+              make clean; \
+              rm -rf $(ROOT)/$(PKGROOT); \
+              exit; \
+          fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
 	  make install prefix=$(ROOT)/$(PKGROOT); \
