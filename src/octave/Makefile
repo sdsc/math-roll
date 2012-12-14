@@ -138,7 +138,7 @@ install::
 	( \
 	  cd $(SOURCE)/build; \
 	  $(COMPILERSETUP); \
-	  make prefix=$(ROOT)/$(PKGROOT) -i install \
+	  make prefix=$(PKGROOT) -i install \
 	)
 	cat octave.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/octave!g;s!VERSION!$(VERSION)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
