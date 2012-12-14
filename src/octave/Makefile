@@ -106,7 +106,10 @@ endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
-	cp patch-files/sighandlers.cc $(SOURCE)/src
+	mkdir -p $(PKGROOT)
+	mkdir -p $(ROOT)/$(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+#	cp patch-files/sighandlers.cc $(SOURCE)/src
 	( \
 	  $(COMPILERSETUP); \
 	  export CPPFLAGS=-I$${HDF5HOME}/include; \
@@ -117,18 +120,21 @@ build:
 	  export FFLAGS="$(COMPILE_FLAGS)"; \
 	  cd $(SOURCE); \
 	  mkdir build; \
+          export PATH=/opt/gnu/texinfo/4.13a/bin:$${PATH}; \
 	  cd build; \
 	  ../configure --prefix=$(PKGROOT) \
-	    --enable-64 --enable-docs=no \
+	    --enable-64 \
 	    --with-blas="$${MKLLINK}" --with-lapack="$${MKLLINK}" \
 	    --with-fftw3=$${FFTWHOME} \
-	    --with-hdf5=$${HDF5HOME}; \
-	  make -i \
+	    --with-hdf5=$${HDF5HOME} \
+	    --without-curl \
 	)
+	umount $(PKGROOT)
 
 install::
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE)/build; \
 	  $(COMPILERSETUP); \
@@ -136,6 +142,7 @@ install::
 	)
 	cat octave.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/octave!g;s!VERSION!$(VERSION)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+	umount $(PKGROOT)
 
 
 clean::

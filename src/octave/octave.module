@@ -6,6 +6,7 @@ cat > ROOT_PKGROOTMODULEROOT/VERSION <<END
 module-whatis "octave"
 module-whatis "Version: VERSION"
 prepend-path PATH /opt/octave/bin
+prepend-path PATH /opt/gnu/texinfo/4.13a/bin
 prepend-path LD_LIBRARY_PATH /opt/octave/lib/octave/VERSION
 prepend-path LIBPATH /opt/octave/lib/octave/VERSION
 
