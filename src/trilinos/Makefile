@@ -119,6 +119,9 @@ build:
   	  cd $(SOURCE); \
   	  mkdir build; \
   	  cd build; \
+	  mkdir -p -m 755 $(ROOT)/$(PKGROOT); \
+	  mkdir -p -m 755 $(PKGROOT); \
+          mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
   	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) \
   	        -DCMAKE_BUILD_TYPE:STRING=DEBUG \
   	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpif90 \
@@ -144,19 +147,23 @@ build:
   	        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
   	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
   	        $(PWD)/$(SOURCE); \
-  	  make \
+  	  make; \
+          umount $(PKGROOT) \
        )
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(PKGROOT)
 	( \
           if test $(ROLLCOMPILER) = "pgi"; then \
               make clean; \
               rm -rf $(ROOT)/$(PKGROOT); \
               exit; \
           fi; \
+          mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
 	  cd $(SOURCE)/build; \
-	  make prefix=$(ROOT)/$(PKGROOT) install \
+	  make prefix=$(PKGROOT) install; \
+          umount $(PKGROOT) \
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat trilinos.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/trilinos!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
