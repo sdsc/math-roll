@@ -29,7 +29,7 @@ DSUPERLULIB   	= $(DSuperLUroot)/lib/libsuperlu_dist_3.1.a
 
 
 BLASDEF	     	=  -DUSE_VENDOR_BLAS
-BLASLIB	        = MKLROOT/lib/intel64/libmkl_solver_lp64_sequential.a -Wl,--start-group  MKLROOT/lib/intel64/libmkl_intel_lp64.a MKLROOT/lib/intel64/libmkl_sequential.a MKLROOT/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread
+BLASLIB	        = -Wl,--start-group  MKLROOT/lib/intel64/libmkl_intel_lp64.a MKLROOT/lib/intel64/libmkl_sequential.a MKLROOT/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm
 METISLIB   	= -LROLL_PARMETIS -lmetis
 PARMETISLIB   	= -LROLL_PARMETIS -lparmetis
 
