@@ -76,11 +76,10 @@ COMPILERSETUP = \
     . /etc/profile.d/modules.sh; \
     module load intel; \
     export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-    export MKLLINK="$${MKLLIB}/libmkl_solver_lp64_sequential.a \
-                    -Wl,--start-group \
+    export MKLLINK=" -Wl,--start-group \
                     $${MKLLIB}/libmkl_intel_lp64.a \
                     $${MKLLIB}/libmkl_sequential.a \
-                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread"; \
+                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm"; \
     module unload intel; \
     latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
     module load $(ROLLCOMPILER)/$${latestModule}; \

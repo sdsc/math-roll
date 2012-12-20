@@ -54,15 +54,7 @@
 #
 # @Copyright@
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
+ROLLCOMPILER=gnu
 
 PKGROOT = /opt/octave
 SOURCE = octave-$(VERSION)
@@ -71,11 +63,6 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
 
 # The different structure of this Makefile reflects the fact that we've only
 # been able to compile octave using the gnu compilers combined with the intel
@@ -86,11 +73,9 @@ COMPILERSETUP = \
     module load intel; \
     export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
     module unload intel; \
-    export LDFLAGS="-L$${MKLLIB}"; \
     export LD_LIBRARY_PATH="$${MKLLIB}:$${LD_LIBRARY_PATH}"; \
-    export MKLLINK="-lmkl_solver_ilp64 \
-                    -Wl,--start-group -lmkl_gf_ilp64 -lmkl_core \
-                    -lmkl_gnu_thread -Wl,--end-group -fopenmp -lpthread"; \
+    export MKLLINK="-L$${MKLLIB} -lmkl_gf_ilp64 -lmkl_gnu_thread \
+             -lmkl_core -ldl -lpthread -lm"; \
     latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
     module load $(ROLLCOMPILER)/$${latestModule}; \
     module load $(MPIMODULE) fftw hdf5; \
@@ -99,10 +84,11 @@ COMPILERSETUP = \
 CC = gcc
 CXX = g++
 F77 = gfortran
-COMPILE_FLAGS = -O2
+COMPILE_FLAGS = -O2 -fopenmp -m64 -I$${MKL_ROOT}/include
 ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   COMPILE_FLAGS += -mavx
 endif
+F77_INTEGER_8_FLAG=-fdefault-integer-8
 
 build:
 	tar zxvf $(SOURCE).tar.gz
@@ -116,11 +102,11 @@ build:
 	  export CC=$(CC); \
 	  export CFLAGS="$(COMPILE_FLAGS)"; \
 	  export CXX=$(CXX); \
+	  export CXXFLAGS="$(COMPILE_FLAGS)"; \
 	  export F77=$(F77); \
 	  export FFLAGS="$(COMPILE_FLAGS)"; \
 	  cd $(SOURCE); \
 	  mkdir build; \
-          export PATH=/opt/gnu/texinfo/4.13a/bin:$${PATH}; \
 	  cd build; \
 	  ../configure --prefix=$(PKGROOT) \
 	    --enable-64 \
