@@ -101,17 +101,23 @@ build:
 	tar zxvf $(SOURCE).tar.gz
 	cp patch-files/Makefile.parmetis $(SOURCE)
 	cp patch-files/Makefile.metis $(SOURCE)/metis
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  . /etc/profile.d/modules.sh; \
 	  module load cmake; \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
-	  make config prefix=$(ROOT)/$(PKGROOT) \
+	  make config prefix=$(PKGROOT) \
         )
+	umount $(PKGROOT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  . /etc/profile.d/modules.sh; \
 	  module load cmake; \
@@ -123,6 +129,7 @@ install::
 	  cp build/Linux-x86_64/libmetis/libmetis.a $(ROOT)/$(PKGROOT)/lib; \
 	  cp -r Graphs $(ROOT)/$(PKGROOT) \
 	)
+	umount $(PKGROOT)
 	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-$(NAME)
 	cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)/
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules

@@ -100,22 +100,39 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
+
+
+PARMETIS_HOME = \
+  $(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
+PARMETIS_MOUNT = \
+  /opt/parmetis/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+
 build:
 	tar zxvf $(SOURCE).tgz
 	cp patch-files/make.inc $(SOURCE)
+	mkdir -p -m 755 $(PKGROOT)
+	mkdir -p $(PARMETIS_MOUNT)
+	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
+        mount --bind $(PWD)/$(SOURCE) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE)!" $(SOURCE)/make.inc; \
-	  perl -pi -e "s!ROLL_PARMETIS!$(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)/lib!" $(SOURCE)/make.inc; \
+	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_MOUNT)/lib!" $(SOURCE)/make.inc; \
 	  perl -pi -e "s!MKLROOT!$${MKL_HOME}!g" $(SOURCE)/make.inc; \
 	  cd $(SOURCE); \
 	  make \
 	)
+	umount $(PARMETIS_MOUNT)
+	umount $(PKGROOT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
+	mkdir -p $(PARMETIS_MOUNT)
+	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
+	mkdir -p -m 755 $(PKGROOT)
+        mount --bind $(PWD)/$(SOURCE) $(PKGROOT)
 	( \
 	  cd $(SOURCE); \
 	  make install; \
@@ -124,6 +141,8 @@ install::
 	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include; \
 	  cp -r EXAMPLE $(ROOT)/$(PKGROOT) \
 	)
+	umount $(PARMETIS_MOUNT)
+	umount $(PKGROOT)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat superlu.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/superlu!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module

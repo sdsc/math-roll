@@ -106,12 +106,26 @@ MPISETUP = \
 
 PARMETIS_HOME = \
   $(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
+PARMETIS_MOUNT = \
+  /opt/parmetis/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 SUPERLU_HOME = \
   $(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
+SUPERLU_MOUNT = \
+  /opt/superlu/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+SCALAPACK_HOME = \
+  $(REDHAT.ROOT)/src/build-scalapack_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
+SCALAPACK_MOUNT = \
+  /opt/scalapack/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 
 
 build:
 	tar zxvf $(SOURCE).tar.gz
+	mkdir -p $(PARMETIS_MOUNT)
+	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
+	mkdir -p $(SUPERLU_MOUNT)
+	mount --bind $(SUPERLU_HOME) $(SUPERLU_MOUNT)
+	mkdir -p $(SCALAPACK_MOUNT)
+	mount --bind $(SCALAPACK_HOME) $(SCALAPACK_MOUNT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
@@ -120,24 +134,40 @@ build:
 	    --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 \
 	    --download-pastix=1 --download-ptscotch \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
-	    --with-superlu_dist-include=$(SUPERLU_HOME)/include \
-	    --with-superlu_dist-lib="-L$(SUPERLU_HOME)/lib -lsuperlu" \
-	    --with-parmetis-dir=$(PARMETIS_HOME) \
-	    --with-metis-dir=$(PARMETIS_HOME); \
-	  make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
-	)
+	    --with-superlu_dist-include=$(SUPERLU_MOUNT)/include \
+	    --with-superlu_dist-lib="-L$(SUPERLU_MOUNT)/lib -lsuperlu" \
+	    --with-parmetis-dir=$(PARMETIS_MOUNT) \
+	    --with-metis-dir=$(PARMETIS_MOUNT) \
+            --download-mumps=yes \
+            --with-scalapack-dir=$(SCALAPACK_MOUNT) \
+             --download-mumps=yes \
+            --download-blacs=yes; \
+            make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
+         )
+	umount $(PARMETIS_MOUNT)
+	umount $(SUPERLU_MOUNT)
+	umount $(SCALAPACK_MOUNT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	mkdir -p -m 755 $(PKGROOT)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	mkdir -p $(PARMETIS_MOUNT)
+	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
+	mkdir -p $(SUPERLU_MOUNT)
+	mount --bind $(SUPERLU_HOME) $(SUPERLU_MOUNT)
+	mkdir -p $(SCALAPACK_MOUNT)
+	mount --bind $(SCALAPACK_HOME) $(SCALAPACK_MOUNT)
 	( \
 	  cd $(SOURCE); \
 	  make install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/ \
 	)
 	umount $(PKGROOT)
+	umount $(PARMETIS_MOUNT)
+	umount $(SUPERLU_MOUNT)
+	umount $(SCALAPACK_MOUNT)
 	cat petsc.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/petsc!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 

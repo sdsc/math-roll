@@ -102,6 +102,8 @@ build:
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
           if test $(ROLLCOMPILER) = "pgi"; then \
               make clean; \
@@ -110,13 +112,14 @@ install::
           fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
-	  make install prefix=$(ROOT)/$(PKGROOT); \
+	  make install prefix=$(PKGROOT); \
 	  make check; \
 	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/tests; \
 	  for file in `cat ../patch-files/tests`; do \
 	    cp -r $$file $(ROOT)/$(PKGROOT)/tests; \
 	  done; \
 	)
+	umount $(PKGROOT)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat gsl.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/gsl!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module

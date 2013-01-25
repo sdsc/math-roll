@@ -102,18 +102,25 @@ ifeq ("$(ROLLCOMPILER)", "pgi")
   ROLLPGI = -pgf90libs
 endif
 
+LAPACK_HOME = \
+  $(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)
+LAPACK_MOUNT = \
+  /opt/lapack/$(ROLLCOMPILER)
 
 build:
 	tar zxvf $(SOURCE).tgz
 	cp patch-files/SLmake.inc $(SOURCE)
+	mkdir -p $(LAPACK_MOUNT)
+	mount --bind $(LAPACK_HOME) $(LAPACK_MOUNT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  perl -pi -e "s!ROLLPGI!$(ROLLPGI)!" $(SOURCE)/SLmake.inc; \
-	  perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_BLACS!$(PWD)/BLACS/LIB!;s!ROLL_LAPACK!$(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)!" $(SOURCE)/SLmake.inc; \
+	  perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_LAPACK!$(LAPACK_MOUNT)!" $(SOURCE)/SLmake.inc; \
           cd $(SOURCE); \
 	  make all \
 	)
+	umount $(LAPACK_MOUNT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
