@@ -113,7 +113,7 @@ build:
 	mkdir -p -m 755 $(PKGROOT)
 	mkdir -p $(PARMETIS_MOUNT)
 	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
-        mount --bind $(PWD)/$(SOURCE) $(PKGROOT)
+	mount --bind $(PWD)/$(SOURCE) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
@@ -132,7 +132,7 @@ install::
 	mkdir -p $(PARMETIS_MOUNT)
 	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
 	mkdir -p -m 755 $(PKGROOT)
-        mount --bind $(PWD)/$(SOURCE) $(PKGROOT)
+	mount --bind $(PWD)/$(SOURCE) $(PKGROOT)
 	( \
 	  cd $(SOURCE); \
 	  make install; \
