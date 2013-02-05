@@ -116,6 +116,11 @@ install::
 	cp $(SOURCE)/lib/*.a $(ROOT)/$(PKGROOT)/lib
 	cp $(SOURCE)/include/* $(ROOT)/$(PKGROOT)/include
 	cp -r $(SOURCE)/EXAMPLES $(ROOT)/$(PKGROOT)/
+	chmod 0755 $(ROOT)/$(PKGROOT)/EXAMPLES
+	chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLES/*.c
+	chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLES/*.C
+	chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLES/*.F
+	chmod 0644 $(ROOT)/$(PKGROOT)/include/*
 	cat sprng.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/sprng!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
