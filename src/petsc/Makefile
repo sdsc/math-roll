@@ -163,6 +163,9 @@ install::
 	  cd $(SOURCE); \
 	  make install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/ \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+             perl -pi -e 's!.*/opt/pgi!/opt/pgi!g' $(ROOT)/$(PKGROOT)/conf/petscvariables; \
+          fi \
 	)
 	umount $(PKGROOT)
 	umount $(PARMETIS_MOUNT)
