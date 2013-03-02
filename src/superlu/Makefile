@@ -140,8 +140,7 @@ install::
 	  cp SRC/*.h $(ROOT)/$(PKGROOT)/include; \
 	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include; \
 	  cp -r EXAMPLE $(ROOT)/$(PKGROOT)/; \
-	  chmod -R 644 $(ROOT)/$(PKGROOT)/EXAMPLE; \
-	  chmod -R ugo+X $(ROOT)/$(PKGROOT)/EXAMPLE \
+	  chmod -R go-w $(ROOT)/$(PKGROOT)/EXAMPLE \
 	)
 	umount $(PARMETIS_MOUNT)
 	umount $(PKGROOT)
