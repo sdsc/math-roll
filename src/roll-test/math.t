@@ -180,7 +180,7 @@ END
         close(OUT);
         $output = `/bin/bash $TESTFILE.sh 2>&1`;
         like($output, qr/number of SNES iterations = 6/,
-             "petsc/$compiler tutorial run");
+             "petsc/$compiler/$mpi/$network tutorial run");
       }
     }
   }
