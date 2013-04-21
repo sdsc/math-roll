@@ -238,7 +238,7 @@ foreach my $compiler(@COMPILERS) {
 module load $compiler ${mpi}_${network} sprng
 mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -lgmp
 ls -l *.exe
-mpirun -np 1 $TESTFILE.sprng.exe
+mpirun -np 1 ./$TESTFILE.sprng.exe
 END
         close(OUT);
         $output = `/bin/bash $TESTFILE.sh 2>&1`;
