@@ -1,4 +1,4 @@
 NAME    = gsl_$(ROLLCOMPILER)
 VERSION = 1.15
 RELEASE = 0
-RPM.EXTRAS = "Autoprov: 0"
+RPM.EXTRAS = "AutoReq: no"

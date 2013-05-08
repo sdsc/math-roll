@@ -1,4 +1,4 @@
 NAME    = superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION = 3.2
 RELEASE = 5
-RPM.EXTRAS = "Autoprov: 0"
+RPM.EXTRAS = "AutoReq: no"

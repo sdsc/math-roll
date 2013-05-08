@@ -1,4 +1,4 @@
 NAME    = sprng_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION = 2.0b
 RELEASE = 24
-RPM.EXTRAS = "Autoprov: 0"
+RPM.EXTRAS = "AutoReq: no"
