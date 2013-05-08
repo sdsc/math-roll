@@ -1,3 +1,4 @@
 NAME    = trilinos_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION = 11.0.3
 RELEASE = 0
+RPM.EXTRAS = "Autoprov: 0"

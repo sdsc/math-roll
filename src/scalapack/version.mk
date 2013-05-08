@@ -1,3 +1,4 @@
 NAME    = scalapack_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION = 2.0.2
 RELEASE = 5
+RPM.EXTRAS = "Autoprov: 0"

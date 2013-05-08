@@ -1,3 +1,4 @@
 NAME    = petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION = 3.3.p5
 RELEASE = 1
+RPM.EXTRAS = "Autoprov: 0"

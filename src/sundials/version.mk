@@ -1,3 +1,4 @@
 NAME    = sundials_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION = 2.5.0
 RELEASE = 0
+RPM.EXTRAS = "Autoprov: 0"
