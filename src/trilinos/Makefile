@@ -80,6 +80,9 @@ COMPILERSETUP = \
     module unload intel; \
     latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
     module load $(ROLLCOMPILER)/$${latestModule}; \
+  fi; \
+  if test "$(ROLLCOMPILER)" != "intel"; then \
+    export LD_LIBRARY_PATH=/opt/intel/composer_xe_2011_sp1.7.256/compiler/lib/intel64:/opt/intel/composer_xe_2011_sp1.7.256/mkl/lib/intel64:$${LD_LIBRARY_PATH}; \
   fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
@@ -116,6 +119,16 @@ build:
   	  $(COMPILERSETUP); \
   	  $(MPISETUP); \
           module load cmake; \
+          export PYTHONPATH=/opt/scipy/lib64/python2.7/site-packages:/opt/scipy/lib/python2.7/site-packages:$${PYTHONPATH}; \
+          if test ! -e $(REDHAT.ROOT)/src/build-swig; then \
+             tar xvf swig-2.0.3.tar.gz; \
+             cd swig-2.0.3; \
+             ./configure --prefix=$(REDHAT.ROOT)/src/build-swig; \
+             make; \
+             make install; \
+             cd ..; \
+          fi; \
+          export PATH=$(REDHAT.ROOT)/src/build-swig/bin:$${PATH}; \
   	  cd $(SOURCE); \
   	  mkdir build; \
   	  cd build; \
@@ -133,6 +146,7 @@ build:
   	        -DTrilinos_ENABLE_CTrilinos:BOOL=ON \
   	        -DTrilinos_ENABLE_ForTrilinos:BOOL=OFF \
   	        -DTrilinos_ENABLE_TESTS:BOOL=ON \
+                -DTrilinos_ENABLE_PyTrilinos:BOOL=ON \
   	        -DTPL_BLAS_LIBRARIES:STRING="$${MKLLINK}" \
   	        -DTPL_LAPACK_LIBRARIES:STRING="$${MKLLINK}" \
   	        -DDART_TESTING_TIMEOUT:STRING=600 \
@@ -146,6 +160,7 @@ build:
   	        -DTPL_MPI_LIBRARIES:INTERNAL="$${MPI_HOME}/lib" \
   	        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
   	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
+                -DBUILD_SHARED_LIBS:BOOL=ON \
   	        $(PWD)/$(SOURCE); \
   	  make; \
           umount $(PKGROOT) \
@@ -170,4 +185,4 @@ install::
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
-	rm -rf $(SOURCE)
+	rm -rf $(SOURCE) $(REDHAT.ROOT)/src/build-swig swig-2.0.3
