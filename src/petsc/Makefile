@@ -141,7 +141,8 @@ build:
             --download-mumps=yes \
             --with-scalapack-dir=$(SCALAPACK_MOUNT) \
              --download-mumps=yes \
-            --download-blacs=yes; \
+            --download-blacs=yes \
+             --with-pic=1; \
             make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
          )
 	umount $(PARMETIS_MOUNT)
