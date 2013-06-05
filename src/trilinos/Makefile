@@ -119,7 +119,13 @@ build:
   	  $(COMPILERSETUP); \
   	  $(MPISETUP); \
           module load cmake; \
-          export PYTHONPATH=/opt/scipy/lib64/python2.7/site-packages:/opt/scipy/lib/python2.7/site-packages:$${PYTHONPATH}; \
+          pypath=`echo python=python | grep -o 'python=[^ ]*' | tail -1 | sed 's/.*=//'`; \
+          echo "Using python $$pypath"; \
+          version=`$$pypath --version 2>&1 |sed 's/Python\s*//'`; \
+          if test `echo $${version} |grep -c  [0-9].[0-9].[0-9]$ ` -eq 1; then \
+                   version=`echo $${version}| sed 's/.[0-9]$$//'`; \
+          fi; \
+          export PYTHONPATH=/opt/scipy/lib64/python$${version}/site-packages:/opt/scipy/lib/python$${version}/site-packages:$${PYTHONPATH}; \
           if test ! -e $(REDHAT.ROOT)/src/build-swig; then \
              tar xvf swig-2.0.3.tar.gz; \
              cd swig-2.0.3; \
