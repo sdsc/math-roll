@@ -125,6 +125,7 @@ build:
           if test `echo $${version} |grep -c  [0-9].[0-9].[0-9]$ ` -eq 1; then \
                    version=`echo $${version}| sed 's/.[0-9]$$//'`; \
           fi; \
+          export LD_LIBRARY_PATH=/opt/intel/composer_xe_2013.1.117/mkl/lib/intel64:/opt/intel/composer_xe_2013.1.117/compiler/lib/intel64:$${LD_LIBRARY_PATH}; \
           export PYTHONPATH=/opt/scipy/lib64/python$${version}/site-packages:/opt/scipy/lib/python$${version}/site-packages:$${PYTHONPATH}; \
           if test ! -e $(REDHAT.ROOT)/src/build-swig; then \
              tar xvf swig-2.0.3.tar.gz; \
