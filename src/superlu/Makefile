@@ -139,7 +139,7 @@ install::
 	  cp lib/*.a $(ROOT)/$(PKGROOT)/lib/libsuperlu.a; \
 	  cp SRC/*.h $(ROOT)/$(PKGROOT)/include; \
 	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include/* ; \
-          chmod 0644 $(ROOT)/$(PKGROOT)/include; \
+          chmod 0644 $(ROOT)/$(PKGROOT)/include/*; \
 	  cp -r EXAMPLE $(ROOT)/$(PKGROOT)/; \
 	  chmod -R go-w $(ROOT)/$(PKGROOT)/EXAMPLE \
 	)
