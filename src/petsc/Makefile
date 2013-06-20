@@ -142,7 +142,9 @@ build:
             --with-scalapack-dir=$(SCALAPACK_MOUNT) \
              --download-mumps=yes \
             --download-blacs=yes \
-             --with-pic=1; \
+             --with-pic=1 \
+             --download-f-blas-lapack=yes \
+             --with-shared-libraries=1; \
             make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
          )
 	umount $(PARMETIS_MOUNT)
@@ -162,6 +164,7 @@ install::
 	mount --bind $(SCALAPACK_HOME) $(SCALAPACK_MOUNT)
 	( \
 	  cd $(SOURCE); \
+          make BOPT=g shared; \
 	  make install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/; \
 	)
