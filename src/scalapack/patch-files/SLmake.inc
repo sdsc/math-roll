@@ -28,9 +28,9 @@ CDEFS         = -DAdd_ -DNO_IEEE
 
 FC            = mpif90
 CC            = mpicc 
-NOOPT         = -O0
-FCFLAGS       = -O3
-CCFLAGS       = -O3
+NOOPT         = -O0 -fPIC
+FCFLAGS       = -O3 -fPIC
+CCFLAGS       = -O3 -fPIC
 FCLOADER      = $(FC)
 CCLOADER      = $(CC)
 FCLOADFLAGS   = $(FCFLAGS)
