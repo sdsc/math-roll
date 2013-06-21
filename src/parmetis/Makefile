@@ -110,6 +110,8 @@ build:
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
+          export CFLAGS=-fPIC
+          export CXXFLAGS=-fPIC
 	  make config prefix=$(PKGROOT) \
         )
 	umount $(PKGROOT)
@@ -124,6 +126,8 @@ install::
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
+          export CFLAGS=-fPIC
+          export CXXFLAGS=-fPIC
 	  make install; \
 	  cp metis/include/metis.h $(ROOT)/$(PKGROOT)/include; \
 	  cp build/Linux-x86_64/libmetis/libmetis.a $(ROOT)/$(PKGROOT)/lib; \
