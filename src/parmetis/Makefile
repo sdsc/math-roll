@@ -101,6 +101,7 @@ build:
 	tar zxvf $(SOURCE).tar.gz
 	cp patch-files/Makefile.parmetis $(SOURCE)
 	cp patch-files/Makefile.metis $(SOURCE)/metis
+	cp patch-files/CMakeLists.txt $(SOURCE)
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	mkdir -p -m 755 $(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
