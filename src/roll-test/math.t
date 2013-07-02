@@ -10,7 +10,7 @@ my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = '.';
 my @packages = ('gsl', 'lapack', 'octave', 'parmetis', 'petsc',
-                'scalapack', 'sprng', 'superlu', 'trilinos');
+                'scalapack', 'sprng', 'superlu', 'trilinos','sundials');
 my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
