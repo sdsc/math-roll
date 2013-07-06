@@ -266,7 +266,7 @@ mpirun -np 1 \$SUPERLUHOME/EXAMPLE/pddrive \$SUPERLUHOME/EXAMPLE/g20.rua
 END
         close(OUT);
         $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/Sol  0.*=\s*1.332268e-15/,
+        like($output, qr/nonzeros in L\+U     11694/,
              "Superlu/$compiler/$mpi/$network test run");
       }
     }
@@ -295,6 +295,7 @@ foreach my $compiler(@COMPILERS) {
 #!/bin/bash
 . /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} trilinos
+export LD_LIBRARY_PATH=/opt/intel/composer_xe_2013.1.117/mkl/lib/intel64:\${LD_LIBRARY_PATH}
 mpicxx -I\${TRILINOSHOME}/include -o $TESTFILE.tril.exe $TESTFILE.tril.cxx -L\${TRILINOSHOME}/lib -lteuchos
 ls -l *.exe
 ./$TESTFILE.tril.exe
@@ -310,5 +311,41 @@ END
     }
   }
 }
+
+# sundials
+foreach my $compiler(@COMPILERS) {
+  foreach my $mpi(@MPIS) {
+    foreach my $network(@NETWORKS) {
+      $packageHome = "/opt/sundials/$compiler";
+      SKIP: {
+        skip "sundials/$compiler not installed", 2 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler ${mpi}_${network} sundials
+if [ ! -e fcvDiag_kry_p.f ]; then
+cp $packageHome/${mpi}/${network}/examples/cvode/fcmix_parallel/fcvDiag_kry_p.f .
+ex fcvDiag_kry_p.f <<EOF
+:1,32s/INTEGER\\*4/INTEGER*8/
+:w
+:q
+EOF
+fi
+mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/$network/lib -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
+ls -l *.exe
+mpirun -np 4 ./$TESTFILE.sundials.exe
+END
+        close(OUT);
+        $output = `/bin/bash $TESTFILE.sh 2>&1`;
+        like($output, qr/$TESTFILE.sundials.exe/,
+             "Sundials/$compiler/$mpi/$network compilation");
+        like($output, qr/0.9094/,
+             "Sundials/$compiler/$mpi/$network run");
+      }
+    }
+  }
+}
+
 
 `rm -fr $TESTFILE*`;
