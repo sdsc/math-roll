@@ -36,6 +36,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>superlu_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>trilinos_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>sundials_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>eigen_ROLLCOMPILER</package>
 <package>math-modules</package>
 <package>math-roll-test</package>
 <package>texinfo</package>
