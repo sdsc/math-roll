@@ -93,6 +93,7 @@ build:
               make clean; \
               exit; \
           fi; \
+          module load cmake; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
 	  mkdir build; \
