@@ -73,28 +73,42 @@ COMPILERSETUP = \
   fi
 
 
-CONFIGURE_OPTIONS = \
-  --prefix=$(ROOT)/$(PKGROOT) \
-  --with-netlib-lapack-tarfile=$(REDHAT.ROOT)/../math/src/lapack/lapack-3.4.2.tgz
+CC=gcc
+CXX=g++
+F90=gfortran
 ifeq ("$(ROLLCOMPILER)", "intel")
+CC=icc
+CXX=icpc
+F90=ifort
 else ifeq ("$(ROLLCOMPILER)", "pgi")
-else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
-else
+CC=pgcc
+CXX=pgCC
+F90=pgf90
 endif
 
 build:
 	tar zxvf $(SOURCE).tar.gz
 	( \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+              make clean; \
+              exit; \
+          fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
-          cmake ..; \
+          cmake cmake -DCMAKE_CXX_COMPILER=$(CXX)  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(ROOT)/$(PKGROOT) ..; \
 	)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
+          if test $(ROLLCOMPILER) = "pgi"; then \
+              make clean; \
+              rm -rf $(ROOT)/$(PKGROOT); \
+              exit; \
+          fi; \
+	  $(COMPILERSETUP); \
 	  cd $(SOURCE)/build; \
 	  make install \
 	)
