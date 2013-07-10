@@ -87,6 +87,9 @@ F90=pgf90
 endif
 
 build:
+	mkdir -p $(PKGROOT)
+	mkdir -p $(ROOT)/$(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	tar zxvf $(SOURCE).tar.gz
 	( \
           if test $(ROLLCOMPILER) = "pgi"; then \
@@ -98,11 +101,15 @@ build:
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
-          cmake -DCMAKE_CXX_COMPILER=$(CXX)  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(ROOT)/$(PKGROOT) ..; \
+          cmake -DCMAKE_CXX_COMPILER=$(CXX)  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) ..; \
 	)
+	umount $(PKGROOT)
+	umount $(ROOT)/$(PKGROOT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
           if test $(ROLLCOMPILER) = "pgi"; then \
               make clean; \
@@ -113,6 +120,8 @@ install::
 	  cd $(SOURCE)/build; \
 	  make install \
 	)
+	umount $(PKGROOT)
+	umount $(ROOT)/$(PKGROOT)
 
 clean::
 	rm -rf $(SOURCE)
