@@ -10,12 +10,13 @@ my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = '.';
 my @packages = ('gsl', 'lapack', 'octave', 'parmetis', 'petsc',
-                'scalapack', 'sprng', 'superlu', 'trilinos','sundials');
+                'scalapack', 'sprng', 'superlu', 'trilinos','sundials','eigen');
 my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
 my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
 my $TESTFILE = 'tmpmath';
+my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 
 # math-install.xml
 foreach my $package(@packages) {
@@ -347,5 +348,49 @@ END
   }
 }
 
+# eigen
+open(OUT, ">$TESTFILE.cc");
+print OUT <<END;
+#include <iostream>
+#include <Eigen/Dense>
+using namespace Eigen;
+int main()
+{
+Matrix2d mat;
+mat << 1, 2,
+3, 4;
+Vector2d u(-1,1), v(2,0);
+std::cout << "Here is mat*mat:\\n" << mat*mat << std::endl;
+std::cout << "Here is mat*u:\\n" << mat*u << std::endl;
+std::cout << "Here is u^T*mat:\\n" << u.transpose()*mat << std::endl;
+std::cout << "Here is u^T*v:\\n" << u.transpose()*v << std::endl;
+std::cout << "Here is u*v^T:\\n" << u*v.transpose() << std::endl;
+std::cout << "Let's multiply mat by itself" << std::endl;
+mat = mat*mat;
+std::cout << "Now mat is mat:\\n" << mat << std::endl;
+}
+END
+close(OUT);
+foreach my $compiler(@COMPILERS) {
+      $packageHome = "/opt/eigen/$compiler";
+      SKIP: {
+        skip "eigen/$compiler not installed", 2 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler eigen
+$CXX{$compiler}  -o $TESTFILE.eigen.exe  $TESTFILE.cc   -I$packageHome/include/eigen3
+ls -l *.exe
+./$TESTFILE.eigen.exe
+END
+close(OUT);
+        $output = `/bin/bash $TESTFILE.sh 2>&1`;
+        like($output, qr/$TESTFILE.eigen.exe/,
+             "Eigen/$compiler compilation");
+        like($output, qr/15 22/,
+             "Eigen/$compiler run");
+      }
+}
 
 `rm -fr $TESTFILE*`;
