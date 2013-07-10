@@ -104,7 +104,6 @@ build:
           cmake -DCMAKE_CXX_COMPILER=$(CXX)  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) ..; \
 	)
 	umount $(PKGROOT)
-	umount $(ROOT)/$(PKGROOT)
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
@@ -121,7 +120,6 @@ install::
 	  make install \
 	)
 	umount $(PKGROOT)
-	umount $(ROOT)/$(PKGROOT)
 
 clean::
 	rm -rf $(SOURCE)
