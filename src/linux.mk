@@ -62,6 +62,8 @@ SRCDIRS = `find . -maxdepth 1 -type d \
         -not -name superlu \
         -not -name parmetis \
         -not -name petsc \
+        -not -name eigen \
+        -not -name sundials \
         -not -name math-modules \
         -not -name build-\* \
-        -not -name .` lapack scalapack parmetis superlu petsc math-modules
+        -not -name .` eigen gsl lapack octave sprng sundials scalapack parmetis superlu petsc trilinos math-modules roll-test

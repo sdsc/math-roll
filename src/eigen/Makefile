@@ -97,7 +97,7 @@ build:
 	  cd $(SOURCE); \
 	  mkdir build; \
 	  cd build; \
-          cmake cmake -DCMAKE_CXX_COMPILER=$(CXX)  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(ROOT)/$(PKGROOT) ..; \
+          cmake -DCMAKE_CXX_COMPILER=$(CXX)  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(ROOT)/$(PKGROOT) ..; \
 	)
 
 install::
