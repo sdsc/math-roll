@@ -120,6 +120,8 @@ install::
 	  make install \
 	)
 	umount $(PKGROOT)
+	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/eigen!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 
 clean::
 	rm -rf $(SOURCE)
