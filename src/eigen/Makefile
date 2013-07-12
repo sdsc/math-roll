@@ -118,7 +118,9 @@ install::
           fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE)/build; \
-	  make install \
+	  make install; \
+          cd $(ROOT)/$(PKGROOT)/include; \
+          ln -s eigen3/Eigen Eigen \
 	)
 	umount $(PKGROOT)
 	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/eigen!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
