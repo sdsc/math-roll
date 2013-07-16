@@ -77,7 +77,7 @@ copyright rpm pkg clean::
                 done; \
               else \
 	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" starting at `date +"%F %T"`; \
-	        (cd $$i; $(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" $@) ; \
+	        (cd $$i; $(MAKE) ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" $@) ; \
               fi; \
 	    done; \
 	  else \
