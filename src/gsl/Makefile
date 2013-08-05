@@ -97,7 +97,7 @@ build:
 	  if test "$(ROLLCOMPILER)" = "pgi"; then \
 	    perl -pi -e 's!.*#define  *HAVE_INLINE.*!/* #undef HAVE_INLINE */!' config.h; \
 	  fi; \
-	  make \
+	  make -j 16 \
 	)
 
 install::
@@ -112,7 +112,7 @@ install::
           fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE); \
-	  make install prefix=$(PKGROOT); \
+	  make -j 16 install prefix=$(PKGROOT); \
 	  make check; \
 	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/tests; \
 	  for file in `cat ../patch-files/tests`; do \

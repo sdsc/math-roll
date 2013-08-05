@@ -118,7 +118,7 @@ install::
           fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE)/build; \
-	  make install; \
+	  make -j 16 install; \
           cd $(ROOT)/$(PKGROOT)/include; \
           ln -s eigen3/Eigen Eigen \
 	)

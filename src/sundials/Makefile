@@ -126,7 +126,7 @@ build:
 	  cd $(SOURCE); \
 	  ./configure --prefix=$(PKGROOT) CC=$(CC) F77=$(F77) --enable-examples \
 	    --with-mpicc=$${MPI_HOME}/bin/mpicc --with-mpif77=$${MPI_HOME}/bin/mpif77;  \
-	  make \
+	  make -j 16  \
 	)
 
 install::
@@ -136,7 +136,7 @@ install::
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE); \
-	  make install; \
+	  make -j 16 install; \
 	)
 	umount $(PKGROOT)
 	cat sundials.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/sundials!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \

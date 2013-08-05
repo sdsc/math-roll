@@ -121,7 +121,7 @@ build:
 	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_MOUNT)/lib!" $(SOURCE)/make.inc; \
 	  perl -pi -e "s!MKLROOT!$${MKL_HOME}!g" $(SOURCE)/make.inc; \
 	  cd $(SOURCE); \
-	  make \
+	  make -j 16 \
 	)
 	umount $(PARMETIS_MOUNT)
 	umount $(PKGROOT)
@@ -135,7 +135,7 @@ install::
 	mount --bind $(PWD)/$(SOURCE) $(PKGROOT)
 	( \
 	  cd $(SOURCE); \
-	  make install; \
+	  make -j 16 install; \
 	  cp lib/*.a $(ROOT)/$(PKGROOT)/lib/libsuperlu.a; \
 	  cp SRC/*.h $(ROOT)/$(PKGROOT)/include; \
 	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include ; \

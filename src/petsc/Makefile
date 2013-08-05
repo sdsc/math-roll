@@ -145,7 +145,7 @@ build:
              --with-pic=1 \
              --download-f-blas-lapack=yes \
              --with-shared-libraries=1; \
-            make PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
+            make -j 16 PETSC_DIR=$(PWD)/$(SOURCE) PETSC_ARCH=arch-linux2-c-debug all \
          )
 	umount $(PARMETIS_MOUNT)
 	umount $(SUPERLU_MOUNT)
@@ -164,8 +164,8 @@ install::
 	mount --bind $(SCALAPACK_HOME) $(SCALAPACK_MOUNT)
 	( \
 	  cd $(SOURCE); \
-          make BOPT=g shared; \
-	  make install; \
+          make -j 16 BOPT=g shared; \
+	  make -j 16 install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/; \
 	)
 	umount $(PKGROOT)

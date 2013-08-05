@@ -106,7 +106,7 @@ build:
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE); \
-	  make \
+	  make -j 16 \
         )
 
 install::

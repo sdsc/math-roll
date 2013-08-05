@@ -102,7 +102,7 @@ build:
           ar -x ../blas.a; \
           $(FC) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
  	  cd ../../$(SOURCE); \
-          make; \
+          make -j 16; \
           mkdir tmp; \
           cd tmp; \
           ar -x ../liblapack.a; \

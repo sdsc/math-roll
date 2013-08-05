@@ -131,8 +131,8 @@ build:
              tar xvf swig-2.0.3.tar.gz; \
              cd swig-2.0.3; \
              ./configure --prefix=$(REDHAT.ROOT)/src/build-swig; \
-             make; \
-             make install; \
+             make -j 16; \
+             make  -j 16 install; \
              cd ..; \
           fi; \
           export PATH=$(REDHAT.ROOT)/src/build-swig/bin:$${PATH}; \
@@ -169,7 +169,7 @@ build:
   	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
                 -DBUILD_SHARED_LIBS:BOOL=ON \
   	        $(PWD)/$(SOURCE); \
-  	  make; \
+  	  make -j 16; \
           umount $(PKGROOT) \
        )
 
@@ -184,7 +184,7 @@ install::
           fi; \
           mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
 	  cd $(SOURCE)/build; \
-	  make prefix=$(PKGROOT) install; \
+	  make -j 16 prefix=$(PKGROOT) install; \
           umount $(PKGROOT) \
 	)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
