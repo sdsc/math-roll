@@ -118,7 +118,7 @@ build:
 	  perl -pi -e "s!ROLLPGI!$(ROLLPGI)!" $(SOURCE)/SLmake.inc; \
 	  perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE)!;s!ROLL_LAPACK!$(LAPACK_MOUNT)!" $(SOURCE)/SLmake.inc; \
           cd $(SOURCE); \
-	  make -j 16 all \
+	  make all \
 	)
 	umount $(LAPACK_MOUNT)
 
