@@ -12,9 +12,9 @@ my $installedOnAppliancesPattern = '.';
 my @packages = ('gsl', 'lapack', 'octave', 'parmetis', 'petsc',
                 'scalapack', 'sprng', 'superlu', 'trilinos','sundials','eigen');
 my $output;
-my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
-my @MPIS = split(/\s+/, 'ROLLMPI');
-my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
+my @COMPILERS = split(/\s+/, 'intel pgi gnu');
+my @MPIS = split(/\s+/, 'mvapich2');
+my @NETWORKS = split(/\s+/, 'ib');
 my $TESTFILE = 'tmpmath';
 my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 
@@ -237,7 +237,7 @@ foreach my $compiler(@COMPILERS) {
 #!/bin/bash
 . /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} sprng
-mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -lgmp
+mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -L/opt/gnu/gmp/lib -lgmp
 ls -l *.exe
 mpirun -np 1 ./$TESTFILE.sprng.exe
 END
