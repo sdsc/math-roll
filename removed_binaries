@@ -1,0 +1,53 @@
+6146757    b567da07ba972a68d4d2b754e1c27dd741178f37  src/atlas/atlas-3.10.0.tar.gz
+3388639    d8b8f7179b4ff3ad865ea8510593dc51d0d57cbb  src/atlas/atlas-3.8.4.tar.gz
+6110505    e534c34af179b21c813da437e3313a70f7e5e32b  src/atlas/atlas-3.9.32.tar.gz
+6756691    2519ab4d0d75a8a33d1ddc2f186199beed5e9047  src/atlas/atlas-3.9.45.tar.gz
+
+1400827    b0ba77760ce9762da2bd68f1731db5058af99436  src/eigen/eigen-3.1.3.tar.gz
+
+2700307    dad53252ab6a25fa73cd81baa9b3a70d54f86567  src/gsl/gsl-1.11.tar.gz
+3281134    a6d6d4337d801d54bbaeaaecf4477d718d09d3ce  src/gsl/gsl-1.15.tar.gz
+
+99927      f109eb2030cbb3a8999b51aa67ab38c0953ea0ed  src/lapack/blas.tgz
+4945204    9d599d620af30f9742ed2933c5e91133aa84bb79  src/lapack/lapack-3.3.1.tgz
+6147915    fe264673cd79ac2ae2005bafbbcf4e946739c071  src/lapack/lapack-3.4.1.tgz
+6168281    779d4e96884322e0a05808aaca54bd73dc1fbcd7  src/lapack/lapack-3.4.2.tgz
+
+4962508    2775f0eb7ab4fa8e799cfd669d1ae88023aea6f3  src/metis/metis-5.0.1.tar.gz
+
+17633954   1068acb1cdc72a8f58269ebfbd4d651fb4bf4e5d  src/octave/octave-3.4.2.tar.gz
+17992199   c02f211ff09c207b4479bc21f608834b9a84b15d  src/octave/octave-3.6.2.tar.gz
+
+5288416    a8a2a5e18907837b10447a3525366b52f2df4b68  src/parmetis/parmetis-3.2.0.tar.gz
+5567054    aae1c905f87310c082366feef6c22e012cfe0fcd  src/parmetis/parmetis-4.0.1.tar.gz
+5568477    1f4a11e8c5439a7f488d16929d18d0b6f01d03d3  src/parmetis/parmetis-4.0.2.tar.gz
+5567866    95935c34b92bf0f3ca64a1e93501e2220f95ffcf  src/parmetis/parmetis-4.0.tar.gz
+5517977    93a3c12b57f86596cb621b688020309375af0038  src/petsc/cmake-2.8.5.tar.gz
+
+20739795   40cb1418c6786682b60597e1e117470287c65d17  src/petsc/petsc-3.2.p2.tar.gz
+846661     7f6b5035834e322f20db3b734a774a2b1a2ace53  src/petsc/petsc-3.2.p2.tar.gz
+19450721   8cd722639ad9641a03d9f804ec23c410938d67de  src/petsc/petsc-3.2.p3.tar.gz
+17972339   0d8fed0ad14dee11ca921eed090b59404a5c2c60  src/petsc/petsc-3.3-p2.tar.gz
+17959707   0bb66feb6e56a7d0064f6403f7a1dfaa69e6d6da  src/petsc/petsc-3.3.p2.tar.gz
+17972950   73de9020c3a3960bc664c3882aaf195920812c6f  src/petsc/petsc-3.3.p4.tar.gz
+18056481   3c46566068ed851a79e98725b82de7fcacbe196e  src/petsc/petsc-3.3.p5.tar.gz
+
+152823     4c9b1e4a29296fe1dedaf6b6a847a63a4dc601c1  src/scalapack/mpiblacs.tgz
+5060701    51db8e646384c0581e17023bd82f584b668a6f8a  src/scalapack/scalapack-1.8.0.tgz
+4776410    c18d55486174ba86c8ce4d2406b61be9e6d204ab  src/scalapack/scalapack-2.0.1.tgz
+4779534    6bfaa9b5ee48b318c1dcea53b8a2e75e25679245  src/scalapack/scalapack-2.0.2.tgz
+
+1792954    eecd660ba38f75885d0471817e990ab89cefe205  src/sprng/sprng-2.0b.tgz
+
+8297366    ce1e46a03cccc27ee954a733a1044401df435c24  src/sundials/sundials-2.5.0.tar.gz
+
+2083239    ca4b051d316c4bdec92a570645486f8aadd5c5ca  src/superlu/superlu-2.5.tgz
+2146702    c09b405845df8eb3bc66f4d10937fe9fdc274ed9  src/superlu/superlu-3.1.tgz
+2144309    a7c36e9db63b8248ba380b4d688761e72470dad8  src/superlu/superlu-3.2.tgz
+2868106    635f7f54528e067427890b82de7e2db272ac0239  src/superlu/superlu-4.3.tgz
+
+5108502    9911517152c1aab46cc60fa4c5470a7517787008  src/trilinos/swig-2.0.3.tar.gz
+101156940  bfd38e47c4788df2ef30c2af03417e9b91f5520f  src/trilinos/trilinos-10.12.2.tar.gz
+70196430   f5463cb49490db780ab93558d056e32050169d98  src/trilinos/trilinos-10.6.4.tar.gz
+94463542   923e2d8f0689c7efe798ed1b1e8f3550e34745ac  src/trilinos/trilinos-10.8.1.tar.gz
+107496017  447a6af5d5247a37056e32a84751c88e5cd67b2d  src/trilinos/trilinos-11.0.3.tar.gz
