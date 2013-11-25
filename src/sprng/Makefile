@@ -99,7 +99,7 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-build:
+build: $(SRC_DIRS)
 	tar zxvf $(SOURCE_DIR).tgz
 	cp patch-files/make.CHOICES $(SOURCE_DIR)
 	cp patch-files/make.GENERIC $(SOURCE_DIR)/SRC
