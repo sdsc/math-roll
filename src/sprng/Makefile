@@ -1,44 +1,45 @@
 # $Id$
 #
 # @Copyright@
-#
-# 				Rocks(tm)
+# 
+# 				Rocks(r)
 # 		         www.rocksclusters.org
-# 		        version 4.3 (Mars Hill)
-#
-# Copyright (c) 2000 - 2011 The Regents of the University of California.
-# All rights reserved.
-#
+# 		         version 5.6 (Emerald Boa)
+# 		         version 6.1 (Emerald Boa)
+# 
+# Copyright (c) 2000 - 2013 The Regents of the University of California.
+# All rights reserved.	
+# 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
 # met:
-#
+# 
 # 1. Redistributions of source code must retain the above copyright
 # notice, this list of conditions and the following disclaimer.
-#
+# 
 # 2. Redistributions in binary form must reproduce the above copyright
 # notice unmodified and in its entirety, this list of conditions and the
-# following disclaimer in the documentation and/or other materials provided
+# following disclaimer in the documentation and/or other materials provided 
 # with the distribution.
-#
+# 
 # 3. All advertising and press materials, printed or electronic, mentioning
-# features or use of this software must display the following acknowledgement:
-#
-# 	"This product includes software developed by the Rocks(tm)
+# features or use of this software must display the following acknowledgement: 
+# 
+# 	"This product includes software developed by the Rocks(r)
 # 	Cluster Group at the San Diego Supercomputer Center at the
 # 	University of California, San Diego and its contributors."
-#
+# 
 # 4. Except as permitted for the purposes of acknowledgment in paragraph 3,
 # neither the name or logo of this software nor the names of its
 # authors may be used to endorse or promote products derived from this
 # software without specific prior written permission.  The name of the
 # software includes the following terms, and any derivatives thereof:
-# "Rocks", "Rocks Clusters", and "Avalanche Installer".  For licensing of
-# the associated name, interested parties should contact Technology
-# Transfer & Intellectual Property Services, University of California,
-# San Diego, 9500 Gilman Drive, Mail Code 0910, La Jolla, CA 92093-0910,
+# "Rocks", "Rocks Clusters", and "Avalanche Installer".  For licensing of 
+# the associated name, interested parties should contact Technology 
+# Transfer & Intellectual Property Services, University of California, 
+# San Diego, 9500 Gilman Drive, Mail Code 0910, La Jolla, CA 92093-0910, 
 # Ph: (858) 534-5815, FAX: (858) 534-7345, E-MAIL:invent@ucsd.edu
-#
+# 
 # THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS''
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
 # THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
@@ -50,9 +51,10 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
+# 
 # @Copyright@
-
+#
+# $Log$
 
 ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
@@ -64,12 +66,12 @@ ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
 
-PKGROOT = /opt/sprng/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
-SOURCE = sprng-$(VERSION)
-REDHAT.ROOT = $(PWD)/../../
+REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
+include Rules.mk
+include pull.mk
 
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
@@ -98,24 +100,25 @@ MPISETUP = \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
 build:
-	tar zxvf $(SOURCE).tgz
-	cp patch-files/make.CHOICES $(SOURCE)
-	cp patch-files/make.GENERIC $(SOURCE)/SRC
-	cp patch-files/check_genf_ptr.F $(SOURCE)/SRC
+	tar zxvf $(SOURCE_DIR).tgz
+	cp patch-files/make.CHOICES $(SOURCE_DIR)
+	cp patch-files/make.GENERIC $(SOURCE_DIR)/SRC
+	cp patch-files/check_genf_ptr.F $(SOURCE_DIR)/SRC
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
-	  cd $(SOURCE); \
-	  make -j 16 \
-        )
+	  cd $(SOURCE_DIR); \
+	  $(MAKE) -j 16 \
+	)
+	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cp $(SOURCE)/lib/*.a $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE)/include/* $(ROOT)/$(PKGROOT)/include
-	cp -r $(SOURCE)/EXAMPLES $(ROOT)/$(PKGROOT)/
+	cp $(SOURCE_DIR)/lib/*.a $(ROOT)/$(PKGROOT)/lib
+	cp $(SOURCE_DIR)/include/* $(ROOT)/$(PKGROOT)/include
+	cp -r $(SOURCE_DIR)/EXAMPLES $(ROOT)/$(PKGROOT)/
 	chmod 0755 $(ROOT)/$(PKGROOT)/EXAMPLES
 	chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLES/*.c
 	chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLES/*.C
@@ -123,6 +126,8 @@ install::
 	chmod 0644 $(ROOT)/$(PKGROOT)/include/*
 	cat sprng.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/sprng!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+	@echo "::: Package $(NAME) build complete :::"
 
 clean::
-	rm -rf $(SOURCE)
+	rm -rf $(SOURCE_DIR)
+
