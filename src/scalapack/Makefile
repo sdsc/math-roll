@@ -110,7 +110,7 @@ LAPACK_HOME = \
 LAPACK_MOUNT = \
   /opt/lapack/$(ROLLCOMPILER)
 
-build:
+build: $(SRC_DIRS)
 	tar zxvf $(SOURCE_DIR).tgz
 	cp patch-files/SLmake.inc $(SOURCE_DIR)
 	mkdir -p $(LAPACK_MOUNT)
