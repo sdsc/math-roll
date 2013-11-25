@@ -119,8 +119,7 @@ SCALAPACK_HOME = \
 SCALAPACK_MOUNT = \
   /opt/scalapack/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 
-build:
-	tar zxvf $(SOURCE_DIR).tar.gz
+build: $(SRC_DIRS)
 	mkdir -p $(PARMETIS_MOUNT)
 	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
 	mkdir -p $(SUPERLU_MOUNT)
