@@ -110,6 +110,24 @@ LAPACK_HOME = \
 LAPACK_MOUNT = \
   /opt/lapack/$(ROLLCOMPILER)
 
+
+FC = gfortran
+CC = gcc
+CFLAGS = -O2 -fPIC
+FFLAGS= -fimplicit-none -O2 -fPIC
+ifeq ("$(ROLLCOMPILER)", "intel")
+  FC = ifort
+  CC = icc
+  CFLAGS = -O2 -fPIC
+  FFLAGS = -O2 -fPIC
+else ifeq ("$(ROLLCOMPILER)", "pgi")
+  FC = pgf90
+  CC = pgcc
+  CFLAGS = -O2 -fPIC
+  FFLAGS = -O2 -fPIC
+endif
+
+
 build: $(SRC_DIRS)
 	tar zxvf $(SOURCE_DIR).tgz
 	cp patch-files/SLmake.inc $(SOURCE_DIR)
@@ -118,24 +136,53 @@ build: $(SRC_DIRS)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
-	  perl -pi -e "s!ROLLPGI!$(ROLLPGI)!" $(SOURCE_DIR)/SLmake.inc; \
-	  perl -pi -e "s!ROLL_SCALAPACK!$(PWD)/$(SOURCE_DIR)!;s!ROLL_LAPACK!$(LAPACK_MOUNT)!" $(SOURCE_DIR)/SLmake.inc; \
           cd $(SOURCE_DIR); \
-	  $(MAKE) all \
+          mkdir build_shared; \
+          cd build_shared; \
+	  cmake .. -DCMAKE_INSTALL_PREFIX=$(PKGROOT) -DMPI_C_COMPILER=mpicc \
+                   -DMPI_Fortran_COMPILER=mpif90  \
+                  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
+              -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
+              -DBUILD_SHARED_LIBS=ON \
+              -DLAPACK_LIBRARIES=/opt/lapack/$(ROLLCOMPILER)/lib/liblapack.a \
+              -DBLAS_LIBRARIES=/opt/lapack/$(ROLLCOMPILER)/lib/libblas.a; \
+          make; \
+          cd ..; \
+          mkdir build_static; \
+          cd build_static; \
+	  cmake .. -DCMAKE_INSTALL_PREFIX=$(PKGROOT) -DMPI_C_COMPILER=mpicc \
+                   -DMPI_Fortran_COMPILER=mpif90  \
+                  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
+              -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
+              -DLAPACK_LIBRARIES=/opt/lapack/$(ROLLCOMPILER)/lib/liblapack.a \
+              -DBLAS_LIBRARIES=/opt/lapack/$(ROLLCOMPILER)/lib/libblas.a; \
+          make \
 	)
 	umount $(LAPACK_MOUNT)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/libscalapack.a $(ROOT)/$(PKGROOT)/lib
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	mkdir -p -m 755 $(PKGROOT)
+	mount --bind $(LAPACK_HOME) $(LAPACK_MOUNT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	( \
+            cd $(SOURCE_DIR)/build_shared; \
+            make install; \
+            cd ../build_static; \
+            make install \
+        )
+	umount $(PKGROOT)
+	umount $(LAPACK_MOUNT)
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cp -r $(SOURCE_DIR)/EXAMPLE $(ROOT)/$(PKGROOT)
 	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	cat scalapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/scalapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
           > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
 	rm -rf $(SOURCE_DIR) BLACS
+	-umount $(LAPACK_MOUNT)
+	-umount $(PKGROOT)

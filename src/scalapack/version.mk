@@ -1,6 +1,6 @@
 NAME               = scalapack_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 2.0.2
-RELEASE            = 5
+RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/scalapack/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 
