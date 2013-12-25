@@ -102,7 +102,7 @@ build: $(SRC_DIRS)
           ar -x ../blas.a; \
           $(FC) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
  	  cd ../../$(SOURCE_DIR); \
-          $(MAKE) -j 16; \
+          $(MAKE); \
           mkdir tmp; \
           cd tmp; \
           ar -x ../liblapack.a; \
@@ -138,5 +138,5 @@ install::
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) BLAS
 
