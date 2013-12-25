@@ -131,7 +131,7 @@ build: $(SRC_DIRS)
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
 	  ./configure --prefix=$(PKGROOT) \
-	    --with-fc=mpif90 --with-cc=mpicc -with-mpi=1 \
+	     --with-mpi=1 \
 	    --download-pastix=1 --download-ptscotch \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
 	    --with-superlu_dist-include=$(SUPERLU_MOUNT)/include \
@@ -144,8 +144,9 @@ build: $(SRC_DIRS)
             --download-blacs=yes \
              --with-pic=1 \
              --download-f-blas-lapack=yes \
-             --with-shared-libraries=1; \
-            make -j 16 PETSC_DIR=$(PWD)/$(SOURCE_DIR) PETSC_ARCH=arch-linux2-c-debug all \
+             --with-shared-libraries=1 \
+             --with-mpi-dir=$${MPI_HOME}; \
+            make PETSC_DIR=$(PWD)/$(SOURCE_DIR) PETSC_ARCH=arch-linux2-c-debug all \
          )
 	umount $(PARMETIS_MOUNT)
 	umount $(SUPERLU_MOUNT)
@@ -165,8 +166,10 @@ install::
 	mount --bind $(SCALAPACK_HOME) $(SCALAPACK_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
-          make -j 16 BOPT=g shared; \
-	  make -j 16 install; \
+          rm -rf configure.log; \
+          rm -rf arch-linux2-c-debug/conf/configure.log; \
+          make BOPT=g shared; \
+	  make install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/; \
 	)
 	umount $(PKGROOT)

@@ -1,6 +1,6 @@
 NAME               = petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
-VERSION            = 3.3.p5
-RELEASE            = 1
+VERSION            = 3.4.3
+RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 
