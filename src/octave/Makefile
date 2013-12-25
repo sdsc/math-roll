@@ -109,7 +109,6 @@ build: $(SRC_DIRS)
 	    --with-blas="$${MKLLINK}" --with-lapack="$${MKLLINK}" \
 	    --with-fftw3=$${FFTWHOME} \
 	    --with-hdf5=$${HDF5HOME} \
-	    --without-curl \
 	)
 	umount $(PKGROOT)
 	@echo "::: Package $(NAME) build complete :::"
@@ -120,10 +119,11 @@ install::
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR)/build; \
+          module load intel; \
 	  $(MAKE) -j 16 prefix=$(PKGROOT) -i install; \
 	)
 	cat octave.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/octave!g;s!VERSION!$(VERSION)!g" \
-		$(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+	     >   $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	umount $(PKGROOT)
 	@echo "::: Package $(NAME) install complete :::"
 
