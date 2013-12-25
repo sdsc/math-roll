@@ -12,9 +12,9 @@ my $installedOnAppliancesPattern = '.';
 my @packages = ('gsl', 'lapack', 'octave', 'parmetis', 'petsc',
                 'scalapack', 'sprng', 'superlu', 'trilinos','sundials','eigen');
 my $output;
-my @COMPILERS = split(/\s+/, 'intel pgi gnu');
-my @MPIS = split(/\s+/, 'mvapich2');
-my @NETWORKS = split(/\s+/, 'ib');
+my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
+my @MPIS = split(/\s+/, 'ROLLMPI');
+my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
 my $TESTFILE = 'tmpmath';
 my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 
@@ -109,12 +109,16 @@ SKIP: {
 #!/bin/bash
 . /etc/profile.d/modules.sh
 module load $c lapack
-cd $testDir
+mkdir $TESTFILE.dir
+cd $TESTFILE.dir
+cp $testDir/* .
 sh ./tests
+cat *.out
 END
     close(OUT);
     $output = `/bin/bash $TESTFILE.sh|grep -c -i fail 2>&1`;
-    ok($output <= 19, "lapack $c tests");
+    ok($output <= 31, "lapack $c tests");
+    `rm -rf $TESTFILE*`;
   }
 }
 
@@ -174,6 +178,8 @@ mkdir $TESTFILE.dir
 cd $TESTFILE.dir
 cp -r \$PETSCHOME/examples/* .
 cd tutorials
+cat makefile|sed 's/chkopts//' >temp
+mv temp makefile
 make PETSC_ARCH=arch-linux-c-debug PETSC_DIR=\$PETSCHOME ex1
 ls -l ex1
 mpirun -np 1 ./ex1 -ksp_gmres_cgs_refinement_type refine_always -snes_monitor_short
@@ -182,10 +188,12 @@ END
         $output = `/bin/bash $TESTFILE.sh 2>&1`;
         like($output, qr/number of SNES iterations = 6/,
              "petsc/$compiler/$mpi/$network tutorial run");
+         `rm -rf $TESTFILE*`;
       }
     }
   }
 }
+
 
 # scalapack
 foreach my $compiler(@COMPILERS) {
@@ -199,18 +207,20 @@ foreach my $compiler(@COMPILERS) {
 #!/bin/bash
 . /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} scalapack
-pushd \$SCALAPACKHOME/EXAMPLE
+mkdir $TESTFILE.dir
+cd $TESTFILE.dir
+cp \$SCALAPACKHOME/EXAMPLE/* .
 mpirun -np 16 ./xcscaex
 END
         close(OUT);
         $output = `/bin/bash $TESTFILE.sh 2>&1`;
         like($output, qr/The answer is correct\./,
         "scalapack/$compiler/$mpi/$network example run");
+          `rm -rf $TESTFILE*`;
       }
     }
   }
 }
-
 # sprng
 open(OUT, ">$TESTFILE.sprng.c");
 print OUT <<END;
