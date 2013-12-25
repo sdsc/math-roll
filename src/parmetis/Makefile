@@ -136,7 +136,7 @@ install::
 	  cp build/Linux-x86_64/libmetis/libmetis.a $(ROOT)/$(PKGROOT)/lib; \
 	  cp -r Graphs $(ROOT)/$(PKGROOT) \
 	)
-	unmount $(PKGROOT)
+	umount $(PKGROOT)
 	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-$(NAME)
 	cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)/
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
