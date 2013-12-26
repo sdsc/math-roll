@@ -1,6 +1,6 @@
 NAME               = sprng_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 2.0b
-RELEASE            = 24
+RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/sprng/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 
