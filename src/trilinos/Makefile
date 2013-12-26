@@ -110,6 +110,16 @@ MPISETUP = \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
   export MPIRUN="$${MPI_HOME}/bin/mpirun"
 
+CC = gcc
+CXX = g++
+ifeq ("$(ROLLCOMPILER)", "intel")
+   CC = icc
+   CXX = icpc
+else ifeq ("$(ROLLCOMPILER)", "pgi")
+   CC = pgcc
+   CXX = pgCC
+endif
+
 
 build: $(SRC_DIRS)
 	( \
@@ -131,7 +141,7 @@ build: $(SRC_DIRS)
           export PYTHONPATH=/opt/scipy/lib64/python$${version}/site-packages:/opt/scipy/lib/python$${version}/site-packages:$${PYTHONPATH}; \
           if test ! -e $(REDHAT.ROOT)/src/build-swig; then \
              cd $(SWIG_DIR); \
-             ./configure --prefix=$(REDHAT.ROOT)/src/build-swig; \
+             ./configure CC=$(CC) CXX=$(CXX) --prefix=$(REDHAT.ROOT)/src/build-swig; \
              $(MAKE) -j 16; \
              $(MAKE)  -j 16 install; \
              cd ..; \
