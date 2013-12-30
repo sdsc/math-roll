@@ -186,7 +186,7 @@ mpirun -np 1 ./ex1 -ksp_gmres_cgs_refinement_type refine_always -snes_monitor_sh
 END
         close(OUT);
         $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/number of SNES iterations = 6/,
+        like($output, qr/Number of SNES iterations = 6/,
              "petsc/$compiler/$mpi/$network tutorial run");
          `rm -rf $TESTFILE*`;
       }
