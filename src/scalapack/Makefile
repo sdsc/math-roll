@@ -130,7 +130,6 @@ endif
 
 build: $(SRC_DIRS)
 	tar zxvf $(SOURCE_DIR).tgz
-	cp patch-files/SLmake.inc $(SOURCE_DIR)
 	mkdir -p $(LAPACK_MOUNT)
 	mount --bind $(LAPACK_HOME) $(LAPACK_MOUNT)
 	( \
@@ -170,7 +169,8 @@ install::
             cd $(SOURCE_DIR)/build_shared; \
             make install; \
             cd ../build_static; \
-            make install \
+            make install; \
+            cp -r TESTING $(PKGROOT) \
         )
 	umount $(PKGROOT)
 	umount $(LAPACK_MOUNT)

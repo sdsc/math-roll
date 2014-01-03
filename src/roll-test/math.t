@@ -209,12 +209,12 @@ foreach my $compiler(@COMPILERS) {
 module load $compiler ${mpi}_${network} scalapack
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
-cp \$SCALAPACKHOME/EXAMPLE/* .
-mpirun -np 16 ./xcscaex
+cp \$SCALAPACKHOME/TESTING/* .
+make test
 END
         close(OUT);
         $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/The answer is correct\./,
+        like($output, qr/100% tests passed/,
         "scalapack/$compiler/$mpi/$network example run");
           `rm -rf $TESTFILE*`;
       }
