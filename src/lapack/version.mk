@@ -1,5 +1,5 @@
 NAME               = lapack_$(ROLLCOMPILER)
-VERSION            = 3.4.2
+VERSION            = 3.5.0
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/lapack/$(ROLLCOMPILER)
