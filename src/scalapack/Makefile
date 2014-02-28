@@ -135,6 +135,10 @@ build: $(SRC_DIRS)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
+	  if test -e /etc/profile.d/modules.sh; then \
+	    . /etc/profile.d/modules.sh; \
+	    module load cmake; \
+	  fi; \
           cd $(SOURCE_DIR); \
           mkdir build_shared; \
           cd build_shared; \
