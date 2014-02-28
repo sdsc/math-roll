@@ -1,5 +1,5 @@
 NAME               = octave
-VERSION            = 3.6.4
+VERSION            = 3.8.0
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/octave
