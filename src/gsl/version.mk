@@ -1,5 +1,5 @@
 NAME               = gsl_$(ROLLCOMPILER)
-VERSION            = 1.15
+VERSION            = 1.16
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/gsl/$(ROLLCOMPILER)
