@@ -1,5 +1,5 @@
 NAME               = trilinos_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
-VERSION            = 11.0.3
+VERSION            = 11.4.3
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/trilinos/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
@@ -9,7 +9,7 @@ SRC_SUBDIR         = trilinos
 SOURCE_NAME        = trilinos
 SOURCE_VERSION     = $(VERSION)
 SOURCE_SUFFIX      = tar.gz
-SOURCE_PKG         = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
+SOURCE_PKG         = $(SOURCE_NAME)-$(SOURCE_VERSION)-Source.$(SOURCE_SUFFIX)
 SOURCE_DIR         = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 
 SWIG_NAME          = swig
