@@ -1,5 +1,5 @@
 NAME               = eigen_$(ROLLCOMPILER)
-VERSION            = 3.1.3
+VERSION            = 3.2.1
 RELEASE            = 0
 PKGROOT            = /opt/eigen/$(ROLLCOMPILER)
 RPM.EXTRAS         = AutoReq:No
