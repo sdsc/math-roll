@@ -74,8 +74,7 @@ COMPILERSETUP = \
     export LD_LIBRARY_PATH="$${MKLLIB}:$${LD_LIBRARY_PATH}"; \
     export MKLLINK="-L$${MKLLIB} -lmkl_gf_ilp64 -lmkl_gnu_thread \
              -lmkl_core -ldl -lpthread -lm"; \
-    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
-    module load $(ROLLCOMPILER)/$${latestModule}; \
+    module load $(ROLLCOMPILER); \
     module load $(MPIMODULE) fftw hdf5; \
   fi
 

@@ -82,8 +82,7 @@ COMPILERSETUP = \
     export MKLLINK="-L$${MKLLIB} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core \
                     -lpthread"; \
     module unload intel; \
-    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
-    module load $(ROLLCOMPILER)/$${latestModule}; \
+    module load $(ROLLCOMPILER); \
   fi; \
   if test "$(ROLLCOMPILER)" != "intel"; then \
     export LD_LIBRARY_PATH=/opt/intel/composer_xe_2011_sp1.7.256/compiler/lib/intel64:/opt/intel/composer_xe_2011_sp1.7.256/mkl/lib/intel64:$${LD_LIBRARY_PATH}; \

@@ -79,8 +79,7 @@ COMPILERSETUP = \
     module load intel; \
     export MKL_HOME=$${MKL_ROOT}; \
     module unload intel; \
-    latestModule=`module avail 2>&1 | grep -o '$(ROLLCOMPILER)/[^ (]*' | sed 's/$(ROLLCOMPILER).//' | sort -t. -k1,1n -k2,2n -k3,3n | tail -1`; \
-    module load $(ROLLCOMPILER)/$${latestModule}; \
+    module load $(ROLLCOMPILER); \
   fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
