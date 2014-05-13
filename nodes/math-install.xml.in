@@ -9,6 +9,7 @@ octave - http://www.gnu.org/software/octave
 par/metis - http://glaros.dtc.umn.edu/gkhome/views/metis
 petsc - http://www.mcs.anl.gov/petsc/petsc-2/index.html
 scalapack - http://www.netlib.org/scalapack
+slepc - http://www.grycap.upv.es/slepc/
 sprng - http://sprng.cs.fsu.edu/
 SuperLU - http://crd.lbl.gov/~xiaoye/SuperLU/
 trilinos - http://trilinos.sandia.gov/
@@ -27,6 +28,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>gnuplot.x86_64</package>
 <package>gmp-static</package> <!-- Required by sprng examples -->
 
+<package>eigen_ROLLCOMPILER</package>
 <package>gsl_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
 <package>octave</package>
@@ -34,10 +36,10 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>petsc_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>scalapack_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>sprng_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>slepc_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
+<package>sundials_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>superlu_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
 <package>trilinos_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
-<package>sundials_ROLLCOMPILER_ROLLMPI_ROLLNETWORK</package>
-<package>eigen_ROLLCOMPILER</package>
 <package>math-modules</package>
 <package>math-roll-test</package>
 <package>texinfo</package>

@@ -10,7 +10,7 @@ my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = '.';
 my @packages = ('gsl', 'lapack', 'octave', 'parmetis', 'petsc',
-                'scalapack', 'sprng', 'superlu', 'trilinos','sundials','eigen');
+                'scalapack', 'sprng', 'superlu', 'trilinos','sundials','eigen','slepc');
 my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
@@ -401,6 +401,34 @@ close(OUT);
         like($output, qr/15 22/,
              "Eigen/$compiler run");
       }
+}
+
+# slepc
+foreach my $compiler(@COMPILERS) {
+  foreach my $mpi(@MPIS) {
+    foreach my $network(@NETWORKS) {
+      $packageHome = "/opt/slepc/$compiler";
+      SKIP: {
+        skip "slepc/$compiler not installed", 1 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler ${mpi}_${network} slepc
+mkdir $TESTFILE.dir
+cd $TESTFILE.dir
+cp -r \$SLEPCHOME/examples/* .
+cd tests
+unset PETSCPARCH
+make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} testtest10
+make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} testtest7f
+close(OUT);
+$output = `/bin/bash $TESTFILE.sh|grep -c sucessfully 2>&1`;
+ok($output >= 4, "slepc $compiler $mpi $network works");
+        `rm -rf $TESTFILE*`;
+      }
+    }
+  }
 }
 
 `rm -fr $TESTFILE*`;

@@ -2,16 +2,19 @@
 
 ## Overview
 
-This roll bundles a collection of Math packages: GSL, LAPACK, Octave, Parmetis,
-ScaLAPACK, SPRNG, superLU, and Trilinos.
+This roll bundles a collection of Math packages: eigen, GSL, LAPACK, Octave, Parmetis,petsc, ScaLAPACK, slepc, SPRNG, sundials, superLU, and Trilinos.
 
 For more information about the various packages included in the math roll please visit their official web pages:
 
+- <a href="http://http://eigen.tuxfamily.org/" target="_blank">eigen</a> is a C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
 - <a href="http://www.gnu.org/software/gsl/" target="_blank">GSL</a> is a numerical library for C and C++ programmers.
 - <a href="http://www.netlib.org/lapack/" target="_blank">LAPACK</a> provides routines for solving systems of simultaneous linear equations, least-squares solutions of linear systems of equations, eigenvalue problems, and singular value problems.
 - <a href="http://www.gnu.org/software/octave/" target="_blank">Octave</a> is a high-level interpreted language, primarily intended for numerical computations. It provides capabilities for the numerical solution of linear and nonlinear problems, and for performing other numerical experiments.
 - <a href="http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview" target="_blank">ParMETIS</a> is an MPI-based parallel library that implements a variety of algorithms for partitioning unstructured graphs, meshes, and for computing fill-reducing orderings of sparse matrices.
+- <a href="http://www.mcs.anl.gov/petsc/" target="_blank">petsc</a>  is a suite of data structures and routines for the scalable (parallel) solution of scientific applications modeled by partial differential equations
 - <a href="http://www.netlib.org/scalapack/" target="_blank">ScaLAPACK</a> is a library of high-performance linear algebra routines for parallel distributed memory machines.
+- <a href="http://www.grycap.upv.es/slepc" target="_blank">slepc</a>  is a software library for the solution of large scale sparse eigenvalue problems on parallel computers
+- <a href="http://computation.llnl.gov/casc/sundials/main.html" target="_blank">sundials</a>  solves nonlinear and diffential equations
 - <a href="http://www.sprng.org" target="_blank">SPRNG</a> is a scalable package for parallel pseudo random number generation which will be easy to use on a variety of architectures, especially in large-scale parallel Monte Carlo applications.
 - <a href="http://crd-legacy.lbl.gov/~xiaoye/SuperLU/" target="_blank">SuperLU</a> is a general purpose library for the direct solution of large, sparse, nonsymmetric systems of linear equations on high performance machines.
 - <a href="http://trilinos.sandia.gov/citing.html" target="_blank">Trilinos</a> is an effort to develop algorithms and enabling technologies within an object-oriented software framework for the solution of large-scale, complex multi-physics engineering and scientific problems.
