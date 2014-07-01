@@ -92,17 +92,14 @@ build: $(SRC_DIRS)
 	mkdir -p $(ROOT)/$(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-              make clean; \
-              exit; \
-          fi; \
           module load cmake; \
 	  $(COMPILERSETUP); \
+	  cp patch-files/EigenTesting.cmake $(SOURCE_DIR)/cmake/; \
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \
-          cmake -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
-		        -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) ..; \
+	  cmake -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
+	    -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) ..; \
 	)
 	umount $(PKGROOT)
 	@echo "::: Package $(NAME) build complete :::"
@@ -113,16 +110,11 @@ install::
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-		if test $(ROLLCOMPILER) = "pgi"; then \
-			make clean; \
-			rm -rf $(ROOT)/$(PKGROOT); \
-			exit; \
-		fi; \
-		$(COMPILERSETUP); \
-		cd $(SOURCE_DIR)/build; \
-	 	$(MAKE) -j 16 install; \
-		cd $(ROOT)/$(PKGROOT)/include; \
-		ln -s eigen3/Eigen Eigen \
+	  $(COMPILERSETUP); \
+	  cd $(SOURCE_DIR)/build; \
+	  $(MAKE) -j 16 install; \
+	  cd $(ROOT)/$(PKGROOT)/include; \
+	  ln -s eigen3/Eigen Eigen \
 	)
 	umount $(PKGROOT)
 	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/eigen!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
