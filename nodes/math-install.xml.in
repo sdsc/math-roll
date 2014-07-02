@@ -28,7 +28,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>gnuplot.x86_64</package>
 <package>gmp-static</package> <!-- Required by sprng examples -->
 
-<package>eigen_ROLLCOMPILER</package>
+<package>eigen</package>
 <package>gsl_ROLLCOMPILER</package>
 <package>lapack_ROLLCOMPILER</package>
 <package>octave</package>

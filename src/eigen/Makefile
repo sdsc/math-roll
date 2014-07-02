@@ -56,9 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
 
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
@@ -67,25 +64,6 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
-
-
-CC=gcc
-CXX=g++
-F90=gfortran
-ifeq ("$(ROLLCOMPILER)", "intel")
-CC=icc
-CXX=icpc
-F90=ifort
-else ifeq ("$(ROLLCOMPILER)", "pgi")
-CC=pgcc
-CXX=pgCC
-F90=pgf90
-endif
 
 build: $(SRC_DIRS)
 	mkdir -p $(PKGROOT)
@@ -93,8 +71,6 @@ build: $(SRC_DIRS)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
           module load cmake; \
-	  $(COMPILERSETUP); \
-	  cp patch-files/EigenTesting.cmake $(SOURCE_DIR)/cmake/; \
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \
@@ -110,14 +86,13 @@ install::
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-	  $(COMPILERSETUP); \
 	  cd $(SOURCE_DIR)/build; \
 	  $(MAKE) -j 16 install; \
 	  cd $(ROOT)/$(PKGROOT)/include; \
 	  ln -s eigen3/Eigen Eigen \
 	)
 	umount $(PKGROOT)
-	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/eigen!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/eigen!g;s!VERSION!$(VERSION)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 

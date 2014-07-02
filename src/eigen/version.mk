@@ -1,7 +1,7 @@
-NAME               = eigen_$(ROLLCOMPILER)
+NAME               = eigen
 VERSION            = 3.2.1
 RELEASE            = 0
-PKGROOT            = /opt/eigen/$(ROLLCOMPILER)
+PKGROOT            = /opt/eigen
 RPM.EXTRAS         = AutoReq:No
 
 SRC_SUBDIR         = eigen

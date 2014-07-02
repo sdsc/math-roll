@@ -99,9 +99,9 @@ MPISETUP = \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
 build: $(SRC_DIRS)
-	cp patch-files/Makefile.parmetis $(SOURCE_DIR)
-	cp patch-files/Makefile.metis $(SOURCE_DIR)/metis
-	cp patch-files/CMakeLists.txt $(SOURCE_DIR)
+	patch $(SOURCE_DIR)/Makefile patch-files/Makefile.parmetis.patch
+	patch $(SOURCE_DIR)/metis/Makefile patch-files/Makefile.metis.patch
+	patch $(SOURCE_DIR)/CMakeLists.txt patch-files/CMakeLists.txt.patch
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	mkdir -p -m 755 $(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
