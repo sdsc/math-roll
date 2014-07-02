@@ -124,7 +124,7 @@ install::
 	 mkdir -p $(ROOT)/$(PKGROOT)/examples
 	 mkdir $(PKGROOT)
 	 mount --bind $(REDHAT.ROOT)/src/build-petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK) /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
-         mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR); \
           make PETSC_ARCH=arch-installed-petsc install; \

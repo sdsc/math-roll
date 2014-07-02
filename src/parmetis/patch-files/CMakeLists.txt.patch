@@ -1,0 +1,12 @@
+--- parmetis-4.0.3/CMakeLists.txt	2013-03-30 09:24:50.000000000 -0700
++++ patch-files/CMakeLists.txt	2014-02-19 11:11:03.000000000 -0800
+@@ -14,7 +14,8 @@
+ # if(NOT MPI_FOUND)
+ #   message(FATAL_ERROR "mpi is not found")
+ # endif()
+-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${MPI_COMPILE_FLAGS}")
++set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS} ${MPI_COMPILE_FLAGS}")
++set(CMAKE_CXX_FLAGS "-fPIC ${CMAKE_CXX_FLAGS} ${MPI_COMPILE_FLAGS}")
+ 
+ # Prepare libraries.
+ if(SHARED)
