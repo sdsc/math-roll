@@ -156,6 +156,7 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	mkdir -p -m 755 $(PKGROOT)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
+	mkdir -p $(REDHAT.ROOT)/src/build-petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	mkdir -p $(PARMETIS_MOUNT)
 	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
@@ -170,6 +171,7 @@ install::
           make BOPT=g shared; \
 	  make install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/; \
+          cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK) \
 	)
 	umount $(PKGROOT)
 	umount $(PARMETIS_MOUNT)

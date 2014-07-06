@@ -420,11 +420,12 @@ cd $TESTFILE.dir
 cp -r \$SLEPCHOME/examples/* .
 cd tests
 unset PETSCPARCH
-make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} testtest10
-make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} testtest7f
+make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compiler}/${mpi}/${network} testtest10
+make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compiler}/${mpi}/${network} testtest7f
+END
 close(OUT);
 $output = `/bin/bash $TESTFILE.sh|grep -c sucessfully 2>&1`;
-ok($output >= 4, "slepc $compiler $mpi $network works");
+ok($output >= 3, "slepc $compiler $mpi $network works");
         `rm -rf $TESTFILE*`;
       }
     }

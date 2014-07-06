@@ -108,30 +108,36 @@ MPISETUP = \
 build: $(SRC_DIRS)
 	mkdir -p /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 	mount --bind $(REDHAT.ROOT)/src/build-petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK) /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+	mount --bind $(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK) /opt/superlu/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
           export PETSC_DIR=/opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK); \
+          export LD_LIBRARY_PATH=/opt/superlu/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK):$${LD_LIBRARY_PATH}; \
           unset PETSC_ARCH; \
 	  ./configure --prefix=$(PKGROOT); \
-          make PETSC_ARCH=arch-installed-petsc \
+          make PETSC_ARCH=arch-installed-petsc; \
+          make SLEPC_DIR=`pwd` PETSC_DIR=/opt/petsc/intel/openmpi/ib PETSC_ARCH=arch-installed-petsc \
          )
-	unmount /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+	umount /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+	umount /opt/superlu/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	 mkdir -p $(ROOT)/$(PKGROOT)/examples
-	 mkdir $(PKGROOT)
+	 mkdir -p $(PKGROOT)
 	 mount --bind $(REDHAT.ROOT)/src/build-petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK) /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
-         mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
+	  $(COMPILERSETUP); \
+	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
-          make PETSC_ARCH=arch-installed-petsc install; \
+          make SLEPC_DIR=`pwd` PETSC_DIR=/opt/petsc/intel/openmpi/ib PETSC_ARCH=arch-installed-petsc install; \
           cp -r src/eps/examples $(PKGROOT) \
 	)
-	unmount /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
-	unmount $(PKGROOT)
+	umount /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+	umount $(PKGROOT)
 	cat slepc.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/slepc!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
