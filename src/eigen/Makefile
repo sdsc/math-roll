@@ -56,9 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
 
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
@@ -67,42 +64,18 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
-  fi
-
-
-CC=gcc
-CXX=g++
-F90=gfortran
-ifeq ("$(ROLLCOMPILER)", "intel")
-CC=icc
-CXX=icpc
-F90=ifort
-else ifeq ("$(ROLLCOMPILER)", "pgi")
-CC=pgcc
-CXX=pgCC
-F90=pgf90
-endif
 
 build: $(SRC_DIRS)
 	mkdir -p $(PKGROOT)
 	mkdir -p $(ROOT)/$(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-              make clean; \
-              exit; \
-          fi; \
           module load cmake; \
-	  $(COMPILERSETUP); \
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \
-          cmake -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
-		        -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) ..; \
+	  cmake -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
+	    -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) ..; \
 	)
 	umount $(PKGROOT)
 	@echo "::: Package $(NAME) build complete :::"
@@ -113,19 +86,13 @@ install::
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-		if test $(ROLLCOMPILER) = "pgi"; then \
-			make clean; \
-			rm -rf $(ROOT)/$(PKGROOT); \
-			exit; \
-		fi; \
-		$(COMPILERSETUP); \
-		cd $(SOURCE_DIR)/build; \
-	 	$(MAKE) -j 16 install; \
-		cd $(ROOT)/$(PKGROOT)/include; \
-		ln -s eigen3/Eigen Eigen \
+	  cd $(SOURCE_DIR)/build; \
+	  $(MAKE) -j 16 install; \
+	  cd $(ROOT)/$(PKGROOT)/include; \
+	  ln -s eigen3/Eigen Eigen \
 	)
 	umount $(PKGROOT)
-	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/eigen!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/eigen!g;s!VERSION!$(VERSION)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 

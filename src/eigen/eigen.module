@@ -3,10 +3,10 @@
 
 cat > ROOT_PKGROOTMODULEROOT/VERSION <<END
 #%Module1.0
-module-whatis "eigen_ROLLCOMPILER"
+module-whatis "eigen"
 module-whatis "Version: VERSION"
-prepend-path INCLUDEPATH /opt/eigen/ROLLCOMPILER/include/eigen3
-setenv EIGENHOME /opt/eigen/ROLLCOMPILER
+prepend-path INCLUDEPATH /opt/eigen/include/eigen3
+setenv EIGENHOME /opt/eigen
 END
 
 chmod 0644  ROOT_PKGROOTMODULEROOT/VERSION

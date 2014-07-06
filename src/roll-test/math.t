@@ -153,10 +153,9 @@ module load $compiler ${mpi}_${network} parmetis
 mpirun -np 2 \$PARMETISHOME/bin/ptest \$PARMETISHOME/Graphs/rotor.graph
 END
         close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        ok($? == 0, "parmetis/$compiler/$mpi/$network run");
-        like($output, qr/Initial Load Imbalance: 1.2197/,
-             "parmetis/$compiler/$mpi/$network run output");
+        $output = `/bin/bash $TESTFILE.sh| grep -c OK: 2>&1`;
+        ok($output >= 80, "parmetis $compiler $mpi $network works");
+
       }
     }
   }

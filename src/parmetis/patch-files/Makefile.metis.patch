@@ -1,0 +1,11 @@
+--- parmetis-4.0.3/metis/Makefile	2013-03-30 09:24:50.000000000 -0700
++++ patch-files/Makefile.metis	2014-07-01 16:43:20.000000000 -0700
+@@ -64,7 +64,7 @@
+ 	@if [ ! -f $(BUILDDIR)/Makefile ]; then \
+ 		more BUILD.txt; \
+ 	else \
+-	  	make -C $(BUILDDIR) $@ $(MAKEFLAGS); \
++	  	make -C $(BUILDDIR) $@ ; \
+ 	fi
+ 
+ uninstall:
