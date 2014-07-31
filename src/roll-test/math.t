@@ -9,8 +9,10 @@ use Test::More qw(no_plan);
 my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = '.';
-my @packages = ('gsl', 'lapack', 'octave', 'parmetis', 'petsc',
-                'scalapack', 'sprng', 'superlu', 'trilinos','sundials','eigen','slepc');
+my @packages = (
+  'eigen', 'gsl', 'lapack', 'octave', 'parmetis', 'petsc', 'scalapack',
+  'slepc', 'sprng', 'sundials', 'superlu', 'trilinos'
+);
 my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
@@ -35,8 +37,8 @@ SKIP: {
     skip "$package not installed", 3 if ! -d "/opt/$package";
     foreach my $compiler(@COMPILERS) {
       my $path = '/opt/modulefiles/applications' .
-                 ($package eq 'octave' ? '' : "/.$compiler");
-      my $subpackage = $package eq 'octave' ? $package : "$package/$compiler";
+                 ($package =~ /eigen|octave/ ? '' : "/.$compiler");
+      my $subpackage = $package =~ /eigen|octave/ ? $package : "$package/$compiler";
       `/bin/ls $path/$package/[0-9]* 2>&1`;
       ok($? == 0, "$subpackage module installed");
       `/bin/ls $path/$package/.version.[0-9]* 2>&1`;
@@ -51,6 +53,47 @@ SKIP: {
 
 
 my ($packageHome, $testDir);
+
+# eigen
+open(OUT, ">$TESTFILE.cc");
+print OUT <<END;
+#include <iostream>
+#include <Eigen/Dense>
+using namespace Eigen;
+int main()
+{
+Matrix2d mat;
+mat << 1, 2,
+3, 4;
+Vector2d u(-1,1), v(2,0);
+std::cout << "Here is mat*mat:\\n" << mat*mat << std::endl;
+std::cout << "Here is mat*u:\\n" << mat*u << std::endl;
+std::cout << "Here is u^T*mat:\\n" << u.transpose()*mat << std::endl;
+std::cout << "Here is u^T*v:\\n" << u.transpose()*v << std::endl;
+std::cout << "Here is u*v^T:\\n" << u*v.transpose() << std::endl;
+std::cout << "Let's multiply mat by itself" << std::endl;
+mat = mat*mat;
+std::cout << "Now mat is mat:\\n" << mat << std::endl;
+}
+END
+close(OUT);
+$packageHome = "/opt/eigen";
+SKIP: {
+  skip "eigen not installed", 2 if ! -d $packageHome;
+  open(OUT, ">$TESTFILE.sh");
+  print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load eigen
+$CXX{"gnu"} -o $TESTFILE.eigen.exe $TESTFILE.cc -I$packageHome/include/eigen3
+ls -l *.exe
+./$TESTFILE.eigen.exe
+END
+close(OUT);
+  $output = `/bin/bash $TESTFILE.sh 2>&1`;
+  like($output, qr/$TESTFILE.eigen.exe/, "eigen compilation");
+  like($output, qr/15 22/, "eigen run");
+}
 
 # gsl
 foreach my $c (@COMPILERS) {
@@ -193,7 +236,6 @@ END
   }
 }
 
-
 # scalapack
 foreach my $compiler(@COMPILERS) {
   foreach my $mpi(@MPIS) {
@@ -220,6 +262,36 @@ END
     }
   }
 }
+
+# slepc
+foreach my $compiler(@COMPILERS) {
+  foreach my $mpi(@MPIS) {
+    foreach my $network(@NETWORKS) {
+      $packageHome = "/opt/slepc/$compiler";
+      SKIP: {
+        skip "slepc/$compiler not installed", 1 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler ${mpi}_${network} slepc
+mkdir $TESTFILE.dir
+cd $TESTFILE.dir
+cp -r \$SLEPCHOME/examples/* .
+cd tests
+unset PETSCPARCH
+make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compiler}/${mpi}/${network} testtest10
+make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compiler}/${mpi}/${network} testtest7f
+END
+        close(OUT);
+        $output = `/bin/bash $TESTFILE.sh|grep -c sucessfully 2>&1`;
+        ok($output >= 3, "slepc $compiler $mpi $network works");
+      }
+    }
+  }
+}
+
+        
 # sprng
 open(OUT, ">$TESTFILE.sprng.c");
 print OUT <<END;
@@ -255,6 +327,41 @@ END
         like($output, qr/$TESTFILE.sprng.exe/,
              "sprng/$compiler/$mpi/$network compilation");
         ok($? == 0, "sprng/$compiler/$mpi/$network test run");
+      }
+    }
+  }
+}
+
+# sundials
+foreach my $compiler(@COMPILERS) {
+  foreach my $mpi(@MPIS) {
+    foreach my $network(@NETWORKS) {
+      $packageHome = "/opt/sundials/$compiler";
+      SKIP: {
+        skip "sundials/$compiler not installed", 2 if ! -d $packageHome;
+        open(OUT, ">$TESTFILE.sh");
+        print OUT <<END;
+#!/bin/bash
+. /etc/profile.d/modules.sh
+module load $compiler ${mpi}_${network} sundials
+if [ ! -e fcvDiag_kry_p.f ]; then
+cp $packageHome/${mpi}/${network}/examples/cvode/fcmix_parallel/fcvDiag_kry_p.f .
+ex fcvDiag_kry_p.f <<EOF
+:1,32s/INTEGER\\*4/INTEGER*8/
+:w
+:q
+EOF
+fi
+mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/$network/lib -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
+ls -l *.exe
+mpirun -np 4 ./$TESTFILE.sundials.exe
+END
+        close(OUT);
+        $output = `/bin/bash $TESTFILE.sh 2>&1`;
+        like($output, qr/$TESTFILE.sundials.exe/,
+             "Sundials/$compiler/$mpi/$network compilation");
+        like($output, qr/0.9094/,
+             "Sundials/$compiler/$mpi/$network run");
       }
     }
   }
@@ -317,115 +424,6 @@ END
              "Trilinos/$compiler/$mpi/$network compilation");
         like($output, qr/Teuchos in Trilinos [\d\.]+/,
              "Trilinos/$compiler/$mpi/$network run");
-      }
-    }
-  }
-}
-
-# sundials
-foreach my $compiler(@COMPILERS) {
-  foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/sundials/$compiler";
-      SKIP: {
-        skip "sundials/$compiler not installed", 2 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
-#!/bin/bash
-. /etc/profile.d/modules.sh
-module load $compiler ${mpi}_${network} sundials
-if [ ! -e fcvDiag_kry_p.f ]; then
-cp $packageHome/${mpi}/${network}/examples/cvode/fcmix_parallel/fcvDiag_kry_p.f .
-ex fcvDiag_kry_p.f <<EOF
-:1,32s/INTEGER\\*4/INTEGER*8/
-:w
-:q
-EOF
-fi
-mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/$network/lib -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
-ls -l *.exe
-mpirun -np 4 ./$TESTFILE.sundials.exe
-END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/$TESTFILE.sundials.exe/,
-             "Sundials/$compiler/$mpi/$network compilation");
-        like($output, qr/0.9094/,
-             "Sundials/$compiler/$mpi/$network run");
-      }
-    }
-  }
-}
-
-# eigen
-open(OUT, ">$TESTFILE.cc");
-print OUT <<END;
-#include <iostream>
-#include <Eigen/Dense>
-using namespace Eigen;
-int main()
-{
-Matrix2d mat;
-mat << 1, 2,
-3, 4;
-Vector2d u(-1,1), v(2,0);
-std::cout << "Here is mat*mat:\\n" << mat*mat << std::endl;
-std::cout << "Here is mat*u:\\n" << mat*u << std::endl;
-std::cout << "Here is u^T*mat:\\n" << u.transpose()*mat << std::endl;
-std::cout << "Here is u^T*v:\\n" << u.transpose()*v << std::endl;
-std::cout << "Here is u*v^T:\\n" << u*v.transpose() << std::endl;
-std::cout << "Let's multiply mat by itself" << std::endl;
-mat = mat*mat;
-std::cout << "Now mat is mat:\\n" << mat << std::endl;
-}
-END
-close(OUT);
-foreach my $compiler(@COMPILERS) {
-      $packageHome = "/opt/eigen/$compiler";
-      SKIP: {
-        skip "eigen/$compiler not installed", 2 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
-#!/bin/bash
-. /etc/profile.d/modules.sh
-module load $compiler eigen
-$CXX{$compiler}  -o $TESTFILE.eigen.exe  $TESTFILE.cc   -I$packageHome/include/eigen3
-ls -l *.exe
-./$TESTFILE.eigen.exe
-END
-close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/$TESTFILE.eigen.exe/,
-             "Eigen/$compiler compilation");
-        like($output, qr/15 22/,
-             "Eigen/$compiler run");
-      }
-}
-
-# slepc
-foreach my $compiler(@COMPILERS) {
-  foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/slepc/$compiler";
-      SKIP: {
-        skip "slepc/$compiler not installed", 1 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
-#!/bin/bash
-. /etc/profile.d/modules.sh
-module load $compiler ${mpi}_${network} slepc
-mkdir $TESTFILE.dir
-cd $TESTFILE.dir
-cp -r \$SLEPCHOME/examples/* .
-cd tests
-unset PETSCPARCH
-make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compiler}/${mpi}/${network} testtest10
-make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compiler}/${mpi}/${network} testtest7f
-END
-close(OUT);
-$output = `/bin/bash $TESTFILE.sh|grep -c sucessfully 2>&1`;
-ok($output >= 3, "slepc $compiler $mpi $network works");
-        `rm -rf $TESTFILE*`;
       }
     }
   }
