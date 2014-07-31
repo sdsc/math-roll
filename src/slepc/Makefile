@@ -128,6 +128,7 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR); \
+	  export SLEPC_DIR=`pwd`; \
 	  make install; \
 	  cp -r src/eps/examples $(ROOT)/$(PKGROOT)/ \
 	)
