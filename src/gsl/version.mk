@@ -1,8 +1,13 @@
-NAME               = gsl_$(ROLLCOMPILER)
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
+
+NAME               = gsl_$(COMPILERNAME)
 VERSION            = 1.16
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
-PKGROOT            = /opt/gsl/$(ROLLCOMPILER)
+PKGROOT            = /opt/gsl/$(COMPILERNAME)
 
 SRC_SUBDIR         = gsl
 

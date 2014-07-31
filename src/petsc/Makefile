@@ -56,16 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -76,15 +66,20 @@ include pull.mk
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load intel; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(FIRSTCOMPILER)\>"`; \
+    if test "$${module}" != "$(FIRSTCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(FIRSTCOMPILER) not found; \
+      exit 2; \
+    fi; \
+    module load $(ROLLCOMPILER); \
+  fi; \
+  if test -n "$${MKL_ROOT}"; then \
     export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
     export MKLLINK=" -Wl,--start-group \
                     $${MKLLIB}/libmkl_intel_lp64.a \
                     $${MKLLIB}/libmkl_sequential.a \
                     $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm"; \
-    module unload intel; \
-    module load $(ROLLCOMPILER); \
-  fi
+  fi \
 
 ifeq ("$(ROLLNETWORK)", "eth")
   MPIMODULE = $(ROLLMPI)
@@ -95,6 +90,11 @@ endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
+    if test "$${module}" != "$(MPIMODULE)"; then \
+      echo *** ERROR: MPI module $(MPIMODULE) not found; \
+      exit 2; \
+    fi; \
     module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
@@ -105,79 +105,65 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-PARMETIS_HOME = \
-  $(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
-PARMETIS_MOUNT = \
-  /opt/parmetis/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
-SUPERLU_HOME = \
-  $(REDHAT.ROOT)/src/build-superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
-SUPERLU_MOUNT = \
-  /opt/superlu/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
-SCALAPACK_HOME = \
-  $(REDHAT.ROOT)/src/build-scalapack_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
-SCALAPACK_MOUNT = \
-  /opt/scalapack/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+PETSC_CACHE = \
+  $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+PARMETIS_CACHE = \
+  $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+SUPERLU_CACHE = \
+  $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+SCALAPACK_CACHE = \
+  $(REDHAT.ROOT)/src/build-scalapack_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 
 build: $(SRC_DIRS)
-	mkdir -p $(PARMETIS_MOUNT)
-	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
-	mkdir -p $(SUPERLU_MOUNT)
-	mount --bind $(SUPERLU_HOME) $(SUPERLU_MOUNT)
-	mkdir -p $(SCALAPACK_MOUNT)
-	mount --bind $(SCALAPACK_HOME) $(SCALAPACK_MOUNT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
+	  export PETSC_DIR=`pwd`; \
+	  export PETSC_ARCH=$(COMPILERNAME)-$(ROLLMPI)-$(ROLLNETWORK); \
 	  ./configure --prefix=$(PKGROOT) \
-	     --with-mpi=1 \
+	    --with-mpi=1 \
 	    --download-pastix=1 --download-ptscotch \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
-	    --with-superlu_dist-include=$(SUPERLU_MOUNT)/include \
-	    --with-superlu_dist-lib="-L$(SUPERLU_MOUNT)/lib -lsuperlu" \
-	    --with-parmetis-dir=$(PARMETIS_MOUNT) \
-	    --with-metis-dir=$(PARMETIS_MOUNT) \
-            --download-mumps=yes \
-            --with-scalapack-dir=$(SCALAPACK_MOUNT) \
-             --download-mumps=yes \
-            --download-blacs=yes \
-             --with-pic=1 \
-             --download-f-blas-lapack=yes \
-             --with-shared-libraries=1 \
-             --with-mpi-dir=$${MPI_HOME}; \
-            make PETSC_DIR=$(PWD)/$(SOURCE_DIR) PETSC_ARCH=arch-linux2-c-debug all \
-         )
-	umount $(PARMETIS_MOUNT)
-	umount $(SUPERLU_MOUNT)
-	umount $(SCALAPACK_MOUNT)
+	    --with-superlu_dist-include=$(SUPERLU_CACHE)/include \
+	    --with-superlu_dist-lib="-L$(SUPERLU_CACHE)/lib -lsuperlu" \
+	    --with-parmetis-dir=$(PARMETIS_CACHE) \
+	    --with-metis-dir=$(PARMETIS_CACHE) \
+	    --with-mpi-dir=$${MPI_HOME} \
+	    --with-scalapack-dir=$(SCALAPACK_CACHE) \
+	    --download-mumps=yes \
+	    --download-blacs=yes \
+	    --download-f-blas-lapack=yes \
+	    --with-pic=1 \
+	    --with-shared-libraries=1; \
+	    make all \
+	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
+	# Using a bind mount appears to be the only way to prevent the build
+	# from incorporating $(ROOT) in binary files.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	mkdir -p -m 755 $(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	mkdir -p $(REDHAT.ROOT)/src/build-petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
+	-mkdir -p -m 755 $(PKGROOT)
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
-	mkdir -p $(PARMETIS_MOUNT)
-	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
-	mkdir -p $(SUPERLU_MOUNT)
-	mount --bind $(SUPERLU_HOME) $(SUPERLU_MOUNT)
-	mkdir -p $(SCALAPACK_MOUNT)
-	mount --bind $(SCALAPACK_HOME) $(SCALAPACK_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
-          rm -rf configure.log; \
-          rm -rf arch-linux2-c-debug/conf/configure.log; \
-          make BOPT=g shared; \
+	  export PETSC_DIR=`pwd`; \
+	  make BOPT=g shared; \
 	  make install; \
-	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/; \
-          cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK) \
+	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/ \
 	)
 	umount $(PKGROOT)
-	umount $(PARMETIS_MOUNT)
-	umount $(SUPERLU_MOUNT)
-	umount $(SCALAPACK_MOUNT)
-	cat petsc.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/petsc!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+	-rmdir -p $(PKGROOT)
+	# Get rid of configure.log files that contain build dir path
+	rm `find $(ROOT)/$(PKGROOT) -name configure.log`
+	mkdir -p $(PETSC_CACHE)
+	cp -r $(ROOT)/$(PKGROOT)/* $(PETSC_CACHE)
+	# Fix paths in copy--slepc config checks for mismatch
+	perl -pi -e "s#$(PKGROOT)#$(PETSC_CACHE)#g" \
+	  `find $(PETSC_CACHE) -type f -exec grep -Il . {} ';'`
+	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
+	cat petsc.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/petsc!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 

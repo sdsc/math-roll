@@ -1,8 +1,13 @@
-NAME               = lapack_$(ROLLCOMPILER)
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
+
+NAME               = lapack_$(COMPILERNAME)
 VERSION            = 3.5.0
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
-PKGROOT            = /opt/lapack/$(ROLLCOMPILER)
+PKGROOT            = /opt/lapack/$(COMPILERNAME)
 
 SRC_SUBDIR         = lapack
 

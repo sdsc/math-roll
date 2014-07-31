@@ -56,16 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -76,9 +66,11 @@ include pull.mk
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load intel; \
-    export MKL_HOME=$${MKL_ROOT}; \
-    module unload intel; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLCOMPILER)\>"`; \
+    if test "$${module}" != "$(ROLLCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(ROLLCOMPILER) not found; \
+      exit 2; \
+    fi; \
     module load $(ROLLCOMPILER); \
   fi
 
@@ -91,6 +83,11 @@ endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
+    if test "$${module}" != "$(MPIMODULE)"; then \
+      echo *** ERROR: MPI module $(MPIMODULE) not found; \
+      exit 2; \
+    fi; \
     module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
@@ -101,55 +98,42 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-PARMETIS_HOME = \
-  $(REDHAT.ROOT)/src/build-parmetis_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
-PARMETIS_MOUNT = \
-  /opt/parmetis/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+PARMETIS_CACHE = \
+  $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
 
 build: $(SRC_DIRS)
 	cp patch-files/make.inc $(SOURCE_DIR)
-	mkdir -p -m 755 $(PKGROOT)
-	mkdir -p $(PARMETIS_MOUNT)
-	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
-	mount --bind $(PWD)/$(SOURCE_DIR) $(PKGROOT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE_DIR)!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_MOUNT)/lib!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!MKLROOT!$${MKL_HOME}!g" $(SOURCE_DIR)/make.inc; \
+	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_CACHE)/lib!" $(SOURCE_DIR)/make.inc; \
+	  perl -pi -e "s!MKLROOT!$${MKL_ROOT}!g" $(SOURCE_DIR)/make.inc; \
 	  cd $(SOURCE_DIR); \
-	  $(MAKE)  \
+	  $(MAKE) \
 	)
-	umount $(PARMETIS_MOUNT)
-	umount $(PKGROOT)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
-	mkdir -p -m 755 $(PKGROOT)
-	mkdir -p $(PARMETIS_MOUNT)
-	mount --bind $(PARMETIS_HOME) $(PARMETIS_MOUNT)
-	mount --bind $(PWD)/$(SOURCE_DIR) $(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR); \
-	  $(MAKE)  install; \
+	  $(MAKE) prefix=$(ROOT)/$(PKGROOT) install; \
 	  cp lib/*.a $(ROOT)/$(PKGROOT)/lib/libsuperlu.a; \
 	  cp SRC/*.h $(ROOT)/$(PKGROOT)/include; \
 	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include ; \
-          chmod 0644 $(ROOT)/$(PKGROOT)/include/*; \
+	  chmod 0644 $(ROOT)/$(PKGROOT)/include/*; \
 	  cp -r EXAMPLE $(ROOT)/$(PKGROOT); \
 	  chmod 0755 $(ROOT)/$(PKGROOT)/EXAMPLE; \
 	  chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLE/* \
 	)
-	umount $(PARMETIS_MOUNT)
-	umount $(PKGROOT)
+	mkdir $(SUPERLU_CACHE)
+	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(SUPERLU_CACHE)/
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cat superlu.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/superlu!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
-	mkdir $(REDHAT.ROOT)/src/build-$(NAME)
-	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
+	cat superlu.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/superlu!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
+	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

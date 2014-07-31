@@ -1,8 +1,21 @@
-NAME               = petsc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
+
+ifndef ROLLNETWORK
+  ROLLNETWORK = eth
+endif
+
+ifndef ROLLMPI
+  ROLLMPI = openmpi
+endif
+
+NAME               = petsc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 3.4.3
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
-PKGROOT            = /opt/petsc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+PKGROOT            = /opt/petsc/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR         = petsc
 

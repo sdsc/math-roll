@@ -1,8 +1,21 @@
-NAME               = superlu_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
+
+ifndef ROLLNETWORK
+  ROLLNETWORK = eth
+endif
+
+ifndef ROLLMPI
+  ROLLMPI = openmpi
+endif
+
+NAME               = superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 3.2
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
-PKGROOT            = /opt/superlu/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+PKGROOT            = /opt/superlu/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR         = superlu
 

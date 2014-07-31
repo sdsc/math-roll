@@ -1,8 +1,21 @@
-NAME               = slepc_$(ROLLCOMPILER)_$(ROLLMPI)_$(ROLLNETWORK)
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
+
+ifndef ROLLNETWORK
+  ROLLNETWORK = eth
+endif
+
+ifndef ROLLMPI
+  ROLLMPI = openmpi
+endif
+
+NAME               = slepc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 3.4.4
 RELEASE            = 0
 RPM.EXTRAS         = "AutoReq: no"
-PKGROOT            = /opt/slepc/$(ROLLCOMPILER)/$(ROLLMPI)/$(ROLLNETWORK)
+PKGROOT            = /opt/slepc/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR         = slepc
 

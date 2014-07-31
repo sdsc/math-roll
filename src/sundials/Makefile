@@ -56,16 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -76,14 +66,19 @@ include pull.mk
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load intel; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(FIRSTCOMPILER)\>"`; \
+    if test "$${module}" != "$(FIRSTCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(FIRSTCOMPILER) not found; \
+      exit 2; \
+    fi; \
+    module load $(ROLLCOMPILER); \
+  fi; \
+  if test -n "$${MKL_ROOT}"; then \
     export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
     export MKLLINK="-Wl,--start-group \
                     $${MKLLIB}/libmkl_intel_lp64.a \
                     $${MKLLIB}/libmkl_sequential.a \
                     $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm"; \
-    module unload intel; \
-    module load $(ROLLCOMPILER); \
   fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
@@ -91,15 +86,15 @@ ifeq ("$(ROLLNETWORK)", "eth")
 else
   MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
 endif
+
 CC=gcc
 F77=gfortran
 CFLAGS=-O2
 FFLAGS=-O2
-ifeq ("$(ROLLCOMPILER)","intel")
+ifeq ("$(COMPILERNAME)","intel")
    CC=icc
    F77=ifort
-endif
-ifeq ("$(ROLLCOMPILER)","pgi")
+else ifeq ("$(COMPILERNAME)","pgi")
    CC=pgcc
    F77=pgf77
 endif
@@ -107,6 +102,11 @@ endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
+    if test "$${module}" != "$(MPIMODULE)"; then \
+      echo *** ERROR: MPI module $(MPIMODULE) not found; \
+      exit 2; \
+    fi; \
     module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
@@ -123,23 +123,25 @@ build: $(SRC_DIRS)
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
-	  ./configure --prefix=$(PKGROOT) CC=$(CC) F77=$(F77) --enable-examples \
-	    --with-mpicc=$${MPI_HOME}/bin/mpicc --with-mpif77=$${MPI_HOME}/bin/mpif77;  \
-	  make -j 16  \
+	  ./configure CC=$(CC) F77=$(F77) \
+	    --prefix=$(ROOT)/$(PKGROOT) --enable-examples \
+	    --with-mpicc=$${MPI_HOME}/bin/mpicc \
+	    --with-mpif77=$${MPI_HOME}/bin/mpif77;  \
+	  make -j 16 \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	mkdir -p -m 755 $(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR); \
-	  make -j 16 install; \
+	  make install \
 	)
-	umount $(PKGROOT)
-	cat sundials.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/sundials!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+	# Fix references to install dir in rpm text files
+	perl -pi -e "s#$(ROOT)##g" \
+	  `find $(ROOT)/$(PKGROOT)/ -type f -exec grep -Il . {} ';'`
+	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
+	cat sundials.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/sundials!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 

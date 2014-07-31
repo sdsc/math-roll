@@ -56,16 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -76,7 +66,17 @@ include pull.mk
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLCOMPILER)\>"`; \
+    if test "$${module}" != "$(ROLLCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(ROLLCOMPILER) not found; \
+      exit 2; \
+    fi; \
+    module=`module avail 2>&1 | grep -o -m1 "\<cmake\>"`; \
+    if test "$${module}" != "cmake"; then \
+      echo *** ERROR: cmake module not found; \
+      exit 2; \
+    fi; \
+    module load $(ROLLCOMPILER) cmake; \
   fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
@@ -88,6 +88,11 @@ endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
+    if test "$${module}" != "$(MPIMODULE)"; then \
+      echo *** ERROR: MPI module $(MPIMODULE) not found; \
+      exit 2; \
+    fi; \
     module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
@@ -98,94 +103,75 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
-ROLLCOMMENT =
-ROLLPGI =
-ifeq ("$(ROLLCOMPILER)", "pgi")
-  ROLLPGI = -pgf90libs
-endif
-
-LAPACK_HOME = \
-  $(REDHAT.ROOT)/src/build-lapack_$(ROLLCOMPILER)
-LAPACK_MOUNT = \
-  /opt/lapack/$(ROLLCOMPILER)
-
-
 FC = gfortran
 CC = gcc
 CFLAGS = -O2 -fPIC
 FFLAGS= -fimplicit-none -O2 -fPIC
-ifeq ("$(ROLLCOMPILER)", "intel")
+ROLLCOMMENT =
+ifeq ("$(COMPILERNAME)", "intel")
   FC = ifort
   CC = icc
   CFLAGS = -O2 -fPIC
   FFLAGS = -O2 -fPIC
-else ifeq ("$(ROLLCOMPILER)", "pgi")
+else ifeq ("$(COMPILERNAME)", "pgi")
   FC = pgf90
   CC = pgcc
   CFLAGS = -O2 -fPIC
   FFLAGS = -O2 -fPIC
+  ROLLPGI = -pgf90libs
 endif
 
+LAPACK_CACHE = $(REDHAT.ROOT)/src/build-lapack_$(COMPILERNAME)
+SCALAPACK_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
 
 build: $(SRC_DIRS)
-	tar zxvf $(SOURCE_DIR).tgz
-	mkdir -p $(LAPACK_MOUNT)
-	mount --bind $(LAPACK_HOME) $(LAPACK_MOUNT)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
-	  if test -e /etc/profile.d/modules.sh; then \
-	    . /etc/profile.d/modules.sh; \
-	    module load cmake; \
-	  fi; \
-          cd $(SOURCE_DIR); \
-          mkdir build_shared; \
-          cd build_shared; \
-	  cmake .. -DCMAKE_INSTALL_PREFIX=$(PKGROOT) -DMPI_C_COMPILER=mpicc \
-                   -DMPI_Fortran_COMPILER=mpif90  \
-                  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
-              -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
-              -DBUILD_SHARED_LIBS=ON \
-              -DLAPACK_LIBRARIES=/opt/lapack/$(ROLLCOMPILER)/lib/liblapack.a \
-              -DBLAS_LIBRARIES=/opt/lapack/$(ROLLCOMPILER)/lib/libblas.a; \
-          make; \
-          cd ..; \
-          mkdir build_static; \
-          cd build_static; \
-	  cmake .. -DCMAKE_INSTALL_PREFIX=$(PKGROOT) -DMPI_C_COMPILER=mpicc \
-                   -DMPI_Fortran_COMPILER=mpif90  \
-                  -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
-              -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
-              -DLAPACK_LIBRARIES=/opt/lapack/$(ROLLCOMPILER)/lib/liblapack.a \
-              -DBLAS_LIBRARIES=/opt/lapack/$(ROLLCOMPILER)/lib/libblas.a; \
-          make \
+	  cd $(SOURCE_DIR); \
+	  mkdir build_shared; \
+	  cd build_shared; \
+	  cmake .. \
+	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=mpicc \
+	    -DMPI_Fortran_COMPILER=mpif90  \
+	    -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
+	    -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
+	    -DBUILD_SHARED_LIBS=ON \
+	    -DLAPACK_LIBRARIES=$(LAPACK_CACHE)/lib/liblapack.a \
+	    -DBLAS_LIBRARIES=$(LAPACK_CACHE)/lib/libblas.a; \
+	  make; \
+	  cd ..; \
+	  mkdir build_static; \
+	  cd build_static; \
+	  cmake .. \
+	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=mpicc \
+	    -DMPI_Fortran_COMPILER=mpif90  \
+	    -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
+	    -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
+	    -DLAPACK_LIBRARIES=$(LAPACK_CACHE)/lib/liblapack.a \
+	    -DBLAS_LIBRARIES=$(LAPACK_CACHE)/lib/libblas.a; \
+	  make \
 	)
-	umount $(LAPACK_MOUNT)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(LAPACK_HOME) $(LAPACK_MOUNT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-            cd $(SOURCE_DIR)/build_shared; \
-            make install; \
-            cd ../build_static; \
-            make install; \
-            cp -r TESTING $(PKGROOT) \
-        )
-	umount $(PKGROOT)
-	umount $(LAPACK_MOUNT)
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cp -r $(SOURCE_DIR)/EXAMPLE $(ROOT)/$(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
-	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
-	cat scalapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/scalapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+	  cd $(SOURCE_DIR)/build_shared; \
+	  make install; \
+	  cd ../build_static; \
+	  make install; \
+	  cp -r TESTING ../EXAMPLE $(ROOT)/$(PKGROOT)/ \
+	)
+	# Fix references to install dir in rpm text files
+	perl -pi -e "s#$(ROOT)##g" \
+	  `find $(ROOT)/$(PKGROOT)/ -type f -exec grep -Il . {} ';'`
+	mkdir -p $(SCALAPACK_CACHE)
+	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(SCALAPACK_CACHE)/
+	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
+	cat scalapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/scalapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
+	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
 	rm -rf $(SOURCE_DIR) BLACS
-	-umount $(LAPACK_MOUNT)
-	-umount $(PKGROOT)

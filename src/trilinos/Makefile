@@ -56,16 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -73,19 +63,25 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load intel; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLCOMPILER)\>"`; \
+    if test "$${module}" != "$(ROLLCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(ROLLCOMPILER) not found; \
+      exit 2; \
+    fi; \
+    module=`module avail 2>&1 | grep -o -m1 "\<cmake\>"`; \
+    if test "$${module}" != "cmake"; then \
+      echo *** ERROR: cmake module not found; \
+      exit 2; \
+    fi; \
+    module load cmake $(ROLLCOMPILER); \
+  fi; \
+  if test -n "$${MKL_ROOT}"; then \
     export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
     export MKLLINK="-L$${MKLLIB} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core \
                     -lpthread"; \
-    module unload intel; \
-    module load $(ROLLCOMPILER); \
-  fi; \
-  if test "$(ROLLCOMPILER)" != "intel"; then \
-    export LD_LIBRARY_PATH=/opt/intel/composer_xe_2011_sp1.7.256/compiler/lib/intel64:/opt/intel/composer_xe_2011_sp1.7.256/mkl/lib/intel64:$${LD_LIBRARY_PATH}; \
   fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
@@ -94,10 +90,14 @@ else
   MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
 endif
 
-
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
+    if test "$${module}" != "$(MPIMODULE)"; then \
+      echo *** ERROR: MPI module $(MPIMODULE) not found; \
+      exit 2; \
+    fi; \
     module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
@@ -109,97 +109,90 @@ MPISETUP = \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
   export MPIRUN="$${MPI_HOME}/bin/mpirun"
 
+PYSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLPY)\>"`; \
+    if test "$${module}" != "$(ROLLPY)"; then \
+      echo *** ERROR: Python $(ROLLPY) not found; \
+      exit 2; \
+    fi; \
+    module load $(ROLLPY); \
+  fi
+
 CC = gcc
 CXX = g++
-ifeq ("$(ROLLCOMPILER)", "intel")
+ifeq ("$(COMPILERNAME)", "intel")
    CC = icc
    CXX = icpc
-else ifeq ("$(ROLLCOMPILER)", "pgi")
+else ifeq ("$(COMPILERNAME)", "pgi")
    CC = pgcc
    CXX = pgCC
 endif
 
-
 build: $(SRC_DIRS)
 	( \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-              make clean; \
-              rm -rf $(ROOT)/$(PKGROOT); \
-              exit; \
-          fi; \
-  	  $(COMPILERSETUP); \
-  	  $(MPISETUP); \
-          module load cmake; \
-          pypath=`echo python=python | grep -o 'python=[^ ]*' | tail -1 | sed 's/.*=//'`; \
-          echo "Using python $$pypath"; \
-          version=`$$pypath --version 2>&1 |sed 's/Python\s*//'`; \
-          if test `echo $${version} |grep -c  [0-9].[0-9].[0-9]$ ` -eq 1; then \
-                   version=`echo $${version}| sed 's/.[0-9]$$//'`; \
-          fi; \
-          export LD_LIBRARY_PATH=/opt/intel/composer_xe_2013.1.117/mkl/lib/intel64:/opt/intel/composer_xe_2013.1.117/compiler/lib/intel64:$${LD_LIBRARY_PATH}; \
-          export PYTHONPATH=/opt/scipy/lib64/python$${version}/site-packages:/opt/scipy/lib/python$${version}/site-packages:$${PYTHONPATH}; \
-          if test ! -e $(REDHAT.ROOT)/src/build-swig; then \
-             cd $(SWIG_DIR); \
-             ./configure CC=$(CC) CXX=$(CXX) --prefix=$(REDHAT.ROOT)/src/build-swig; \
-             $(MAKE) -j 16; \
-             $(MAKE)  -j 16 install; \
-             cd ..; \
-          fi; \
-          export PATH=$(REDHAT.ROOT)/src/build-swig/bin:$${PATH}; \
-  	  cd $(SOURCE_DIR); \
-  	  mkdir build; \
-  	  cd build; \
-	  mkdir -p -m 755 $(ROOT)/$(PKGROOT); \
-	  mkdir -p -m 755 $(PKGROOT); \
-	  mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
-  	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) \
-  	        -DCMAKE_BUILD_TYPE:STRING=DEBUG \
-  	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpif90 \
-  	        -DCMAKE_CXX_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicxx \
-  	        -DCMAKE_C_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicc \
-  	        -DTrilinos_ENABLE_DEFAULT_PACKAGES:BOOL=ON \
-  	        -DTrilinos_ENABLE_Epetra:BOOL=ON \
-  	        -DTrilinos_ENABLE_Teuchos:BOOL=ON \
-  	        -DTrilinos_ENABLE_CTrilinos:BOOL=ON \
-  	        -DTrilinos_ENABLE_ForTrilinos:BOOL=OFF \
-  	        -DTrilinos_ENABLE_TESTS:BOOL=ON \
-            -DTrilinos_ENABLE_PyTrilinos:BOOL=ON \
-  	        -DTPL_BLAS_LIBRARIES:STRING="$${MKLLINK}" \
-  	        -DTPL_LAPACK_LIBRARIES:STRING="$${MKLLINK}" \
-  	        -DDART_TESTING_TIMEOUT:STRING=600 \
-  	        -DTPL_ENABLE_MPI:BOOL=ON \
-  	        -DMPI_BASE_DIR:PATH=${MPI_HOME} \
-  	        -DMPI_USE_COMPILER_WRAPPERS:BOOL=ON \
-  	        -DTrilinos_EXTRA_LINK_FLAGS:STRING="" \
-  	        -DMPI_EXEC_MAX_NUMPROCS:STRING=8 \
-            -DMPI_EXEC:FILEPATH="$${MPIRUN}" \
-  	        -DTPL_MPI_INCLUDE_DIRS:INTERNAL="$${MPI_HOME}/include" \
-  	        -DTPL_MPI_LIBRARIES:INTERNAL="$${MPI_HOME}/lib" \
-  	        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
-  	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
-            -DBUILD_SHARED_LIBS:BOOL=ON \
-  	        $(PWD)/$(SOURCE_DIR); \
-  	  $(MAKE) -j 16; \
-      umount $(PKGROOT) \
-    )
+	  $(COMPILERSETUP); \
+	  $(MPISETUP); \
+	  $(PYSETUP); \
+	  if test ! -e $(REDHAT.ROOT)/src/build-swig; then \
+	    cd $(SWIG_DIR); \
+	    ./configure CC=$(CC) CXX=$(CXX) \
+	                --prefix=$(REDHAT.ROOT)/src/build-swig; \
+	    $(MAKE) -j 16; \
+	    $(MAKE) -j 16 install; \
+	    cd ..; \
+	  fi; \
+	  export PATH=$(REDHAT.ROOT)/src/build-swig/bin:$${PATH}; \
+	  cd $(SOURCE_DIR); \
+	  mkdir build; \
+	  cd build; \
+	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) \
+	        -DCMAKE_BUILD_TYPE:STRING=DEBUG \
+	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpif90 \
+	        -DCMAKE_CXX_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicxx \
+	        -DCMAKE_C_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicc \
+	        -DTrilinos_ENABLE_DEFAULT_PACKAGES:BOOL=ON \
+	        -DTrilinos_ENABLE_Epetra:BOOL=ON \
+	        -DTrilinos_ENABLE_Teuchos:BOOL=ON \
+	        -DTrilinos_ENABLE_CTrilinos:BOOL=ON \
+	        -DTrilinos_ENABLE_ForTrilinos:BOOL=OFF \
+	        -DTrilinos_ENABLE_TESTS:BOOL=ON \
+	        -DTrilinos_ENABLE_PyTrilinos:BOOL=ON \
+	        -DTPL_BLAS_LIBRARIES:STRING="$${MKLLINK}" \
+	        -DTPL_LAPACK_LIBRARIES:STRING="$${MKLLINK}" \
+	        -DDART_TESTING_TIMEOUT:STRING=600 \
+	        -DTPL_ENABLE_MPI:BOOL=ON \
+	        -DMPI_BASE_DIR:PATH=${MPI_HOME} \
+	        -DMPI_USE_COMPILER_WRAPPERS:BOOL=ON \
+	        -DTrilinos_EXTRA_LINK_FLAGS:STRING="" \
+	        -DMPI_EXEC_MAX_NUMPROCS:STRING=8 \
+	        -DMPI_EXEC:FILEPATH="$${MPIRUN}" \
+	        -DTPL_MPI_INCLUDE_DIRS:INTERNAL="$${MPI_HOME}/include" \
+	        -DTPL_MPI_LIBRARIES:INTERNAL="$${MPI_HOME}/lib" \
+	        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
+	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
+	        -DBUILD_SHARED_LIBS:BOOL=ON \
+	        $(PWD)/$(SOURCE_DIR); \
+	  $(MAKE) -j 16 \
+	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
+	# Using a bind mount appears to be the only way to prevent the build
+	# from incorporating $(ROOT) in binary files.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	mkdir -p -m 755 $(PKGROOT)
+	-mkdir -p -m 755 $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-              make clean; \
-              rm -rf $(ROOT)/$(PKGROOT); \
-              exit; \
-          fi; \
-          mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT); \
+	  $(PYSETUP); \
 	  cd $(SOURCE_DIR)/build; \
-	  make -j 16 prefix=$(PKGROOT) install; \
-          umount $(PKGROOT) \
+	  make install \
 	)
+	umount $(PKGROOT)
+	-rmdir -p $(PKGROOT)
 	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cat trilinos.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/trilinos!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+	cat trilinos.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/trilinos!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 

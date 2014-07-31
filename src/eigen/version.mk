@@ -1,4 +1,10 @@
-NAME               = eigen
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+FIRSTCOMPILER = $(firstword $(ROLLCOMPILER))
+COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
+
+NAME               = eigen_$(COMPILERNAME)
 VERSION            = 3.2.1
 RELEASE            = 0
 PKGROOT            = /opt/eigen

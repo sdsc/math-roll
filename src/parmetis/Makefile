@@ -56,16 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -76,7 +66,17 @@ include pull.mk
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER); \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(FIRSTCOMPILER)\>"`; \
+    if test "$${module}" != "$(FIRSTCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(FIRSTCOMPILER) not found; \
+      exit 2; \
+    fi; \
+    module=`module avail 2>&1 | grep -o -m1 "\<cmake\>"`; \
+    if test "$${module}" != "cmake"; then \
+      echo *** ERROR: cmake module not found; \
+      exit 2; \
+    fi; \
+    module load cmake $(ROLLCOMPILER); \
   fi
 
 ifeq ("$(ROLLNETWORK)", "eth")
@@ -88,6 +88,11 @@ endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
+    if test "$${module}" != "$(MPIMODULE)"; then \
+      echo *** ERROR: MPI module $(MPIMODULE) not found; \
+      exit 2; \
+    fi; \
     module load $(MPIMODULE); \
   fi; \
   export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
@@ -98,33 +103,24 @@ MPISETUP = \
   export PATH=$${PATH}:$${MPI_HOME}/bin; \
   export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
 
+PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
+
 build: $(SRC_DIRS)
 	patch $(SOURCE_DIR)/Makefile patch-files/Makefile.parmetis.patch
 	patch $(SOURCE_DIR)/metis/Makefile patch-files/Makefile.metis.patch
 	patch $(SOURCE_DIR)/CMakeLists.txt patch-files/CMakeLists.txt.patch
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-	  . /etc/profile.d/modules.sh; \
-	  module load cmake; \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
 	  export CFLAGS=-fPIC; \
 	  export CXXFLAGS=-fPIC; \
-	  $(MAKE) -j 16 prefix=$(PKGROOT) config; \
+	  $(MAKE) -j 16 prefix=$(ROOT)/$(PKGROOT) config; \
 	)
-	umount $(PKGROOT)
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
-	mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-	  . /etc/profile.d/modules.sh; \
-	  module load cmake; \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
@@ -135,11 +131,10 @@ install::
 	  cp build/Linux-x86_64/libmetis/libmetis.a $(ROOT)/$(PKGROOT)/lib; \
 	  cp -r Graphs $(ROOT)/$(PKGROOT) \
 	)
-	umount $(PKGROOT)
-	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-$(NAME)
-	cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)/
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cat parmetis.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/parmetis!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
+	mkdir -p -m 755 $(PARMETIS_CACHE)
+	cp -r $(ROOT)/$(PKGROOT)/* $(PARMETIS_CACHE)/
+	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
+	cat parmetis.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/parmetis!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 

@@ -56,10 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -70,60 +66,55 @@ include pull.mk
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLCOMPILER)\>"`; \
+    if test "$${module}" != "$(ROLLCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(ROLLCOMPILER) not found; \
+      exit 2; \
+    fi; \
     module load $(ROLLCOMPILER); \
   fi
 
 CC = gcc
 COMPILE_FLAGS = -O2
-ifeq ("$(ROLLCOMPILER)", "intel")
+ifeq ("$(COMPILERNAME)", "intel")
   CC = icc
   COMPILE_FLAGS = -O2 -fp-model precise
-else ifeq ("$(ROLLCOMPILER)", "pgi")
+else ifeq ("$(COMPILERNAME)", "pgi")
   CC = pgcc
   COMPILE_FLAGS = -O1 -Mdaz 
-else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
-  COMPILE_FLAGS += -mavx
+endif
+ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    COMPILE_FLAGS += -mavx
+  endif
 endif
 
 build: $(SRC_DIRS)
 	( \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-              make clean; \
-              exit; \
-          fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE_DIR); \
 	  ./configure CC=$(CC) CFLAGS="$(COMPILE_FLAGS)" --prefix=$(PKGROOT); \
-	  if test "$(ROLLCOMPILER)" = "pgi"; then \
+	  if test "$(COMPILERNAME)" = "pgi"; then \
 	    perl -pi -e 's!.*#define  *HAVE_INLINE.*!/* #undef HAVE_INLINE */!' config.h; \
 	  fi; \
-	  $(MAKE) -j 16 ; \
+	  $(MAKE) -j 16 \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
-	mkdir -p $(ROOT)/$(PKGROOT)
-	mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
-          if test $(ROLLCOMPILER) = "pgi"; then \
-              make clean; \
-              rm -rf $(ROOT)/$(PKGROOT); \
-              exit; \
-          fi; \
 	  $(COMPILERSETUP); \
 	  cd $(SOURCE_DIR); \
-	  $(MAKE) -j 16 prefix=$(ROOT)/$(PKGROOT) install; \
+	  $(MAKE) prefix=$(ROOT)/$(PKGROOT) install; \
 	  $(MAKE) check; \
 	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/tests; \
 	  for file in `cat ../patch-files/tests`; do \
 	    cp -r $$file $(ROOT)/$(PKGROOT)/tests; \
 	  done; \
 	)
-	umount $(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cat gsl.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/gsl!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
+	cat gsl.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/gsl!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
+	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

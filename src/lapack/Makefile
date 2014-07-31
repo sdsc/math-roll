@@ -56,10 +56,6 @@
 #
 # $Log$
 
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-
 REDHAT.ROOT = $(CURDIR)/../../
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
@@ -70,21 +66,31 @@ include pull.mk
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLCOMPILER)\>"`; \
+    if test "$${module}" != "$(ROLLCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(ROLLCOMPILER) not found; \
+      exit 2; \
+    fi; \
     module load $(ROLLCOMPILER); \
   fi
 
 FC = gfortran -fimplicit-none -O2 -fPIC
 CC = gcc -O2 -fPIC
-ifeq ("$(ROLLCOMPILER)", "intel")
+ifeq ("$(COMPILERNAME)", "intel")
   FC = ifort -O2 -xHOST -fPIC
   CC = icc -O2 -xHOST -fPIC
-else ifeq ("$(ROLLCOMPILER)", "pgi")
+else ifeq ("$(COMPILERNAME)", "pgi")
   FC = pgf90 -fast -fPIC
   CC = pcc -fast -fPIC
-else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
-   CC += -mavx
-   FC += -mavx
 endif
+ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    CC += -mavx
+    FC += -mavx
+  endif
+endif
+
+LAPACK_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
 
 build: $(SRC_DIRS)
 	cp patch-files/make.inc.lapack $(SOURCE_DIR)/make.inc
@@ -96,19 +102,19 @@ build: $(SRC_DIRS)
 	  $(COMPILERSETUP); \
 	  cd BLAS; \
 	  make; \
-          mkdir tmp; \
-          cd tmp; \
-          ar -x ../blas.a; \
-          $(FC) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
- 	  cd ../../$(SOURCE_DIR); \
-          $(MAKE); \
-          mkdir tmp; \
-          cd tmp; \
-          ar -x ../liblapack.a; \
-          $(FC) -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
-          rm *.o; \
-          ar -x ../libtmglib.a; \
-          $(FC) -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
+	  mkdir tmp; \
+	  cd tmp; \
+	  ar -x ../blas.a; \
+	  $(FC) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
+	  cd ../../$(SOURCE_DIR); \
+	  $(MAKE); \
+	  mkdir tmp; \
+	  cd tmp; \
+	  ar -x ../liblapack.a; \
+	  $(FC) -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
+	  rm *.o; \
+	  ar -x ../libtmglib.a; \
+$(FC) -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
@@ -130,10 +136,11 @@ install::
 	       $(ROOT)/$(PKGROOT)/runtests; \
 	  fi \
 	)
-	mkdir -p $(REDHAT.ROOT)/src/build-$(NAME)
-	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(REDHAT.ROOT)/src/build-$(NAME)
-	cat lapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(ROLLCOMPILER)/lapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(ROLLCOMPILER)!g" \
-          > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
+	mkdir -p -m 755 $(LAPACK_CACHE)
+	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(LAPACK_CACHE)/
+	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
+	cat lapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/lapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
+	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

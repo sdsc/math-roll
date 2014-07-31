@@ -65,38 +65,65 @@ include Rules.mk
 include pull.mk
 
 
+COMPILERSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module=`module avail 2>&1 | grep -o -m1 "\<$(FIRSTCOMPILER)\>"`; \
+    if test "$${module}" != "$(FIRSTCOMPILER)"; then \
+      echo *** ERROR: Compiler module $(FIRSTCOMPILER) not found; \
+      exit 2; \
+    fi; \
+    module=`module avail 2>&1 | grep -o -m1 "\<cmake\>"`; \
+    if test "$${module}" != "cmake"; then \
+      echo *** ERROR: cmake module not found; \
+      exit 2; \
+    fi; \
+    module load cmake $(FIRSTCOMPILER); \
+  fi
+
+CC = gcc
+CXX = g++
+F90 = gfortran
+ifeq ("$(ROLLCOMPILER)", "intel")
+  CC = icc
+  CXX = icpc
+  F90 = ifort
+else ifeq ("$(ROLLCOMPILER)", "pgi")
+  CC = pgcc
+  CXX = pgCC
+  F90 = pgf90
+endif
+ 
 build: $(SRC_DIRS)
-	mkdir -p $(PKGROOT)
-	mkdir -p $(ROOT)/$(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	cp patch-files/EigenTesting.cmake $(SOURCE_DIR)/cmake/
 	( \
-          module load cmake; \
+	  $(COMPILERSETUP); \
+	  module load cmake; \
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \
 	  cmake -DCMAKE_CXX_COMPILER=$(CXX) -DCMAKE_C_COMPILER=$(CC) \
-	    -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) ..; \
+	    -DCMAKE_Fortran_COMPILER=$(F90) -DCMAKE_INSTALL_PREFIX:PATH=$(ROOT)/$(PKGROOT) ..; \
 	)
-	umount $(PKGROOT)
 	@echo "::: Package $(NAME) build complete :::"
 	
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	mkdir -p -m 755 $(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
+	  $(COMPILERSETUP); \
 	  cd $(SOURCE_DIR)/build; \
-	  $(MAKE) -j 16 install; \
+	  $(MAKE) install; \
 	  cd $(ROOT)/$(PKGROOT)/include; \
 	  ln -s eigen3/Eigen Eigen \
 	)
-	umount $(PKGROOT)
+	# Fix references to install dir in rpm text files
+	perl -pi -e "s#$(ROOT)##g" \
+	  `find $(ROOT)/$(PKGROOT)/ -type f -exec grep -Il . {} ';'`
+	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
 	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/eigen!g;s!VERSION!$(VERSION)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
 	rm -rf $(SOURCE_DIR)
-	-umount $(PKGROOT)
 
