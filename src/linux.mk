@@ -65,4 +65,4 @@ SRCDIRS = `find . -maxdepth 1 -type d \
         -not -name slepc \
         -not -name math-modules \
         -not -name build-\* \
-        -not -name .` parmetis scalapack superlu petsc slepc math-modules
+        -not -name .` scalapack petsc slepc math-modules
