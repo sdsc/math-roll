@@ -279,13 +279,13 @@ mkdir $TESTFILE.dir
 cd $TESTFILE.dir
 cp -r \$SLEPCHOME/examples/* .
 cd tests
-unset PETSCPARCH
+unset PETSC_ARCH
 make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compiler}/${mpi}/${network} testtest10
 make SLEPC_DIR=/opt/slepc/${compiler}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compiler}/${mpi}/${network} testtest7f
 END
         close(OUT);
-        $output = `/bin/bash $TESTFILE.sh|grep -c sucessfully 2>&1`;
-        ok($output >= 3, "slepc $compiler $mpi $network works");
+        $output = `/bin/bash $TESTFILE.sh | grep -c successfully 2>&1`;
+        ok($output >= 3, "slepc/$compiler/$mpi/$network works");
       }
     }
   }
