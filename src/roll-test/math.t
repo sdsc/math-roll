@@ -413,7 +413,7 @@ foreach my $compiler(@COMPILERS) {
 . /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} trilinos
 export LD_LIBRARY_PATH=/opt/intel/composer_xe_2013.1.117/mkl/lib/intel64:\${LD_LIBRARY_PATH}
-mpicxx -I\${TRILINOSHOME}/include -o $TESTFILE.tril.exe $TESTFILE.tril.cxx -L\${TRILINOSHOME}/lib -lteuchos
+mpicxx -I\${TRILINOSHOME}/include -o $TESTFILE.tril.exe $TESTFILE.tril.cxx -L\${TRILINOSHOME}/lib -lteuchoscore
 ls -l *.exe
 ./$TESTFILE.tril.exe
 rm -f $TESTFILE.tril.exe
