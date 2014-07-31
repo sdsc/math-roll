@@ -118,20 +118,24 @@ build: $(SRC_DIRS)
 	  export LD_LIBRARY_PATH=$(SUPERLU_CACHE):$${LD_LIBRARY_PATH}; \
 	  export PETSC_DIR=$(PETSC_CACHE); \
 	  unset PETSC_ARCH; \
-	  export SLEPC_DIR=`pwd`; \
-	  ./configure --prefix=$(ROOT)/$(PKGROOT); \
-	  make SLEPC_DIR=$${PWD} PETSC_DIR=$(PETSC_CACHE) PETSC_ARCH=arch-installed-petsc \
+	  ./configure --prefix=$(PKGROOT); \
+	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) PETSC_ARCH=arch-installed-petsc \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
+	# Using a bind mount appears to be the only way to prevent the build
+	# from incorporating $(ROOT) in binary files.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	-mkdir -p -m 755 $(PKGROOT)
+	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR); \
-	  export SLEPC_DIR=`pwd`; \
-	  make install; \
+	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) PETSC_ARCH=arch-installed-petsc install; \
 	  cp -r src/eps/examples $(ROOT)/$(PKGROOT)/ \
 	)
+	umount $(PKGROOT)
+	-rmdir -p $(PKGROOT)
 	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
 	cat slepc.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/slepc!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
 	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
