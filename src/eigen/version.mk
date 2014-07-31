@@ -6,7 +6,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
 
 NAME               = eigen_$(COMPILERNAME)
 VERSION            = 3.2.1
-RELEASE            = 0
+RELEASE            = 1
 PKGROOT            = /opt/eigen
 RPM.EXTRAS         = AutoReq:No
 

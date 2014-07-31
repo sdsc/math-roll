@@ -13,7 +13,7 @@ endif
 
 NAME               = sprng_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 2.0b
-RELEASE            = 0
+RELEASE            = 1
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/sprng/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 

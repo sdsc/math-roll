@@ -13,7 +13,7 @@ endif
 
 NAME               = superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 3.2
-RELEASE            = 0
+RELEASE            = 1
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/superlu/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 

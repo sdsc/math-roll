@@ -17,7 +17,7 @@ endif
 
 NAME               = trilinos_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 11.4.3
-RELEASE            = 0
+RELEASE            = 1
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/trilinos/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 

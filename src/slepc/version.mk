@@ -13,7 +13,7 @@ endif
 
 NAME               = slepc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 3.4.4
-RELEASE            = 0
+RELEASE            = 1
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/slepc/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 

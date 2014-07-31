@@ -13,7 +13,7 @@ endif
 
 NAME               = petsc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION            = 3.4.3
-RELEASE            = 0
+RELEASE            = 1
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/petsc/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 

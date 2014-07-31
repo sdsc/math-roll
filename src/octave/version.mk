@@ -19,7 +19,7 @@ endif
 
 NAME               = octave_$(COMPILERNAME)
 VERSION            = 3.6.4
-RELEASE            = 0
+RELEASE            = 1
 RPM.EXTRAS         = "AutoReq: no"
 PKGROOT            = /opt/octave
 
