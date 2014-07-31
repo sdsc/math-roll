@@ -126,8 +126,8 @@ install::
 	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include ; \
 	  chmod 0644 $(ROOT)/$(PKGROOT)/include/*; \
 	  cp -r EXAMPLE $(ROOT)/$(PKGROOT); \
-	  chmod 0755 $(ROOT)/$(PKGROOT)/EXAMPLE; \
-	  chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLE/* \
+	  chmod go+rx $(ROOT)/$(PKGROOT)/EXAMPLE; \
+	  chmod go+rX $(ROOT)/$(PKGROOT)/EXAMPLE/* \
 	)
 	mkdir $(SUPERLU_CACHE)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(SUPERLU_CACHE)/
