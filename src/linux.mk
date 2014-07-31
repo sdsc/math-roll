@@ -55,19 +55,14 @@
 #
 
 
+# petsc depends on parmetis, scalapack, superlu
+# scalapack depends on lapack
+# slepc depends on parmetis, petsc
 SRCDIRS = `find . -maxdepth 1 -type d \
         -not -name CVS \
-        -not -name lapack \
-        -not -name octave \
-        -not -name scalapack \
-        -not -name superlu \
-        -not -name parmetis \
         -not -name petsc \
-        -not -name sprng \
-        -not -name trilinos \
-        -not -name eigen \
-        -not -name gsl \
-        -not -name sundials \
+        -not -name scalapack \
+        -not -name slepc \
         -not -name math-modules \
         -not -name build-\* \
-        -not -name .` eigen trilinos gsl lapack octave sprng sundials scalapack parmetis superlu petsc math-modules
+        -not -name .` parmetis scalapack superlu petsc slepc math-modules
