@@ -64,6 +64,11 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
+endif
+FIRSTCOMPILER = $(firstword $(ROLLCOMPILER))
+COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
 
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
