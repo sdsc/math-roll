@@ -70,6 +70,10 @@ ifndef ROLLNETWORK
   ROLLNETWORK = eth
 endif
 
+ifndef ROLLPY
+  ROLLPY = python
+endif
+
 -include $(ROLLSROOT)/etc/Rolls.mk
 include Rolls.mk
 
@@ -89,7 +93,12 @@ default:
 	  done; \
 	  perl -pi -e '$$_ = "" if m/COMPILERNAME|ROLLNETWORK|ROLLMPI/' $$o; \
 	done
-	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLNETWORK="$(ROLLNETWORK)" ROLLMPI="$(ROLLMPI)" roll
+	SKIP=''; \
+	if test -f packages_to_skip; then \
+	  SKIP=`sed 's/#.*//' packages_to_skip | tr '\n' ' '`; \
+	fi; \
+	echo $(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLNETWORK="$(ROLLNETWORK)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" SKIP="$${SKIP}" roll; \
+	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLNETWORK="$(ROLLNETWORK)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" SKIP="$${SKIP}" roll
 
 clean::
 	rm -f _arch bootstrap.py

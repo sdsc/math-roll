@@ -65,10 +65,16 @@ default:
 	@echo "copyright|rpm|pkg|clean"
 
 copyright rpm pkg clean::
-	for i in $(SRCDIRS) ; do \
+	for i in $(SRCDIRS); do \
+	  package=`echo $$i | sed 's/\.\///'`; \
 	  if test `grep -c "\<NAME.*COMPILER" $$i/version.mk` -gt 0 -a \
 	          `grep -c FIRSTCOMPILER $$i/version.mk` -eq 0; then \
 	    for c in $(ROLLCOMPILER); do \
+	      echo "$(SKIP)" | grep -q "$${package}_$${c}"; \
+	      if test $$? -eq 0; then \
+	        echo skip make $@ of $${package}_$${c}; \
+	        continue; \
+	      fi; \
 	      grep -q ROLLMPI $$i/version.mk; \
 	      if test $$? -eq 0; then \
 	        for m in $(ROLLMPI); do \
@@ -85,6 +91,11 @@ copyright rpm pkg clean::
               fi; \
 	    done; \
 	  else \
+	    echo "$(SKIP)" | grep -q "$${package}_$(ROLLCOMPILER)"; \
+	    if test $$? -eq 0; then \
+	      echo skip make $@ of $${package}_$(ROLLCOMPILER); \
+	      continue; \
+	    fi; \
 	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
 	    (cd $$i && $(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" $@) || exit 2; \
 	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \

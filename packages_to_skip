@@ -1,0 +1,5 @@
+# List of packages known to have build problems.  The Makefile reads this file
+# and doesn't attempt to build any of the packages listed.
+trilinos_pgi
+octave_intel
+octave_pgi

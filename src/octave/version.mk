@@ -3,11 +3,6 @@ ifndef ROLLCOMPILER
 endif
 FIRSTCOMPILER := $(firstword $(ROLLCOMPILER))
 COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
-# Note: presently only able to compile with gnu compiler
-ifneq ("$(COMPILERNAME)", "gnu")
-  FIRSTCOMPILER := gnu
-  COMPILERNAME := gnu
-endif
 
 # ROLLNETWORK/MPI only used for locating fftw/hdf5 modulefiles
 ifndef ROLLNETWORK
