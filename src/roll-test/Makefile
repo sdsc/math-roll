@@ -72,6 +72,6 @@ install::
 	  perl -pi -e 's#ROLLCOMPILER#$(ROLLCOMPILER)#g' $(ROOT)/$(PKGROOT)/*.t
 	  perl -pi -e 's#ROLLMPI#$(ROLLMPI)#g' $(ROOT)/$(PKGROOT)/*.t
 	  perl -pi -e 's#ROLLNETWORK#$(ROLLNETWORK)#g' $(ROOT)/$(PKGROOT)/*.t
-	  perl -pi -e 's#SKIP#$(SKIP)#g' $(ROOT)/$(PKGROOT)/*.t
+	  perl -pi -e 's#ROLLSKIP#$(SKIP)#g' $(ROOT)/$(PKGROOT)/*.t
 
 clean::

@@ -17,7 +17,7 @@ my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
 my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
-my $SKIP = 'SKIP';
+my $SKIP = 'ROLLSKIP';
 my $TESTFILE = 'tmpmath';
 my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 
