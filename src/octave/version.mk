@@ -5,25 +5,30 @@ FIRSTCOMPILER := $(firstword $(ROLLCOMPILER))
 COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
 
 # ROLLNETWORK/MPI only used for locating fftw/hdf5 modulefiles
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
+
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
+FIRSTMPI := $(firstword $(ROLLMPI))
 
-NAME               = octave_$(COMPILERNAME)
-VERSION            = 3.6.4
-RELEASE            = 1
-RPM.EXTRAS         = "AutoReq: no"
-PKGROOT            = /opt/octave
+ifndef ROLLNETWORK
+  ROLLNETWORK = eth
+endif
+FIRSTNETWORK := $(firstword $(ROLLNETWORK))
 
-SRC_SUBDIR         = octave
+NAME           = octave_$(COMPILERNAME)
+VERSION        = 3.6.4
+RELEASE        = 1
+PKGROOT        = /opt/octave
 
-SOURCE_NAME        = octave
-SOURCE_VERSION     = $(VERSION)
-SOURCE_SUFFIX      = tar.gz
-SOURCE_PKG         = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
-SOURCE_DIR         = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
+SRC_SUBDIR     = octave
 
-TAR_GZ_PKGS        = $(SOURCE_PKG)
+SOURCE_NAME    = octave
+SOURCE_SUFFIX  = tar.gz
+SOURCE_VERSION = $(VERSION)
+SOURCE_PKG     = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
+SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
+
+TAR_GZ_PKGS    = $(SOURCE_PKG)
+
+RPM.EXTRAS     = AutoReq:No
