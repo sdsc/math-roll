@@ -18,7 +18,7 @@ FIRSTNETWORK := $(firstword $(ROLLNETWORK))
 
 NAME           = octave_$(COMPILERNAME)
 VERSION        = 3.6.4
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/octave
 
 SRC_SUBDIR     = octave

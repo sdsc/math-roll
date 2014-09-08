@@ -63,86 +63,87 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(FIRSTCOMPILER)\>"`; \
-    if test "$${module}" != "$(FIRSTCOMPILER)"; then \
-      echo *** ERROR: Compiler module $(FIRSTCOMPILER) not found; \
-      exit 2; \
-    fi; \
-    module load $(FIRSTCOMPILER); \
-  fi; \
-  if test -n "$${MKL_ROOT}"; then \
-    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-    export LD_LIBRARY_PATH="$${MKLLIB}:$${LD_LIBRARY_PATH}"; \
-    export LIBINCLUDE="-I$${MKL_ROOT}/include"; \
-    export LIBLINK="-L$${MKLLIB} -lmkl_gf_ilp64 -lmkl_gnu_thread \
-             -lmkl_core -ldl -lpthread -lm"; \
-  fi; \
-  if test "$(COMPILERNAME)" = "gnu"; then \
-    gccdir=`which gcc | sed 's/\/gcc$$//'`; \
-    if test "$${gccdir}" != "/usr/bin"; then \
-      for F in `find $${gccdir}/.. -name include`; do \
-        export LIBINCLUDE="$${LIBINCLUDE} -I$${F}"; \
-      done; \
-    fi; \
-  fi
-
-FFTWSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<fftw\>"`; \
-    if test "$${module}" != "fftw"; then \
-      echo *** ERROR: fftw module not found; \
-      exit 2; \
-    fi; \
-    module load fftw; \
-  fi
-
-HDF5SETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<hdf5\>"`; \
-    if test "$${module}" != "hdf5"; then \
-      echo *** ERROR: hdf5 module not found; \
-      exit 2; \
-    fi; \
-    module load hdf5; \
-  fi
-
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
-MPISETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
-    if test "$${module}" != "$(MPIMODULE)"; then \
-      echo *** ERROR: MPI module $(MPIMODULE) not found; \
-      exit 2; \
-    fi; \
-    module load $(MPIMODULE); \
-  fi
-
 CC = gcc
 CXX = g++
 F77 = gfortran
 COMPILER_FLAGS = -O2 -fopenmp -m64
+
 ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
-  ifeq ("$(COMPILERNAME)", "gnu")
+  ifeq ("$(FIRSTCOMPILER)", "gnu")
     COMPILER_FLAGS += -mavx
   endif
 endif
 
+COMPILERSETUP =  \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(FIRSTCOMPILER) || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version
+
+FFTWSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load fftw || true; \
+  fi; \
+  echo === FFTWHOME ===; \
+  echo $${FFTWHOME}
+
+HDF5SETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load hdf5 || true; \
+  fi; \
+  echo === HDF5HOME ===; \
+  echo $${HDF5HOME}
+
+MKLSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load mkl || true; \
+  fi; \
+  echo === MKL_ROOT ===; \
+  echo $${MKL_ROOT}; \
+  export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
+  export LD_LIBRARY_PATH="$${MKLLIB}:$${LD_LIBRARY_PATH}"
+
+ifeq ("$(FIRSTNETWORK)", "eth")
+  MPIMODULE = $(FIRSTMPI)
+else
+  MPIMODULE = $(FIRSTMPI)_$(FIRSTNETWORK)
+endif
+
+MPISETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(MPIMODULE) || true; \
+  fi; \
+  if test -z "$${MPIHOME}"; then \
+    export MPIHOME=/opt/$(FIRSTMPI); \
+  fi; \
+  echo === MPIHOME ===; \
+  echo $${MPIHOME}
+
+
 build: $(SRC_DIRS)
 	( \
 	  $(COMPILERSETUP); \
+	  $(MKLSETUP); \
 	  $(MPISETUP); \
 	  $(FFTWSETUP); \
 	  $(HDF5SETUP); \
+	  export LIBINCLUDE="-I$${MKL_ROOT}/include"; \
+	  export LIBLINK="-Wl,-rpath,$${MKLLIB} -L$${MKLLIB} -lmkl_gf_ilp64 \
+	                  -lmkl_gnu_thread -lmkl_core -ldl -lpthread -lm"; \
+	  if test "$(COMPILERNAME)" = "gnu"; then \
+	    gccdir=`which gcc | sed 's/\/gcc$$//'`; \
+	    if test "$${gccdir}" != "/usr/bin"; then \
+	      for F in `find $${gccdir}/.. -name include`; do \
+	        export LIBINCLUDE="$${LIBINCLUDE} -I$${F}"; \
+	      done; \
+	    fi; \
+	  fi; \
 	  export CC=$(CC); \
 	  export CFLAGS="$(COMPILER_FLAGS) $${LIBINCLUDE}"; \
 	  export CXX=$(CXX); \
@@ -152,7 +153,6 @@ build: $(SRC_DIRS)
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \
-	  set; \
 	  ../configure --prefix=$(PKGROOT) \
 	    --enable-64 --disable-docs \
 	    --with-blas="$${LIBLINK}" --with-lapack="$${LIBLINK}" \

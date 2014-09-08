@@ -13,7 +13,7 @@ endif
 
 NAME           = scalapack_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 2.0.2
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/scalapack/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = scalapack

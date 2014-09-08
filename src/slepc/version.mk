@@ -13,7 +13,7 @@ endif
 
 NAME           = slepc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 3.4.4
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/slepc/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = slepc

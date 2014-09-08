@@ -63,30 +63,6 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(FIRSTCOMPILER)\>"`; \
-    if test "$${module}" != "$(FIRSTCOMPILER)"; then \
-      echo *** ERROR: Compiler module $(FIRSTCOMPILER) not found; \
-      exit 2; \
-    fi; \
-    module load $(ROLLCOMPILER); \
-  fi; \
-  if test -n "$${MKL_ROOT}"; then \
-    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-    export MKLLINK="-Wl,--start-group \
-                    $${MKLLIB}/libmkl_intel_lp64.a \
-                    $${MKLLIB}/libmkl_sequential.a \
-                    $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm"; \
-  fi
-
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
-
 CC=gcc
 F77=gfortran
 CFLAGS=-O2
@@ -99,23 +75,30 @@ else ifeq ("$(COMPILERNAME)","pgi")
    F77=pgf77
 endif
 
+COMPILERSETUP =  \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(ROLLCOMPILER) || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version
+
+ifeq ("$(ROLLNETWORK)", "eth")
+  MPIMODULE = $(ROLLMPI)
+else
+  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
+endif
+
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
-    if test "$${module}" != "$(MPIMODULE)"; then \
-      echo *** ERROR: MPI module $(MPIMODULE) not found; \
-      exit 2; \
-    fi; \
-    module load $(MPIMODULE); \
+    module load $(MPIMODULE) || true; \
   fi; \
-  export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
-  if test -z "$${MPI_HOME}"; then \
-    export MPI_HOME=/opt/$(ROLLMPI); \
+  if test -z "$${MPIHOME}"; then \
+    export MPIHOME=/opt/$(ROLLMPI); \
   fi; \
-  echo Using MPI from $${MPI_HOME}; \
-  export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
+  echo === MPIHOME ===; \
+  echo $${MPIHOME}
 
 build: $(SRC_DIRS)
 	tar zxvf $(SOURCE_DIR).tar.gz
@@ -125,8 +108,8 @@ build: $(SRC_DIRS)
 	  cd $(SOURCE_DIR); \
 	  ./configure CC=$(CC) F77=$(F77) \
 	    --prefix=$(ROOT)/$(PKGROOT) --enable-examples \
-	    --with-mpicc=$${MPI_HOME}/bin/mpicc \
-	    --with-mpif77=$${MPI_HOME}/bin/mpif77;  \
+	    --with-mpicc=$${MPIHOME}/bin/mpicc \
+	    --with-mpif77=$${MPIHOME}/bin/mpif77;  \
 	  make -j 16 \
 	)
 	@echo "::: Package $(NAME) build complete :::"

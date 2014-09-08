@@ -63,26 +63,35 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-COMPILERSETUP = \
+CC = gcc
+CXX = g++
+ifeq ("$(COMPILERNAME)", "intel")
+  CC = icc
+  CXX = icpc
+else ifeq ("$(COMPILERNAME)", "pgi")
+  CC = pgcc
+  CXX = pgCC
+endif
+
+COMPILERSETUP =  \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLCOMPILER)\>"`; \
-    if test "$${module}" != "$(ROLLCOMPILER)"; then \
-      echo *** ERROR: Compiler module $(ROLLCOMPILER) not found; \
-      exit 2; \
-    fi; \
-    module=`module avail 2>&1 | grep -o -m1 "\<cmake\>"`; \
-    if test "$${module}" != "cmake"; then \
-      echo *** ERROR: cmake module not found; \
-      exit 2; \
-    fi; \
-    module load cmake $(ROLLCOMPILER); \
+    module load $(ROLLCOMPILER) || true; \
+    module load cmake || true; \
   fi; \
-  if test -n "$${MKL_ROOT}"; then \
-    export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`; \
-    export MKLLINK="-L$${MKLLIB} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core \
-                    -lpthread"; \
-  fi
+  echo === Compiler and version ===; \
+  $(CC) --version; \
+  echo === cmake version ===; \
+  cmake --version
+
+MKLSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load mkl || true; \
+  fi; \
+  echo === MKL_ROOT ===; \
+  echo $${MKL_ROOT}; \
+  export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`
 
 ifeq ("$(ROLLNETWORK)", "eth")
   MPIMODULE = $(ROLLMPI)
@@ -93,46 +102,26 @@ endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
-    if test "$${module}" != "$(MPIMODULE)"; then \
-      echo *** ERROR: MPI module $(MPIMODULE) not found; \
-      exit 2; \
-    fi; \
-    module load $(MPIMODULE); \
+    module load $(MPIMODULE) || true; \
   fi; \
-  export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
-  if test -z "$${MPI_HOME}"; then \
-    export MPI_HOME=/opt/$(ROLLMPI); \
+  if test -z "$${MPIHOME}"; then \
+    export MPIHOME=/opt/$(ROLLMPI); \
   fi; \
-  echo Using MPI from $${MPI_HOME}; \
-  export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib; \
-  export MPIRUN="$${MPI_HOME}/bin/mpirun"
+  echo === MPIHOME ===; \
+  echo $${MPIHOME}
 
 PYSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLPY)\>"`; \
-    if test "$${module}" != "$(ROLLPY)"; then \
-      echo *** ERROR: Python $(ROLLPY) not found; \
-      exit 2; \
-    fi; \
-    module load $(ROLLPY); \
-  fi
-
-CC = gcc
-CXX = g++
-ifeq ("$(COMPILERNAME)", "intel")
-   CC = icc
-   CXX = icpc
-else ifeq ("$(COMPILERNAME)", "pgi")
-   CC = pgcc
-   CXX = pgCC
-endif
+    module load $(ROLLPY) || true; \
+  fi; \
+  echo === Python and version ===; \
+  echo `which python; python --version`
 
 build: $(SRC_DIRS)
 	( \
 	  $(COMPILERSETUP); \
+	  $(MKLSETUP); \
 	  $(MPISETUP); \
 	  $(PYSETUP); \
 	  if test ! -e $(REDHAT.ROOT)/src/build-swig; then \
@@ -143,15 +132,17 @@ build: $(SRC_DIRS)
 	    $(MAKE) -j 16 install; \
 	    cd ..; \
 	  fi; \
+	  MKLLINK="-L$${MKLLIB} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core \
+	           -lpthread"; \
 	  export PATH=$(REDHAT.ROOT)/src/build-swig/bin:$${PATH}; \
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \
 	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) \
 	        -DCMAKE_BUILD_TYPE:STRING=DEBUG \
-	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpif90 \
-	        -DCMAKE_CXX_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicxx \
-	        -DCMAKE_C_COMPILER:FILEPATH=$${MPI_HOME}/bin/mpicc \
+	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPIHOME}/bin/mpif90 \
+	        -DCMAKE_CXX_COMPILER:FILEPATH=$${MPIHOME}/bin/mpicxx \
+	        -DCMAKE_C_COMPILER:FILEPATH=$${MPIHOME}/bin/mpicc \
 	        -DTrilinos_ENABLE_DEFAULT_PACKAGES:BOOL=ON \
 	        -DTrilinos_ENABLE_Epetra:BOOL=ON \
 	        -DTrilinos_ENABLE_Teuchos:BOOL=ON \
@@ -163,13 +154,13 @@ build: $(SRC_DIRS)
 	        -DTPL_LAPACK_LIBRARIES:STRING="$${MKLLINK}" \
 	        -DDART_TESTING_TIMEOUT:STRING=600 \
 	        -DTPL_ENABLE_MPI:BOOL=ON \
-	        -DMPI_BASE_DIR:PATH=${MPI_HOME} \
+	        -DMPI_BASE_DIR:PATH=${MPIHOME} \
 	        -DMPI_USE_COMPILER_WRAPPERS:BOOL=ON \
 	        -DTrilinos_EXTRA_LINK_FLAGS:STRING="" \
 	        -DMPI_EXEC_MAX_NUMPROCS:STRING=8 \
-	        -DMPI_EXEC:FILEPATH="$${MPIRUN}" \
-	        -DTPL_MPI_INCLUDE_DIRS:INTERNAL="$${MPI_HOME}/include" \
-	        -DTPL_MPI_LIBRARIES:INTERNAL="$${MPI_HOME}/lib" \
+	        -DMPI_EXEC:FILEPATH="$${MPIHOME}/bin/mpirun" \
+	        -DTPL_MPI_INCLUDE_DIRS:INTERNAL="$${MPIHOME}/include" \
+	        -DTPL_MPI_LIBRARIES:INTERNAL="$${MPIHOME}/lib" \
 	        -DCMAKE_VERBOSE_MAKEFILE:BOOL=TRUE \
 	        -DTrilinos_VERBOSE_CONFIGURE:BOOL=TRUE \
 	        -DBUILD_SHARED_LIBS:BOOL=ON \

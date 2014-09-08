@@ -17,7 +17,7 @@ endif
 
 NAME           = trilinos_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 11.4.3
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/trilinos/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = trilinos

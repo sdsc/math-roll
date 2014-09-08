@@ -63,17 +63,6 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(ROLLCOMPILER)\>"`; \
-    if test "$${module}" != "$(ROLLCOMPILER)"; then \
-      echo *** ERROR: Compiler module $(ROLLCOMPILER) not found; \
-      exit 2; \
-    fi; \
-    module load $(ROLLCOMPILER); \
-  fi
-
 FC = gfortran -fimplicit-none -O2 -fPIC
 CC = gcc -O2 -fPIC
 ifeq ("$(COMPILERNAME)", "intel")
@@ -83,12 +72,21 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   FC = pgf90 -fast -fPIC
   CC = pcc -fast -fPIC
 endif
+
 ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   ifeq ("$(COMPILERNAME)", "gnu")
     CC += -mavx
     FC += -mavx
   endif
 endif
+
+COMPILERSETUP =  \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(ROLLCOMPILER) || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version
 
 LAPACK_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
 

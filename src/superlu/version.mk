@@ -13,7 +13,7 @@ endif
 
 NAME           = superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 3.2
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/superlu/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = superlu

@@ -64,46 +64,41 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
+# We only build with gnu; these make vars are defined for future development.
 ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
 FIRSTCOMPILER = $(firstword $(ROLLCOMPILER))
 COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
 
-COMPILERSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(FIRSTCOMPILER)\>"`; \
-    if test "$${module}" != "$(FIRSTCOMPILER)"; then \
-      echo *** ERROR: Compiler module $(FIRSTCOMPILER) not found; \
-      exit 2; \
-    fi; \
-    module=`module avail 2>&1 | grep -o -m1 "\<cmake\>"`; \
-    if test "$${module}" != "cmake"; then \
-      echo *** ERROR: cmake module not found; \
-      exit 2; \
-    fi; \
-    module load cmake $(FIRSTCOMPILER); \
-  fi
-
 CC = gcc
 CXX = g++
 F90 = gfortran
-ifeq ("$(ROLLCOMPILER)", "intel")
+ifeq ("$(COMPILERNAME)", "intel")
   CC = icc
   CXX = icpc
   F90 = ifort
-else ifeq ("$(ROLLCOMPILER)", "pgi")
+else ifeq ("$(COMPILERNAME)", "pgi")
   CC = pgcc
   CXX = pgCC
   F90 = pgf90
 endif
  
+COMPILERSETUP =  \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load $(FIRSTCOMPILER) || true; \
+    module load cmake || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version; \
+  echo === cmake version ===; \
+  cmake --version
+
 build: $(SRC_DIRS)
 	cp patch-files/EigenTesting.cmake $(SOURCE_DIR)/cmake/
 	( \
 	  $(COMPILERSETUP); \
-	  module load cmake; \
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \

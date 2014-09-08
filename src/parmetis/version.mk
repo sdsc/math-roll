@@ -13,7 +13,7 @@ endif
 
 NAME           = parmetis_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 4.0.3
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/parmetis/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = parmetis

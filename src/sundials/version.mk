@@ -13,7 +13,7 @@ endif
 
 NAME           = sundials_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 2.5.0
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/sundials/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = sundials
