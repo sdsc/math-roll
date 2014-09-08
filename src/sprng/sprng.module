@@ -42,6 +42,7 @@ module-whatis "Version: VERSION"
 prepend-path LD_LIBRARY_PATH /opt/sprng/ROLLCOMPILER/\$mpi/\$network/lib
 prepend-path LIBPATH /opt/sprng/ROLLCOMPILER/\$mpi/\$network/lib
 setenv SPRNGHOME /opt/sprng/ROLLCOMPILER/\$mpi/\$network
+module load gmp
 
 END
 
