@@ -66,13 +66,18 @@ include pull.mk
 COMPILERSETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(FIRSTCOMPILER)\>"`; \
-    if test "$${module}" != "$(FIRSTCOMPILER)"; then \
-      echo *** ERROR: Compiler module $(FIRSTCOMPILER) not found; \
-      exit 2; \
-    fi; \
-    module load $(ROLLCOMPILER); \
-  fi
+    module load $(ROLLCOMPILER) || true; \
+  fi; \
+  echo === Compiler and version ===; \
+  $(CC) --version
+
+GMPSETUP = \
+  if test -e /etc/profile.d/modules.sh; then \
+    . /etc/profile.d/modules.sh; \
+    module load gmp || true; \
+  fi; \
+  echo === GMPHOME ===; \
+  echo $${GMPHOME}
 
 ifeq ("$(ROLLNETWORK)", "eth")
   MPIMODULE = $(ROLLMPI)
@@ -83,30 +88,28 @@ endif
 MPISETUP = \
   if test -e /etc/profile.d/modules.sh; then \
     . /etc/profile.d/modules.sh; \
-    module=`module avail 2>&1 | grep -o -m1 "\<$(MPIMODULE)\>"`; \
-    if test "$${module}" != "$(MPIMODULE)"; then \
-      echo *** ERROR: MPI module $(MPIMODULE) not found; \
-      exit 2; \
-    fi; \
-    module load $(MPIMODULE); \
+    module load $(MPIMODULE) || true; \
   fi; \
-  export MPI_HOME=`which mpicxx | perl -pe 's!/bin/.*!!'`; \
-  if test -z "$${MPI_HOME}"; then \
-    export MPI_HOME=/opt/$(ROLLMPI); \
+  if test -z "$${MPIHOME}"; then \
+    export MPIHOME=/opt/$(ROLLMPI); \
   fi; \
-  echo Using MPI from $${MPI_HOME}; \
-  export PATH=$${PATH}:$${MPI_HOME}/bin; \
-  export LD_LIBRARY_PATH=$${LD_LIBRARY_PATH}:$${MPI_HOME}/lib
+  echo === MPIHOME ===; \
+  echo $${MPIHOME}
 
 build: $(SRC_DIRS)
-	cp patch-files/make.CHOICES $(SOURCE_DIR)
-	cp patch-files/make.GENERIC $(SOURCE_DIR)/SRC
-	cp patch-files/check_genf_ptr.F $(SOURCE_DIR)/SRC
+	cp patch-files/make.GENERIC $(SOURCE_DIR)/SRC/
 	( \
 	  $(COMPILERSETUP); \
+	  $(GMPSETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
-	  $(MAKE) -j 16 \
+	  if test -n "$${GMPHOME}"; then \
+	    export GMPLINK="-L$${GMPHOME}/lib -lgmp"; \
+	  else \
+	    export GMPLINK=""; \
+	  fi; \
+	  echo $(MAKE) PLAT=GENERIC MPIDEF=-DSPRNG_MPI GMPLIB="$${GMPLINK}"; \
+	  $(MAKE) PLAT=GENERIC MPIDEF=-DSPRNG_MPI GMPLIB="$${GMPLINK}" \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 

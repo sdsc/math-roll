@@ -13,7 +13,7 @@ endif
 
 NAME           = sprng_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 VERSION        = 2.0b
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/sprng/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = sprng
