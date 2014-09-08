@@ -266,7 +266,7 @@ END
         $output = `/bin/bash $TESTFILE.sh 2>&1`;
         like($output, qr/100% tests passed/,
         "scalapack/$compilername/$mpi/$network example run");
-          `rm -rf $TESTFILE*`;
+        `rm -rf $TESTFILE*`;
       }
     }
   }
@@ -296,6 +296,7 @@ END
         close(OUT);
         $output = `/bin/bash $TESTFILE.sh | grep -c successfully 2>&1`;
         ok($output >= 3, "slepc/$compilername/$mpi/$network works");
+        `rm -rf $TESTFILE*`;
       }
     }
   }
@@ -329,7 +330,7 @@ foreach my $compiler(@COMPILERS) {
 #!/bin/bash
 . /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} sprng
-mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -L/opt/gnu/gmp/lib -lgmp
+mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -L\$GMPHOME/lib -lgmp
 ls -l *.exe
 mpirun -np 1 ./$TESTFILE.sprng.exe
 END
