@@ -3,12 +3,12 @@ ifndef ROLLCOMPILER
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-
 ifndef ROLLMPI
   ROLLMPI = openmpi
+endif
+
+ifndef ROLLNETWORK
+  ROLLNETWORK = eth
 endif
 
 NAME           = superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
