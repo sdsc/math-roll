@@ -1,0 +1,10 @@
+--- configure.py	2014-10-03 15:53:50.808433665 -0700
++++ patch-files/configure.py	2014-10-03 15:55:21.778452601 -0700
+@@ -283,6 +283,7 @@
+     slepcconf.write('#ifndef SLEPC_VERSION_GIT\n#define SLEPC_VERSION_GIT "' + gitrev + '"\n#endif\n\n')
+     slepcconf.write('#ifndef SLEPC_VERSION_DATE_GIT\n#define SLEPC_VERSION_DATE_GIT "' + gitdate + '"\n#endif\n\n')
+   slepcconf.write('#ifndef SLEPC_LIB_DIR\n#define SLEPC_LIB_DIR "' + prefixdir + '/lib"\n#endif\n\n')
++  slepcconf.write('#endif\n\n')
+ except:
+   sys.exit('ERROR: cannot create configuration header in ' + confdir)
+ try:

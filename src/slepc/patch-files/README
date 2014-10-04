@@ -1,0 +1,2 @@
+configure.py.patch
+  Bug fix: existing configure.py doesn't close #endif in produced header file
