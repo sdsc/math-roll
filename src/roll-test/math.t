@@ -34,8 +34,6 @@ foreach my $package(@packages) {
 
 SKIP: {
 
-  skip 'modules not installed', 1 if ! -f '/etc/profile.d/modules.sh';
-
   foreach my $package(@packages) {
     skip "$package not installed", 3 if ! -d "/opt/$package";
     foreach my $compiler(@COMPILERS) {
@@ -87,7 +85,6 @@ SKIP: {
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load eigen
 $CXX{"gnu"} -o $TESTFILE.eigen.exe $TESTFILE.cc -I$packageHome/include/eigen3
 ls -l *.exe
@@ -110,7 +107,6 @@ foreach my $compiler (@COMPILERS) {
     open(OUT, ">$TESTFILE.sh");
     print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler gsl
 cd $packageHome/tests
 for test in *; do
@@ -156,7 +152,6 @@ SKIP: {
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler lapack
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
@@ -178,7 +173,6 @@ SKIP: {
   open(OUT, ">$TESTFILE.sh");
   print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load intel octave
 echo 'exp(i*pi)' | octave
 END
@@ -198,7 +192,6 @@ foreach my $compiler(@COMPILERS) {
         open(OUT, ">$TESTFILE.sh");
         print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compilername ${mpi}_${network} parmetis
 mpirun -np 2 \$PARMETISHOME/bin/ptest \$PARMETISHOME/Graphs/rotor.graph
 END
@@ -222,7 +215,6 @@ foreach my $compiler(@COMPILERS) {
         open(OUT, ">$TESTFILE.sh");
         print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} petsc
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
@@ -255,7 +247,6 @@ foreach my $compiler(@COMPILERS) {
         open(OUT, ">$TESTFILE.sh");
         print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} scalapack
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
@@ -283,7 +274,6 @@ foreach my $compiler(@COMPILERS) {
         open(OUT, ">$TESTFILE.sh");
         print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} slepc
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
@@ -328,7 +318,6 @@ foreach my $compiler(@COMPILERS) {
         open(OUT, ">$TESTFILE.sh");
         print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} sprng
 mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -L\$GMPHOME/lib -lgmp
 ls -l *.exe
@@ -355,7 +344,6 @@ foreach my $compiler(@COMPILERS) {
         open(OUT, ">$TESTFILE.sh");
         print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} sundials
 if [ ! -e fcvDiag_kry_p.f ]; then
 cp $packageHome/${mpi}/${network}/examples/cvode/fcmix_parallel/fcvDiag_kry_p.f .
@@ -391,7 +379,6 @@ foreach my $compiler(@COMPILERS) {
         open(OUT, ">$TESTFILE.sh");
         print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} superlu
 mpirun -np 1 \$SUPERLUHOME/EXAMPLE/pddrive \$SUPERLUHOME/EXAMPLE/g20.rua
 END
@@ -425,7 +412,6 @@ foreach my $compiler(@COMPILERS) {
         open(OUT, ">$TESTFILE.sh");
         print OUT <<END;
 #!/bin/bash
-. /etc/profile.d/modules.sh
 module load $compiler ${mpi}_${network} trilinos
 export LD_LIBRARY_PATH=/opt/intel/composer_xe_2013.1.117/mkl/lib/intel64:\${LD_LIBRARY_PATH}
 mpicxx -I\${TRILINOSHOME}/include -o $TESTFILE.tril.exe $TESTFILE.tril.cxx -L\${TRILINOSHOME}/lib -lteuchoscore

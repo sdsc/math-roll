@@ -71,10 +71,7 @@ else ifeq ("$(COMPILERNAME)", "pgi")
 endif
 
 COMPILERSETUP =  \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER) || true; \
-  fi; \
+  module load $(ROLLCOMPILER) || true; \
   echo === Compiler and version ===; \
   $(CC) --version
 
@@ -85,13 +82,7 @@ else
 endif
 
 MPISETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(MPIMODULE) || true; \
-  fi; \
-  if test -z "$${MPIHOME}"; then \
-    export MPIHOME=/opt/$(ROLLMPI); \
-  fi; \
+  module load $(MPIMODULE) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
@@ -101,6 +92,7 @@ SUPERLU_CACHE = \
   $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 
 build: $(SRC_DIRS)
+	patch $(SOURCE_DIR)/config/configure.py patch-files/configure.py.patch
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \

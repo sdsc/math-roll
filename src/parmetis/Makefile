@@ -70,16 +70,15 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   CXX = pgCC
 endif
 
-COMPILERSETUP =  \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER) || true; \
-    module load cmake || true; \
-  fi; \
-  echo === Compiler and version ===; \
-  $(CXX) --version; \
+CMAKESETUP = \
+  module load cmake || true; \
   echo === cmake version ===; \
   cmake --version
+
+COMPILERSETUP =  \
+  module load $(ROLLCOMPILER) || true; \
+  echo === Compiler and version ===; \
+  $(CXX) --version
 
 ifeq ("$(ROLLNETWORK)", "eth")
   MPIMODULE = $(ROLLMPI)
@@ -88,13 +87,7 @@ else
 endif
 
 MPISETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(MPIMODULE) || true; \
-  fi; \
-  if test -z "$${MPIHOME}"; then \
-    export MPIHOME=/opt/$(ROLLMPI); \
-  fi; \
+  module load $(MPIMODULE) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
@@ -106,6 +99,7 @@ build: $(SRC_DIRS)
 	patch $(SOURCE_DIR)/CMakeLists.txt patch-files/CMakeLists.txt.patch
 	( \
 	  $(COMPILERSETUP); \
+	  $(CMAKESETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
 	  export CFLAGS=-fPIC; \

@@ -73,22 +73,18 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   CXX = pgCC
 endif
 
-COMPILERSETUP =  \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLCOMPILER) || true; \
-    module load cmake || true; \
-  fi; \
-  echo === Compiler and version ===; \
-  $(CC) --version; \
+CMAKESETUP = \
+  module load cmake || true; \
   echo === cmake version ===; \
   cmake --version
 
+COMPILERSETUP =  \
+  module load $(ROLLCOMPILER) || true; \
+  echo === Compiler and version ===; \
+  $(CC) --version
+
 MKLSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load mkl || true; \
-  fi; \
+  module load mkl || true; \
   echo === MKL_ROOT ===; \
   echo $${MKL_ROOT}; \
   export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`
@@ -100,44 +96,36 @@ else
 endif
 
 MPISETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(MPIMODULE) || true; \
-  fi; \
-  if test -z "$${MPIHOME}"; then \
-    export MPIHOME=/opt/$(ROLLMPI); \
-  fi; \
+  module load $(MPIMODULE) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
 PYSETUP = \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(ROLLPY) || true; \
-  fi; \
+  module load $(ROLLPY) || true; \
   echo === Python and version ===; \
   echo `which python; python --version`
 
+SWIG_CACHE = $(REDHAT.ROOT)/src/build-swig
+
 build: $(SRC_DIRS)
+	mkdir $(SOURCE_DIR)/build
 	( \
 	  $(COMPILERSETUP); \
+	  $(CMAKESETUP); \
 	  $(MKLSETUP); \
 	  $(MPISETUP); \
 	  $(PYSETUP); \
-	  if test ! -e $(REDHAT.ROOT)/src/build-swig; then \
+	  if test ! -e $(SWIG_CACHE); then \
 	    cd $(SWIG_DIR); \
-	    ./configure CC=$(CC) CXX=$(CXX) \
-	                --prefix=$(REDHAT.ROOT)/src/build-swig; \
+	    ./configure CC=$(CC) CXX=$(CXX) --prefix=$(SWIG_CACHE); \
 	    $(MAKE) -j 16; \
 	    $(MAKE) -j 16 install; \
 	    cd ..; \
 	  fi; \
+	  cd $(SOURCE_DIR)/build; \
 	  MKLLINK="-L$${MKLLIB} -lmkl_intel_lp64 -lmkl_sequential -lmkl_core \
 	           -lpthread"; \
-	  export PATH=$(REDHAT.ROOT)/src/build-swig/bin:$${PATH}; \
-	  cd $(SOURCE_DIR); \
-	  mkdir build; \
-	  cd build; \
+	  export PATH=$(SWIG_CACHE)/bin:$${PATH}; \
 	  cmake -DCMAKE_INSTALL_PREFIX:PATH=$(PKGROOT) \
 	        -DCMAKE_BUILD_TYPE:STRING=DEBUG \
 	        -DCMAKE_Fortran_COMPILER:FILEPATH=$${MPIHOME}/bin/mpif90 \

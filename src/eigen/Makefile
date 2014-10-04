@@ -84,21 +84,21 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   F90 = pgf90
 endif
  
-COMPILERSETUP =  \
-  if test -e /etc/profile.d/modules.sh; then \
-    . /etc/profile.d/modules.sh; \
-    module load $(FIRSTCOMPILER) || true; \
-    module load cmake || true; \
-  fi; \
-  echo === Compiler and version ===; \
-  $(CC) --version; \
+CMAKESETUP = \
+  module load cmake || true; \
   echo === cmake version ===; \
   cmake --version
+
+COMPILERSETUP =  \
+    module load $(FIRSTCOMPILER) || true; \
+  echo === Compiler and version ===; \
+  $(CC) --version
 
 build: $(SRC_DIRS)
 	cp patch-files/EigenTesting.cmake $(SOURCE_DIR)/cmake/
 	( \
 	  $(COMPILERSETUP); \
+	  $(CMAKESETUP); \
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \
