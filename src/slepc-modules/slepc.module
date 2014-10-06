@@ -1,0 +1,30 @@
+#%Module1.0
+if {! [info exists ::env(MPIHOME)]} {
+  puts stderr "Need to load an mpi module before loading slepc"
+  exit 1
+}
+foreach {x} [glob -directory /opt/slepc/ROLLCOMPILER -tails *] {
+  if {[regexp $x $::env(MPIHOME)]} {
+    set mpi $x
+    break
+  }
+}
+if {! [info exists mpi]} {
+  puts stderr "No supported MPI flavor found"
+  exit 1
+}
+foreach {x} [glob -directory /opt/slepc/ROLLCOMPILER/$mpi -tails *] {
+  if {[regexp $x $::env(MPIHOME)]} {
+    set network $x
+    break
+  }
+}
+if {! [info exists network]} {
+  puts stderr "No supported network found"
+  exit 1
+}
+module-whatis "slepc_ROLLCOMPILER_${mpi}_$network"
+module-whatis "Version: VERSION"
+setenv SLEPCHOME /opt/slepc/ROLLCOMPILER/$mpi/$network
+prepend-path LD_LIBRARY_PATH /opt/slepc/ROLLCOMPILER/$mpi/$network/lib
+prepend-path LIBPATH /opt/slepc/ROLLCOMPILER/$mpi/$network/lib

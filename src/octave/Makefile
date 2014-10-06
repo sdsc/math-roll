@@ -154,9 +154,6 @@ install::
 	)
 	umount $(PKGROOT)
 	-rmdir -p $(PKGROOT)
-	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
-	cat octave.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/octave!g;s!VERSION!$(VERSION)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

@@ -119,9 +119,6 @@ install::
 	# Fix references to install dir in rpm text files
 	perl -pi -e "s#$(ROOT)##g" \
 	  `find $(ROOT)/$(PKGROOT)/ -type f -exec grep -Il . {} ';'`
-	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
-	cat eigen.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/eigen!g;s!VERSION!$(VERSION)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

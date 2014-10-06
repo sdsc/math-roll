@@ -63,6 +63,5 @@ SRCDIRS = `find . -maxdepth 1 -type d \
         -not -name petsc \
         -not -name scalapack \
         -not -name slepc \
-        -not -name math-modules \
         -not -name build-\* \
-        -not -name .` scalapack petsc slepc math-modules
+        -not -name .` scalapack petsc slepc

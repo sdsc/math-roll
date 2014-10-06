@@ -150,9 +150,6 @@ install::
 	  `find $(ROOT)/$(PKGROOT)/ -type f -exec grep -Il . {} ';'`
 	mkdir -p $(SCALAPACK_CACHE)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(SCALAPACK_CACHE)/
-	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
-	cat scalapack.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/scalapack!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

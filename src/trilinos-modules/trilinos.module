@@ -1,0 +1,31 @@
+#%Module1.0
+if {! [info exists ::env(MPIHOME)]} {
+  puts stderr "Need to load an mpi module before loading trilinos"
+  exit 1
+}
+foreach {x} [glob -directory /opt/trilinos/ROLLCOMPILER -tails *] {
+  if {[regexp $x $::env(MPIHOME)]} {
+    set mpi $x
+    break
+  }
+}
+if {! [info exists mpi]} {
+  puts stderr "No supported MPI flavor found"
+  exit 1
+}
+foreach {x} [glob -directory /opt/trilinos/ROLLCOMPILER/$mpi -tails *] {
+  if {[regexp $x $::env(MPIHOME)]} {
+    set network $x
+    break
+  }
+}
+if {! [info exists network]} {
+  puts stderr "No supported network found"
+  exit 1
+}
+module-whatis "trilinos_ROLLCOMPILER_${mpi}_$network"
+module-whatis "Version: VERSION"
+setenv TRILINOSHOME /opt/trilinos/ROLLCOMPILER/$mpi/$network
+prepend-path PATH /opt/trilinos/ROLLCOMPILER/$mpi/$network/bin
+prepend-path LD_LIBRARY_PATH /opt/trilinos/ROLLCOMPILER/$mpi/$network/lib
+prepend-path LIBPATH /opt/trilinos/ROLLCOMPILER/$mpi/$network/lib

@@ -107,9 +107,6 @@ install::
 	    cp -r $$file $(ROOT)/$(PKGROOT)/tests; \
 	  done; \
 	)
-	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
-	cat gsl.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/gsl!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

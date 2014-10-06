@@ -170,9 +170,6 @@ install::
 	)
 	umount $(PKGROOT)
 	-rmdir -p $(PKGROOT)
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cat trilinos.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/trilinos!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

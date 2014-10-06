@@ -1,0 +1,7 @@
+#%Module1.0
+module-whatis "gsl_ROLLCOMPILER"
+module-whatis "Version: VERSION"
+setenv GSLHOME /opt/gsl/ROLLCOMPILER
+prepend-path PATH /opt/gsl/ROLLCOMPILER/bin
+prepend-path LD_LIBRARY_PATH /opt/gsl/ROLLCOMPILER/lib
+prepend-path LIBPATH /opt/gsl/ROLLCOMPILER/lib

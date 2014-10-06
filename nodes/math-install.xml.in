@@ -27,19 +27,30 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>gmp-static</package> <!-- Required by sprng examples -->
 
 <package>eigen</package>
+<package>eigen-modules</package>
 <package>gsl_COMPILERNAME</package>
+<package>gsl_COMPILERNAME-modules</package>
 <package>lapack_COMPILERNAME</package>
+<package>lapack_COMPILERNAME-modules</package>
 <package>octave</package>
+<package>octave-modules</package>
 <package>parmetis_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>parmetis_COMPILERNAME_ROLLMPI_ROLLNETWORK-modules</package>
 <package>petsc_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>petsc_COMPILERNAME_ROLLMPI_ROLLNETWORK-modules</package>
 <package>scalapack_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>scalapack_COMPILERNAME_ROLLMPI_ROLLNETWORK-modules</package>
 <package>slepc_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>slepc_COMPILERNAME_ROLLMPI_ROLLNETWORK-modules</package>
 <package>sprng_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>sprng_COMPILERNAME_ROLLMPI_ROLLNETWORK-modules</package>
 <package>sundials_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>sundials_COMPILERNAME_ROLLMPI_ROLLNETWORK-modules</package>
 <package>superlu_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>superlu_COMPILERNAME_ROLLMPI_ROLLNETWORK-modules</package>
 <package>trilinos_COMPILERNAME_ROLLMPI_ROLLNETWORK</package>
+<package>trilinos_COMPILERNAME_ROLLMPI_ROLLNETWORK-modules</package>
 
-<package>math-modules</package>
 <package>math-roll-test</package>
 
 </kickstart>

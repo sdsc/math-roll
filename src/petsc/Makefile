@@ -153,9 +153,6 @@ install::
 	# Fix paths in copy--slepc config checks for mismatch
 	perl -pi -e "s#$(PKGROOT)#$(PETSC_CACHE)#g" \
 	  `find $(PETSC_CACHE) -type f -exec grep -Il . {} ';'`
-	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
-	cat petsc.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/petsc!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

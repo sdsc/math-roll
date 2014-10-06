@@ -110,9 +110,6 @@ install::
 	chmod 0755 $(ROOT)/$(PKGROOT)/EXAMPLES
 	chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLES/*.[cCF]
 	chmod 0644 $(ROOT)/$(PKGROOT)/include/*
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cat sprng.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/sprng!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) build complete :::"
 
 clean::

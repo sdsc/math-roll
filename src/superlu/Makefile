@@ -125,9 +125,6 @@ install::
 	)
 	mkdir $(SUPERLU_CACHE)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(SUPERLU_CACHE)/
-	mkdir -p $(REDHAT.ROOT)/src/build-math-modules
-	cat superlu.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/superlu!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::

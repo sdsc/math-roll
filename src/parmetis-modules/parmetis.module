@@ -1,0 +1,30 @@
+#%Module1.0
+if {! [info exists ::env(MPIHOME)]} {
+  puts stderr "Need to load an mpi module before loading parmetis"
+  exit 1
+}
+foreach {x} [glob -directory /opt/parmetis/ROLLCOMPILER -tails *] {
+  if {[regexp $x $::env(MPIHOME)]} {
+    set mpi $x
+    break
+  }
+}
+if {! [info exists mpi]} {
+  puts stderr "No supported MPI flavor found"
+  exit 1
+}
+foreach {x} [glob -directory /opt/parmetis/ROLLCOMPILER/$mpi -tails *] {
+  if {[regexp $x $::env(MPIHOME)]} {
+    set network $x
+    break
+  }
+}
+if {! [info exists network]} {
+  puts stderr "No supported network found"
+  exit 1
+}
+module-whatis "parmetis_ROLLCOMPILER_${mpi}_$network"
+module-whatis "Version: VERSION"
+setenv PARMETISHOME /opt/parmetis/ROLLCOMPILER/$mpi/$network
+prepend-path LD_LIBRARY_PATH /opt/parmetis/ROLLCOMPILER/$mpi/$network/lib
+prepend-path LIBPATH /opt/parmetis/ROLLCOMPILER/$mpi/$network/lib

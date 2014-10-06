@@ -122,9 +122,6 @@ install::
 	)
 	mkdir -p -m 755 $(PARMETIS_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PARMETIS_CACHE)/
-	mkdir -p -m 755 $(REDHAT.ROOT)/src/build-math-modules
-	cat parmetis.module | perl -pi -e "s!MODULEROOT!/opt/modulefiles/applications/.$(COMPILERNAME)/parmetis!g;s!VERSION!$(VERSION)!g;s!ROLLCOMPILER!$(COMPILERNAME)!g" \
-	  > $(REDHAT.ROOT)/src/build-math-modules/$(NAME).module
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
