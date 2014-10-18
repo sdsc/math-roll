@@ -12,8 +12,8 @@ ifndef ROLLNETWORK
 endif
 
 NAME           = petsc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
-VERSION        = 3.4.3
-RELEASE        = 2
+VERSION        = 3.5.2
+RELEASE        = 0
 PKGROOT        = /opt/petsc/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = petsc

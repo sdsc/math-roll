@@ -16,8 +16,8 @@ ifndef ROLLPY
 endif
 
 NAME           = trilinos_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
-VERSION        = 11.4.3
-RELEASE        = 2
+VERSION        = 11.10.2
+RELEASE        = 0
 PKGROOT        = /opt/trilinos/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = trilinos

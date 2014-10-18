@@ -124,7 +124,7 @@ build: $(SRC_DIRS)
 	    --with-scalapack-dir=$(SCALAPACK_CACHE) \
 	    --download-mumps=yes \
 	    --download-blacs=yes \
-	    --download-f-blas-lapack=yes \
+	    --download-fblaslapack=yes \
 	    --with-pic=1 \
 	    --with-shared-libraries=1; \
 	    make all \

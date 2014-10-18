@@ -63,11 +63,14 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 include Rules.mk
 include pull.mk
 
-CC=gcc
+CC = gcc
+CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
 ifeq ("$(COMPILERNAME)","intel")
-   CC=icc
+   CC = icc
+   CFLAGS = -I$(PARMETIS_CACHE)/include
 else ifeq ("$(COMPILERNAME)","pgi")
-   CC=pgcc
+   CC = pgcc
+   CFLAGS = -I$(PARMETIS_CACHE)/include
 endif
 
 COMPILERSETUP =  \
@@ -95,6 +98,8 @@ PARMETIS_CACHE = \
   $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
 
+MKLLINK = -Wl,--start-group $${MKL_ROOT}/lib/intel64/libmkl_intel_lp64.a $${MKL_ROOT}/lib/intel64/libmkl_sequential.a $${MKL_ROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm
+
 build: $(SRC_DIRS)
 	cp patch-files/make.inc $(SOURCE_DIR)
 	( \
@@ -102,10 +107,10 @@ build: $(SRC_DIRS)
 	  $(MKLSETUP); \
 	  $(MPISETUP); \
 	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE_DIR)!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_CACHE)/lib!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!MKLROOT!$${MKL_ROOT}!g" $(SOURCE_DIR)/make.inc; \
+	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_CACHE)!" $(SOURCE_DIR)/make.inc; \
+	  perl -pi -e "s!ROLL_MKLLINK!$(MKLLINK)!" $(SOURCE_DIR)/make.inc; \
 	  cd $(SOURCE_DIR); \
-	  $(MAKE) \
+	  $(MAKE) CFLAGS="$(CFLAGS)" \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 

@@ -11,29 +11,42 @@
 #  Modified:	    September 1, 1999  version 1.0
 #                   March 15, 2003     version 2.0
 #		    November 1, 2007   version 2.1
-#		    September 1, 2011  version 3.0
-#		    May 20, 2012       version 3.1
+#		    September 1, 2011   version 3.0
 #
 ############################################################################
 #
 #  The machine (platform) identifier to append to the library names
 #
+PLAT		= _xe6
+#SDSC
 PLAT		= _
 
 #
 #  The name of the libraries to be created/linked to
 #
+DSuperLUroot 	= ${HOME}/Release_Codes/SuperLU_DIST_3.3
+DSUPERLULIB   	= $(DSuperLUroot)/lib/libsuperlu_dist_3.3.a
+#SDSC
 DSuperLUroot 	= ROLL_INSTALL
-DSUPERLULIB   	= $(DSuperLUroot)/lib/libsuperlu_dist_3.1.a
-
-
-
-BLASDEF	     	=  -DUSE_VENDOR_BLAS
-BLASLIB	        = -Wl,--start-group  MKLROOT/lib/intel64/libmkl_intel_lp64.a MKLROOT/lib/intel64/libmkl_sequential.a MKLROOT/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm
-METISLIB   	= -LROLL_PARMETIS -lmetis
-PARMETISLIB   	= -LROLL_PARMETIS -lparmetis
+#
+BLASDEF	     	= -DUSE_VENDOR_BLAS
+BLASLIB	        =
+#SDSC
+BLASLIB	        = ROLL_MKLLINK
+#
+## parmetis 4.x.x, 32-bit integer
+METISLIB    	= -L${HOME}/Hopper/lib/parmetis-4.0.2/build/Linux-x86_64/libmetis -lmetis
+PARMETISLIB  	= -L${HOME}/Hopper/lib/parmetis-4.0.2/build/Linux-x86_64/libparmetis -lparmetis
+## parmetis 4.x.x, 64-bit integer
+# METISLIB    	= -L${HOME}/Hopper/lib/parmetis-4.0.2-64bit/build/Linux-x86_64/libmetis -lmetis
+# PARMETISLIB  	= -L${HOME}/Hopper/lib/parmetis-4.0.2-64bit/build/Linux-x86_64/libparmetis -lparmetis
+#SDSC
+METISLIB   	= -LROLL_PARMETIS/lib -lmetis
+PARMETISLIB   	= -LROLL_PARMETIS/lib -lparmetis
 
 # Define the required Fortran libraries, if you use C compiler to link
+FLIBS	 	= -lpgf90 -lpgf90_rpm1
+#SDSC
 FLIBS	 	= 
 
 # Define all the libraries
@@ -49,19 +62,28 @@ RANLIB       	= ranlib
 
 ############################################################################
 # C compiler setup
+CC           	= cc
+#SDSC
 CC           	= mpicc
 # CFLAGS should be set to be the C flags that include optimization
-CFLAGS          =  -fPIC
+CFLAGS          = -fast -Mipa=fast,safe \
+		-DDEBUGlevel=0 -DPRNTlevel=1 -DPROFlevel=0 \
+#		-D_LONGINT
 #
 # NOOPTS should be set to be the C flags that turn off any optimization
-NOOPTS		= -O0 -fPIC
+NOOPTS		= -O0
 ############################################################################
 # FORTRAN compiler setup
+FORTRAN         = ftn
+F90FLAGS	= -fast -Mipa=fast,safe
+#SDSC
 FORTRAN         = mpif90
 F90FLAGS	=  -fPIC
 ############################################################################
 LOADER	        = $(CC)
-LOADOPTS	= 
+LOADOPTS	= -fast
+#SDSC
+LOADOPTS	=
 ############################################################################
 #  C preprocessor defs for compilation (-DNoChange, -DAdd_, or -DUpCase)
 #

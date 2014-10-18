@@ -12,8 +12,8 @@ ifndef ROLLNETWORK
 endif
 
 NAME           = slepc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
-VERSION        = 3.4.4
-RELEASE        = 2
+VERSION        = 3.5.2
+RELEASE        = 0
 PKGROOT        = /opt/slepc/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
 
 SRC_SUBDIR     = slepc

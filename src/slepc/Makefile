@@ -92,7 +92,6 @@ SUPERLU_CACHE = \
   $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
 
 build: $(SRC_DIRS)
-	patch $(SOURCE_DIR)/config/configure.py patch-files/configure.py.patch
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
@@ -101,7 +100,7 @@ build: $(SRC_DIRS)
 	  export PETSC_DIR=$(PETSC_CACHE); \
 	  unset PETSC_ARCH; \
 	  ./configure --prefix=$(PKGROOT); \
-	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) PETSC_ARCH=arch-installed-petsc \
+	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
@@ -113,7 +112,7 @@ install::
 	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
 	( \
 	  cd $(SOURCE_DIR); \
-	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) PETSC_ARCH=arch-installed-petsc install; \
+	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) install; \
 	  cp -r src/eps/examples $(ROOT)/$(PKGROOT)/ \
 	)
 	umount $(PKGROOT)

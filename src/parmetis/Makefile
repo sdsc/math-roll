@@ -105,6 +105,7 @@ build: $(SRC_DIRS)
 	  export CFLAGS=-fPIC; \
 	  export CXXFLAGS=-fPIC; \
 	  $(MAKE) -j 16 prefix=$(ROOT)/$(PKGROOT) config; \
+	  $(MAKE) \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
