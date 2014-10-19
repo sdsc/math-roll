@@ -33,13 +33,22 @@ Rocks development machine.
 
 ## Dependencies
 
-cmake
-fftw
-hdf5
+Intel MKL libraries.  If you're building with the Intel compiler or there is
+an mkl modulefile present (the mkl-roll provides this), then the build process
+will pick these up automatically.  Otherwise, you'll need to set the MKL_ROOT
+environment variable to the library location.
 
-Many of the packages depend on the MKL libraries and expect the environment
-variable MKL_ROOT to be set when built.  If you have installed the intel
-compiler roll, "module load intel" will set this variable appropriately.
+FFTW libraries.  If there is an fftw modulefile present (the fftw-roll provides
+this), then the build process will pick these up automatically.  Otherwise,
+you'll need to set the FFTWHOME environment variable to the library location.
+
+HDF5 libraries.  If there is an hdf5 modulefile present (the hdf5-roll provides
+this), then the build process will pick these up automatically.  Otherwise,
+you'll need to set the HDF5HOME environment variable to the library location.
+
+cmake.  If there is an cmake modulefile present (the cmake-roll provides
+this), then the build process will pick this up automatically.  Otherwise,
+you'll need to add the appropriate directory to your PATH environment variable.
 
 ## Building
 
@@ -48,44 +57,35 @@ machine (e.g., a frontend or development appliance):
 
 ```shell
 % make default 2>&1 | tee build.log
-% grep "RPM build error" build.log
 ```
 
-If nothing is returned from the grep command then the roll should have been
-created as... `math-*.iso`. If you built the roll on a Rocks frontend then
-proceed to the installation step. If you built the roll on a Rocks development
-appliance you need to copy the roll to your Rocks frontend before continuing
-with installation.
+A successful build will create the file `math-*.disk1.iso`.  If you built the
+roll on a Rocks frontend, proceed to the installation step. If you built the
+roll on a Rocks development appliance, you need to copy the roll to your Rocks
+frontend before continuing with installation.
 
 This roll source supports building with different compilers and for different
-network fabrics and mpi flavors.  By default, it builds using the gnu compilers
-for openmpi ethernet.  To build for a different configuration, use the
-`ROLLCOMPILER`, `ROLLMPI` and `ROLLNETWORK` make variables, e.g.,
+MPI flavors.  The `ROLLCOMPILER` and `ROLLMPI` make variables can be used to
+specify the names of compiler and MPI modulefiles to use for building the
+software, e.g.,
 
 ```shell
-make ROLLCOMPILER=intel ROLLMPI=mpich2 ROLLNETWORK=mx 
+make ROLLCOMPILER=intel ROLLMPI=mvapich2_ib 2>&1 | tee build.log
 ```
 
-The build process currently supports one or more of the values "intel", "pgi",
-and "gnu" for the `ROLLCOMPILER` variable, defaulting to "gnu".  It supports
-`ROLLMPI` values "openmpi", "mpich2", and "mvapich2", defaulting to "openmpi".
-It uses any `ROLLNETWORK` variable value(s) to load appropriate mpi modules,
-assuming that there are modules named `$(ROLLMPI)_$(ROLLNETWORK)` available
-(e.g., `openmpi_ib`, `mpich2_mx`, etc.).  The build process uses the ROLLCOMPILER
-value to load an environment module, so you can also use it to specify a
-particular compiler version, e.g.,
+The build process recognizes "gnu", "intel" or "pgi" as the value for the
+`ROLLCOMPILER` variable; any MPI modulefile name may be used as the value of
+the `ROLLMPI` variable.  The default values are "gnu" and "rocks-openmpi".
+
+The values of the `ROLLCOMPILER` and `ROLLMPI` variables are incorporated into
+the names of the produced rpms.  For example,
 
 ```shell
-% make ROLLCOMPILER=gnu/4.8.1
+make ROLLCOMPILER=intel ROLLMPI=mvapich2_ib 2>&1 | tee build.log
 ```
 
-If the `ROLLCOMPILER`, `ROLLNETWORK` and/or `ROLLMPI` variables are specified,
-their values are incorporated into the names of the produced rpms, e.g.,
-
-```shell
-make ROLLCOMPILER=intel ROLLMPI=mvapich2 ROLLNETWORK=ib
-```
-produces an rpm with a name that begins "`petsc_intel_mvapich2_ib`".
+produces a roll containing an rpm with a name that begins
+`petsc_intel_mvapich2_ib`.
 
 For gnu compilers, the roll also supports a `ROLLOPTS` make variable value of
 'avx', indicating that the target architecture supports AVX instructions.
@@ -114,7 +114,7 @@ module files for each tool in:
 ## Testing
 
 The math-roll includes a test script which can be run to verify proper
-installation of the math-roll documentation, binaries and module files. To
+installation of the roll documentation, binaries and module files. To
 run the test scripts execute the following command(s):
 
 ```shell

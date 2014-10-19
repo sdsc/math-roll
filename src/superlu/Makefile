@@ -83,19 +83,12 @@ MKLSETUP = \
   echo === MKL_ROOT ===; \
   echo $${MKL_ROOT}
 
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
-
 MPISETUP = \
-  module load $(MPIMODULE) || true; \
+  module load $(ROLLMPI) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PARMETIS_CACHE = \
-  $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
 SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
 
 MKLLINK = -Wl,--start-group $${MKL_ROOT}/lib/intel64/libmkl_intel_lp64.a $${MKL_ROOT}/lib/intel64/libmkl_sequential.a $${MKL_ROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm

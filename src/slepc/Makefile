@@ -75,21 +75,13 @@ COMPILERSETUP =  \
   echo === Compiler and version ===; \
   $(CC) --version
 
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
-
 MPISETUP = \
-  module load $(MPIMODULE) || true; \
+  module load $(ROLLMPI) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PETSC_CACHE = \
-  $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
-SUPERLU_CACHE = \
-  $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+PETSC_CACHE = $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(ROLLMPI)
+SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)
 
 build: $(SRC_DIRS)
 	( \

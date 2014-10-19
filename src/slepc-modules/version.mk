@@ -7,7 +7,7 @@ PACKAGE     = slepc
 CATEGORY    = applications
 
 NAME        = $(PACKAGE)_$(COMPILERNAME)-modules
-RELEASE     = 1
+RELEASE     = 2
 PKGROOT     = /opt/modulefiles/$(CATEGORY)/.$(COMPILERNAME)/$(PACKAGE)
 
 VERSION_SRC = $(REDHAT.ROOT)/src/$(PACKAGE)/version.mk

@@ -4,21 +4,15 @@ endif
 FIRSTCOMPILER := $(firstword $(ROLLCOMPILER))
 COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
 
-# ROLLNETWORK/MPI only used for locating fftw/hdf5 modulefiles
-
+# ROLLMPI only used for locating fftw/hdf5 modulefiles
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
 FIRSTMPI := $(firstword $(ROLLMPI))
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-FIRSTNETWORK := $(firstword $(ROLLNETWORK))
-
 NAME           = octave_$(COMPILERNAME)
 VERSION        = 3.8.2
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/octave
 
 SRC_SUBDIR     = octave

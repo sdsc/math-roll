@@ -6,15 +6,12 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-
-NAME           = sprng_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+NAME           = sprng_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0b
-RELEASE        = 2
-PKGROOT        = /opt/sprng/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
+RELEASE        = 3
+PKGROOT        = /opt/sprng/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = sprng
 

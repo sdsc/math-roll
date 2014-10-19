@@ -6,15 +6,12 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-
-NAME           = parmetis_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+NAME           = parmetis_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 4.0.3
-RELEASE        = 2
-PKGROOT        = /opt/parmetis/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
+RELEASE        = 3
+PKGROOT        = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = parmetis
 

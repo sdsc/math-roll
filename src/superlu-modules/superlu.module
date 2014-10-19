@@ -1,10 +1,17 @@
 #%Module1.0
-if {! [info exists ::env(MPIHOME)]} {
-  puts stderr "Need to load an mpi module before loading superlu"
+module-whatis "superlu"
+module-whatis "Version: VERSION"
+module-whatis "Description: superlu"
+module-whatis "Compiler: COMPILERNAME"
+module-whatis "MPI Flavors: ROLLMPI"
+if {! [info exists ::env(MPIHOME)] || ! [info exists ::env(LOADEDMODULES)]} {
+  puts stderr "Need to load an mpi module before loading superlu
   exit 1
 }
-foreach {x} [glob -directory /opt/superlu/ROLLCOMPILER -tails *] {
-  if {[regexp $x $::env(MPIHOME)]} {
+foreach {x} [list ROLLMPI] {
+  # Look for flavor in LOADEDMODULES, delimited by colon or end of string.
+  # Can also be followed by / (version number).
+  if {[regexp [format {[:^]%s[:/$]} $x] $::env(LOADEDMODULES)]} {
     set mpi $x
     break
   }
@@ -13,18 +20,6 @@ if {! [info exists mpi]} {
   puts stderr "No supported MPI flavor found"
   exit 1
 }
-foreach {x} [glob -directory /opt/superlu/ROLLCOMPILER/$mpi -tails *] {
-  if {[regexp $x $::env(MPIHOME)]} {
-    set network $x
-    break
-  }
-}
-if {! [info exists network]} {
-  puts stderr "No supported network found"
-  exit 1
-}
-module-whatis "superlu_ROLLCOMPILER_${mpi}_$network"
-module-whatis "Version: VERSION"
-setenv SUPERLUHOME /opt/superlu/ROLLCOMPILER/$mpi/$network
-prepend-path LD_LIBRARY_PATH /opt/superlu/ROLLCOMPILER/$mpi/$network/lib
-prepend-path LIBPATH /opt/superlu/ROLLCOMPILER/$mpi/$network/lib
+setenv SUPERLUHOME /opt/superlu/ROLLCOMPILER/$mpi
+prepend-path LD_LIBRARY_PATH /opt/superlu/ROLLCOMPILER/$mpi/lib
+prepend-path LIBPATH /opt/superlu/ROLLCOMPILER/$mpi/lib

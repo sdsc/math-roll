@@ -16,7 +16,6 @@ my @packages = (
 my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
-my @NETWORKS = split(/\s+/, 'ROLLNETWORK');
 my $SKIP = 'ROLLSKIP';
 my $TESTFILE = 'tmpmath';
 my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
@@ -185,21 +184,18 @@ END
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/parmetis/$compilername";
-      SKIP: {
-        skip "parmetis/$compilername not installed", 2 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
+    $packageHome = "/opt/parmetis/$compilername";
+    SKIP: {
+      skip "parmetis/$compilername not installed", 2 if ! -d $packageHome;
+      open(OUT, ">$TESTFILE.sh");
+      print OUT <<END;
 #!/bin/bash
-module load $compilername ${mpi}_${network} parmetis
+module load $compilername $mpi parmetis
 mpirun -np 2 \$PARMETISHOME/bin/ptest \$PARMETISHOME/Graphs/rotor.graph
 END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh| grep -c OK: 2>&1`;
-        ok($output >= 80, "parmetis $compilername $mpi $network works");
-
-      }
+      close(OUT);
+      $output = `/bin/bash $TESTFILE.sh| grep -c OK: 2>&1`;
+      ok($output >= 80, "parmetis $compilername $mpi works");
     }
   }
 }
@@ -208,14 +204,13 @@ END
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/petsc/$compilername";
-      SKIP: {
-        skip "petsc/$compilername not installed", 1 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
+    $packageHome = "/opt/petsc/$compilername";
+    SKIP: {
+      skip "petsc/$compilername not installed", 1 if ! -d $packageHome;
+      open(OUT, ">$TESTFILE.sh");
+      print OUT <<END;
 #!/bin/bash
-module load $compiler ${mpi}_${network} petsc
+module load $compiler $mpi petsc
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
 cp -r \$PETSCHOME/examples/* .
@@ -226,12 +221,11 @@ make PETSC_ARCH=arch-linux-c-debug PETSC_DIR=\$PETSCHOME ex1
 ls -l ex1
 mpirun -np 1 ./ex1 -ksp_gmres_cgs_refinement_type refine_always -snes_monitor_short
 END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/Number of SNES iterations = 6/,
-             "petsc/$compilername/$mpi/$network tutorial run");
-         `rm -rf $TESTFILE*`;
-      }
+      close(OUT);
+      $output = `/bin/bash $TESTFILE.sh 2>&1`;
+      like($output, qr/Number of SNES iterations = 6/,
+           "petsc/$compilername/$mpi tutorial run");
+       `rm -rf $TESTFILE*`;
     }
   }
 }
@@ -240,25 +234,23 @@ END
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/scalapack/$compilername";
-      SKIP: {
-        skip "scalapack/$compilername not installed", 1 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
+    $packageHome = "/opt/scalapack/$compilername";
+    SKIP: {
+      skip "scalapack/$compilername not installed", 1 if ! -d $packageHome;
+      open(OUT, ">$TESTFILE.sh");
+      print OUT <<END;
 #!/bin/bash
-module load $compiler ${mpi}_${network} scalapack
+module load $compiler $mpi scalapack
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
 cp \$SCALAPACKHOME/TESTING/* .
 make test
 END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/100% tests passed/,
-        "scalapack/$compilername/$mpi/$network example run");
-        `rm -rf $TESTFILE*`;
-      }
+      close(OUT);
+      $output = `/bin/bash $TESTFILE.sh 2>&1`;
+      like($output, qr/100% tests passed/,
+      "scalapack/$compilername/$mpi example run");
+      `rm -rf $TESTFILE*`;
     }
   }
 }
@@ -267,27 +259,25 @@ END
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/slepc/$compilername";
-      SKIP: {
-        skip "slepc/$compilername not installed", 1 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
+    $packageHome = "/opt/slepc/$compilername";
+    SKIP: {
+      skip "slepc/$compilername not installed", 1 if ! -d $packageHome;
+      open(OUT, ">$TESTFILE.sh");
+      print OUT <<END;
 #!/bin/bash
-module load $compiler ${mpi}_${network} slepc
+module load $compiler $mpi slepc
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
 cp -r \$SLEPCHOME/examples/* .
 cd tests
 unset PETSC_ARCH
-make SLEPC_DIR=/opt/slepc/${compilername}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compilername}/${mpi}/${network} testtest10
-make SLEPC_DIR=/opt/slepc/${compilername}/${mpi}/${network} PETSC_DIR=/opt/petsc/${compilername}/${mpi}/${network} testtest7f
+make SLEPC_DIR=/opt/slepc/${compilername}/${mpi} PETSC_DIR=/opt/petsc/${compilername}/${mpi} testtest10
+make SLEPC_DIR=/opt/slepc/${compilername}/${mpi} PETSC_DIR=/opt/petsc/${compilername}/${mpi} testtest7f
 END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh | grep -c successfully 2>&1`;
-        ok($output >= 3, "slepc/$compilername/$mpi/$network works");
-        `rm -rf $TESTFILE*`;
-      }
+      close(OUT);
+      $output = `/bin/bash $TESTFILE.sh | grep -c successfully 2>&1`;
+      ok($output >= 3, "slepc/$compilername/$mpi works");
+      `rm -rf $TESTFILE*`;
     }
   }
 }
@@ -311,24 +301,22 @@ close(OUT);
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/sprng/$compilername";
-      SKIP: {
-        skip "sprng/$compilername not installed", 2 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
+    $packageHome = "/opt/sprng/$compilername";
+    SKIP: {
+      skip "sprng/$compilername not installed", 2 if ! -d $packageHome;
+      open(OUT, ">$TESTFILE.sh");
+      print OUT <<END;
 #!/bin/bash
-module load $compiler ${mpi}_${network} sprng
+module load $compiler $mpi sprng
 mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -L\$GMPHOME/lib -lgmp
 ls -l *.exe
 mpirun -np 1 ./$TESTFILE.sprng.exe
 END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/$TESTFILE.sprng.exe/,
-             "sprng/$compilername/$mpi/$network compilation");
-        ok($? == 0, "sprng/$compilername/$mpi/$network test run");
-      }
+      close(OUT);
+      $output = `/bin/bash $TESTFILE.sh 2>&1`;
+      like($output, qr/$TESTFILE.sprng.exe/,
+           "sprng/$compilername/$mpi compilation");
+      ok($? == 0, "sprng/$compilername/$mpi test run");
     }
   }
 }
@@ -337,33 +325,30 @@ END
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/sundials/$compilername";
-      SKIP: {
-        skip "sundials/$compilername not installed", 2 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
+    $packageHome = "/opt/sundials/$compilername";
+    SKIP: {
+      skip "sundials/$compilername not installed", 2 if ! -d $packageHome;
+      open(OUT, ">$TESTFILE.sh");
+      print OUT <<END;
 #!/bin/bash
-module load $compiler ${mpi}_${network} sundials
+module load $compiler $mpi sundials
 if [ ! -e fcvDiag_kry_p.f ]; then
-cp $packageHome/${mpi}/${network}/examples/cvode/fcmix_parallel/fcvDiag_kry_p.f .
+cp $packageHome/$mpi/examples/cvode/fcmix_parallel/fcvDiag_kry_p.f .
 ex fcvDiag_kry_p.f <<EOF
 :1,32s/INTEGER\\*4/INTEGER*8/
 :w
 :q
 EOF
 fi
-mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/$network/lib -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
+mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/lib -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
 ls -l *.exe
 mpirun -np 4 ./$TESTFILE.sundials.exe
 END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/$TESTFILE.sundials.exe/,
-             "Sundials/$compilername/$mpi/$network compilation");
-        like($output, qr/0.9094/,
-             "Sundials/$compilername/$mpi/$network run");
-      }
+      close(OUT);
+      $output = `/bin/bash $TESTFILE.sh 2>&1`;
+      like($output, qr/$TESTFILE.sundials.exe/,
+           "Sundials/$compilername/$mpi compilation");
+      like($output, qr/0.9094/, "Sundials/$compilername/$mpi run");
     }
   }
 }
@@ -372,21 +357,19 @@ END
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/superlu/$compilername";
-      SKIP: {
-        skip "superlu/$compilername not installed", 1 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
+    $packageHome = "/opt/superlu/$compilername";
+    SKIP: {
+      skip "superlu/$compilername not installed", 1 if ! -d $packageHome;
+      open(OUT, ">$TESTFILE.sh");
+      print OUT <<END;
 #!/bin/bash
-module load $compiler ${mpi}_${network} superlu
+module load $compiler $mpi superlu
 mpirun -np 1 \$SUPERLUHOME/EXAMPLE/pddrive \$SUPERLUHOME/EXAMPLE/g20.rua
 END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/nonzeros in L\+U     11694/,
-             "Superlu/$compilername/$mpi/$network test run");
-      }
+      close(OUT);
+      $output = `/bin/bash $TESTFILE.sh 2>&1`;
+      like($output, qr/nonzeros in L\+U     11694/,
+           "Superlu/$compilername/$mpi test run");
     }
   }
 }
@@ -405,27 +388,25 @@ close(OUT);
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
-    foreach my $network(@NETWORKS) {
-      $packageHome = "/opt/trilinos/$compilername";
-      SKIP: {
-        skip "trilinos/$compilername not installed", 2 if ! -d $packageHome;
-        open(OUT, ">$TESTFILE.sh");
-        print OUT <<END;
+    $packageHome = "/opt/trilinos/$compilername";
+    SKIP: {
+      skip "trilinos/$compilername not installed", 2 if ! -d $packageHome;
+      open(OUT, ">$TESTFILE.sh");
+      print OUT <<END;
 #!/bin/bash
-module load $compiler ${mpi}_${network} trilinos
+module load $compiler $mpi trilinos
 export LD_LIBRARY_PATH=/opt/intel/composer_xe_2013.1.117/mkl/lib/intel64:\${LD_LIBRARY_PATH}
 mpicxx -I\${TRILINOSHOME}/include -o $TESTFILE.tril.exe $TESTFILE.tril.cxx -L\${TRILINOSHOME}/lib -lteuchoscore
 ls -l *.exe
 ./$TESTFILE.tril.exe
 rm -f $TESTFILE.tril.exe
 END
-        close(OUT);
-        $output = `/bin/bash $TESTFILE.sh 2>&1`;
-        like($output, qr/$TESTFILE.tril.exe/,
-             "Trilinos/$compilername/$mpi/$network compilation");
-        like($output, qr/Teuchos in Trilinos [\d\.]+/,
-             "Trilinos/$compilername/$mpi/$network run");
-      }
+      close(OUT);
+      $output = `/bin/bash $TESTFILE.sh 2>&1`;
+      like($output, qr/$TESTFILE.tril.exe/,
+           "Trilinos/$compilername/$mpi compilation");
+      like($output, qr/Teuchos in Trilinos [\d\.]+/,
+           "Trilinos/$compilername/$mpi run");
     }
   }
 }

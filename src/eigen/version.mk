@@ -1,6 +1,6 @@
 NAME           = eigen
 VERSION        = 3.2.2
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/eigen
 
 SRC_SUBDIR     = eigen

@@ -1,6 +1,6 @@
 #%Module1.0
 module-whatis "lapack_ROLLCOMPILER"
 module-whatis "Version: VERSION"
+setenv LAPACKHOME /opt/lapack/ROLLCOMPILER
 prepend-path LD_LIBRARY_PATH /opt/lapack/ROLLCOMPILER/lib
 prepend-path LIBPATH /opt/lapack/ROLLCOMPILER/lib
-setenv LAPACKHOME /opt/lapack/ROLLCOMPILER

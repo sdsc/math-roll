@@ -6,19 +6,16 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
-
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 ifndef ROLLPY
   ROLLPY = python
 endif
 
-NAME           = trilinos_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+NAME           = trilinos_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 11.10.2
-RELEASE        = 0
-PKGROOT        = /opt/trilinos/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
+RELEASE        = 1
+PKGROOT        = /opt/trilinos/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = trilinos
 

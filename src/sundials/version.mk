@@ -6,15 +6,12 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-
-NAME           = sundials_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+NAME           = sundials_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.5.0
-RELEASE        = 2
-PKGROOT        = /opt/sundials/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
+RELEASE        = 3
+PKGROOT        = /opt/sundials/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = sundials
 

@@ -95,14 +95,8 @@ MKLSETUP = \
   echo $${MKL_ROOT}; \
   export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`
 
-ifeq ("$(FIRSTNETWORK)", "eth")
-  MPIMODULE = $(FIRSTMPI)
-else
-  MPIMODULE = $(FIRSTMPI)_$(FIRSTNETWORK)
-endif
-
 MPISETUP = \
-  module load $(MPIMODULE) || true; \
+  module load $(FIRSTMPI) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 

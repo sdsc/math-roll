@@ -1,10 +1,17 @@
 #%Module1.0
-if {! [info exists ::env(MPIHOME)]} {
-  puts stderr "Need to load an mpi module before loading petsc"
+module-whatis "petsc"
+module-whatis "Version: VERSION"
+module-whatis "Description: petsc"
+module-whatis "Compiler: COMPILERNAME"
+module-whatis "MPI Flavors: ROLLMPI"
+if {! [info exists ::env(MPIHOME)] || ! [info exists ::env(LOADEDMODULES)]} {
+  puts stderr "Need to load an mpi module before loading petsc
   exit 1
 }
-foreach {x} [glob -directory /opt/petsc/ROLLCOMPILER -tails *] {
-  if {[regexp $x $::env(MPIHOME)]} {
+foreach {x} [list ROLLMPI] {
+  # Look for flavor in LOADEDMODULES, delimited by colon or end of string.
+  # Can also be followed by / (version number).
+  if {[regexp [format {[:^]%s[:/$]} $x] $::env(LOADEDMODULES)]} {
     set mpi $x
     break
   }
@@ -13,18 +20,6 @@ if {! [info exists mpi]} {
   puts stderr "No supported MPI flavor found"
   exit 1
 }
-foreach {x} [glob -directory /opt/petsc/ROLLCOMPILER/$mpi -tails *] {
-  if {[regexp $x $::env(MPIHOME)]} {
-    set network $x
-    break
-  }
-}
-if {! [info exists network]} {
-  puts stderr "No supported network found"
-  exit 1
-}
-module-whatis "petsc_ROLLCOMPILER_${mpi}_$network"
-module-whatis "Version: VERSION"
-setenv PETSCHOME /opt/petsc/ROLLCOMPILER/$mpi/$network
-prepend-path LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/$mpi/$network/lib
-prepend-path LIBPATH /opt/petsc/ROLLCOMPILER/$mpi/$network/lib
+setenv PETSCHOME /opt/petsc/ROLLCOMPILER/$mpi
+prepend-path LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/$mpi/lib
+prepend-path LIBPATH /opt/petsc/ROLLCOMPILER/$mpi/lib

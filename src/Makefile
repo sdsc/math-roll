@@ -78,17 +78,15 @@ copyright rpm pkg clean::
 	      grep -q ROLLMPI $$i/version.mk; \
 	      if test $$? -eq 0; then \
 	        for m in $(ROLLMPI); do \
-	         for n in $(ROLLNETWORK); do \
-	           echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI=$$m ROLLNETWORK=$$n ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
-	           (cd $$i && $(MAKE) ROLLCOMPILER=$$c ROLLMPI=$$m ROLLNETWORK=$$n ROLLPY="$(ROLLPY)" $@) || exit 2; \
-	           echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI=$$m ROLLNETWORK=$$n ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
-	         done; \
-                done; \
-              else \
-	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
-	        (cd $$i && $(MAKE) ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" $@) || exit 2; \
-	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
-              fi; \
+	          echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI=$$m ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
+	          (cd $$i && $(MAKE) ROLLCOMPILER=$$c ROLLMPI=$$m ROLLPY="$(ROLLPY)" $@) || exit 2; \
+	          echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI=$$m ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
+	        done; \
+	      else \
+	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
+	        (cd $$i && $(MAKE) ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" $@) || exit 2; \
+	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
+	      fi; \
 	    done; \
 	  else \
 	    echo "$(SKIP)" | grep -q "$${package}_$(ROLLCOMPILER)"; \
@@ -96,8 +94,8 @@ copyright rpm pkg clean::
 	      echo skip make $@ of $${package}_$(ROLLCOMPILER); \
 	      continue; \
 	    fi; \
-	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
-	    (cd $$i && $(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" $@) || exit 2; \
-	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLNETWORK="$(ROLLNETWORK)" ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
+	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
+	    (cd $$i && $(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" $@) || exit 2; \
+	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
 	  fi; \
 	done

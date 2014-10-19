@@ -5,7 +5,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = gsl_$(COMPILERNAME)
 VERSION        = 1.16
-RELEASE        = 2
+RELEASE        = 3
 PKGROOT        = /opt/gsl/$(COMPILERNAME)
 
 SRC_SUBDIR     = gsl

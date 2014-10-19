@@ -54,20 +54,13 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # 
 # @Copyright@
-#
-# $Log$
-#
 
 ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
 
 ifndef ROLLMPI
-  ROLLMPI = openmpi
-endif
-
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
+  ROLLMPI = rocks-openmpi
 endif
 
 ifndef ROLLPY
@@ -83,22 +76,19 @@ default:
 	  cp $$i $$o; \
 	  for c in $(ROLLCOMPILER); do \
 	    COMPILERNAME=`echo $$c | awk -F/ '{print $$1}'`; \
-	    perl -pi -e 'print and s/COMPILERNAME/'$${c}'/g if m/COMPILERNAME/' $$o; \
-	  done; \
-	  for n in $(ROLLNETWORK); do \
-	    perl -pi -e 'print and s/ROLLNETWORK/'$${n}'/g if m/ROLLNETWORK/' $$o; \
+	    perl -pi -e "print and s/COMPILERNAME/$$COMPILERNAME/g if m/COMPILERNAME/" $$o; \
 	  done; \
 	  for m in $(ROLLMPI); do \
-	    perl -pi -e 'print and s/ROLLMPI/'$${m}'/g if m/ROLLMPI/' $$o; \
+	    MPINAME=`echo $$m | awk -F/ '{print $$1}'`; \
+	    perl -pi -e "print and s/MPINAME/$$MPINAME/g if m/MPINAME/" $$o; \
 	  done; \
-	  perl -pi -e '$$_ = "" if m/COMPILERNAME|ROLLNETWORK|ROLLMPI/' $$o; \
+	  perl -pi -e '$$_ = "" if m/COMPILERNAME|MPINAME/' $$o; \
 	done
 	SKIP=''; \
 	if test -f packages_to_skip; then \
 	  SKIP=`sed 's/#.*//' packages_to_skip | tr '\n' ' '`; \
 	fi; \
-	echo $(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLNETWORK="$(ROLLNETWORK)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" SKIP="$${SKIP}" roll; \
-	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLNETWORK="$(ROLLNETWORK)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" SKIP="$${SKIP}" roll
+	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" SKIP="$${SKIP}" roll
 
 clean::
 	rm -f _arch bootstrap.py

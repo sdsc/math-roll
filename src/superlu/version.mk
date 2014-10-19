@@ -6,15 +6,12 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 ifndef ROLLMPI
   ROLLMPI = openmpi
 endif
+MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-ifndef ROLLNETWORK
-  ROLLNETWORK = eth
-endif
-
-NAME           = superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+NAME           = superlu_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 3.3
-RELEASE        = 0
-PKGROOT        = /opt/superlu/$(COMPILERNAME)/$(ROLLMPI)/$(ROLLNETWORK)
+RELEASE        = 1
+PKGROOT        = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = superlu
 

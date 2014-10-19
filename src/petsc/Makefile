@@ -81,25 +81,15 @@ MKLSETUP = \
   echo $${MKL_ROOT}; \
   export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`
 
-ifeq ("$(ROLLNETWORK)", "eth")
-  MPIMODULE = $(ROLLMPI)
-else
-  MPIMODULE = $(ROLLMPI)_$(ROLLNETWORK)
-endif
-
 MPISETUP = \
-  module load $(MPIMODULE) || true; \
+  module load $(ROLLMPI) || true; \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PETSC_CACHE = \
-  $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
-PARMETIS_CACHE = \
-  $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
-SUPERLU_CACHE = \
-  $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
-SCALAPACK_CACHE = \
-  $(REDHAT.ROOT)/src/build-scalapack_$(COMPILERNAME)_$(ROLLMPI)_$(ROLLNETWORK)
+PETSC_CACHE = $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(ROLLMPI)
+PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
+SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)
+SCALAPACK_CACHE = $(REDHAT.ROOT)/src/build-scalapack_$(COMPILERNAME)_$(ROLLMPI)
 
 build: $(SRC_DIRS)
 	( \
@@ -111,7 +101,7 @@ build: $(SRC_DIRS)
 	           $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a \
 	           -Wl,--end-group -lpthread -lm"; \
 	  export PETSC_DIR=`pwd`; \
-	  export PETSC_ARCH=$(COMPILERNAME)-$(ROLLMPI)-$(ROLLNETWORK); \
+	  export PETSC_ARCH=$(COMPILERNAME)-$(ROLLMPI); \
 	  ./configure --prefix=$(PKGROOT) \
 	    --with-mpi=1 \
 	    --download-pastix=1 --download-ptscotch \
