@@ -6,7 +6,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
 
 # ROLLMPI only used for locating fftw/hdf5 modulefiles
 ifndef ROLLMPI
-  ROLLMPI = openmpi
+  ROLLMPI = rocks-openmpi
 endif
 FIRSTMPI := $(firstword $(ROLLMPI))
 
