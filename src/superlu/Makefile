@@ -64,13 +64,10 @@ include Rules.mk
 include pull.mk
 
 CC = gcc
-CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
 ifeq ("$(COMPILERNAME)","intel")
    CC = icc
-   CFLAGS = -I$(PARMETIS_CACHE)/include
 else ifeq ("$(COMPILERNAME)","pgi")
    CC = pgcc
-   CFLAGS = -I$(PARMETIS_CACHE)/include
 endif
 
 COMPILERSETUP =  \
@@ -91,6 +88,7 @@ MPISETUP = \
 PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
 SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
 
+CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
 MKLLINK = -Wl,--start-group $${MKL_ROOT}/lib/intel64/libmkl_intel_lp64.a $${MKL_ROOT}/lib/intel64/libmkl_sequential.a $${MKL_ROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm
 
 build: $(SRC_DIRS)
