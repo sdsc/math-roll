@@ -159,7 +159,7 @@ sh ./tests
 cat *.out
 END
     close(OUT);
-    $output = `/bin/bash $TESTFILE.sh|grep -c -i fail 2>&1`;
+    $output = `/bin/bash $TESTFILE.sh |grep -c -i fail 2>&1`;
     ok($output <= 31, "lapack $compilername tests");
     `rm -rf $TESTFILE*`;
   }
@@ -191,11 +191,16 @@ foreach my $compiler(@COMPILERS) {
       print OUT <<END;
 #!/bin/bash
 module load $compilername $mpi parmetis
-mpirun -np 2 \$PARMETISHOME/bin/ptest \$PARMETISHOME/Graphs/rotor.graph
+output=`mpirun -n 2 \$PARMETISHOME/bin/ptest \$PARMETISHOME/Graphs/rotor.graph 2>&1`
+if [[ "\$output" =~ "run-as-root" ]]; then
+  output=`mpirun --allow-run-as-root -n 2 \$PARMETISHOME/bin/ptest \$PARMETISHOME/Graphs/rotor.graph 2>&1`
+fi
+echo \$output
 END
       close(OUT);
-      $output = `/bin/bash $TESTFILE.sh| grep -c OK: 2>&1`;
-      ok($output >= 80, "parmetis $compilername $mpi works");
+      $output = `/bin/bash $TESTFILE.sh 2>&1`;
+      my @oks = $output =~ /OK:/g;
+      ok(int(@oks) >= 80, "parmetis $compilername $mpi works");
     }
   }
 }
@@ -215,11 +220,15 @@ mkdir $TESTFILE.dir
 cd $TESTFILE.dir
 cp -r \$PETSCHOME/examples/* .
 cd tutorials
-cat makefile|sed 's/chkopts//' >temp
+cat makefile | sed 's/chkopts//' >temp
 mv temp makefile
 make PETSC_ARCH=arch-linux-c-debug PETSC_DIR=\$PETSCHOME ex1
 ls -l ex1
-mpirun -np 1 ./ex1 -ksp_gmres_cgs_refinement_type refine_always -snes_monitor_short
+output=`mpirun -n 1 ./ex1 -ksp_gmres_cgs_refinement_type refine_always -snes_monitor_short 2>&1`
+if [[ "\$output" =~ "run-as-root" ]]; then
+  output=`mpirun --allow-run-as-root -n 1 ./ex1 -ksp_gmres_cgs_refinement_type refine_always -snes_monitor_short 2>&1`
+fi
+echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
@@ -243,7 +252,7 @@ foreach my $compiler(@COMPILERS) {
 module load $compiler $mpi scalapack
 mkdir $TESTFILE.dir
 cd $TESTFILE.dir
-cp \$SCALAPACKHOME/TESTING/* .
+cp -r \$SCALAPACKHOME/TESTING/* .
 make test
 END
       close(OUT);
@@ -310,7 +319,11 @@ foreach my $compiler(@COMPILERS) {
 module load $compiler $mpi sprng
 mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -L\$GMPHOME/lib -lgmp
 ls -l *.exe
-mpirun -np 1 ./$TESTFILE.sprng.exe
+output=`mpirun -n 1 ./$TESTFILE.sprng.exe 2>&1`
+if [[ "\$output" =~ "run-as-root" ]]; then
+  output=`mpirun --allow-run-as-root -n 1 ./$TESTFILE.sprng.exe 2>&1`
+fi
+echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
@@ -342,7 +355,11 @@ EOF
 fi
 mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/lib -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
 ls -l *.exe
-mpirun -np 4 ./$TESTFILE.sundials.exe
+output=`mpirun -n 4 ./$TESTFILE.sundials.exe 2>&1`
+if [[ "\$output" =~ "run-as-root" ]]; then
+  output=`mpirun --allow-run-as-root -n 4 ./$TESTFILE.sundials.exe 2>&1`
+fi
+echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
@@ -364,11 +381,15 @@ foreach my $compiler(@COMPILERS) {
       print OUT <<END;
 #!/bin/bash
 module load $compiler $mpi superlu
-mpirun -np 1 \$SUPERLUHOME/EXAMPLE/pddrive \$SUPERLUHOME/EXAMPLE/g20.rua
+output=`mpirun -n 1 \$SUPERLUHOME/EXAMPLE/pddrive \$SUPERLUHOME/EXAMPLE/g20.rua 2>&1`
+if [[ "\$output" =~ "run-as-root" ]]; then
+  output=`mpirun --allow-run-as-root -n 1 \$SUPERLUHOME/EXAMPLE/pddrive \$SUPERLUHOME/EXAMPLE/g20.rua 2>&1`
+fi
+echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
-      like($output, qr/nonzeros in L\+U     11694/,
+      like($output, qr/nonzeros in L\+U\s+11694/,
            "Superlu/$compilername/$mpi test run");
     }
   }
