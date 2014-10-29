@@ -91,11 +91,12 @@ PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
 SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)
 SCALAPACK_CACHE = $(REDHAT.ROOT)/src/build-scalapack_$(COMPILERNAME)_$(ROLLMPI)
 
-build: $(SRC_DIRS)
+build: $(SRC_PKGS)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MKLSETUP); \
 	  $(MPISETUP); \
+	  tar -xzf $(SOURCE_PKG); \
 	  cd $(SOURCE_DIR); \
 	  MKLLINK="-Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a \
 	           $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a \
@@ -104,7 +105,8 @@ build: $(SRC_DIRS)
 	  export PETSC_ARCH=$(COMPILERNAME)-$(ROLLMPI); \
 	  ./configure --prefix=$(PKGROOT) \
 	    --with-mpi=1 \
-	    --download-pastix=1 --download-ptscotch \
+	    --download-pastix=../pastix_5.2.2.12.tar.bz2 \
+	    --download-ptscotch=../scotch_6.0.0_esmumps.tar.gz \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
 	    --with-superlu_dist-include=$(SUPERLU_CACHE)/include \
 	    --with-superlu_dist-lib="-L$(SUPERLU_CACHE)/lib -lsuperlu" \
@@ -112,9 +114,9 @@ build: $(SRC_DIRS)
 	    --with-metis-dir=$(PARMETIS_CACHE) \
 	    --with-mpi-dir=$${MPIHOME} \
 	    --with-scalapack-dir=$(SCALAPACK_CACHE) \
-	    --download-mumps=yes \
-	    --download-blacs=yes \
-	    --download-fblaslapack=yes \
+	    --download-mumps=../MUMPS_4.10.0-p3.tar.gz \
+	    --download-blacs=../blacs-dev.tar.gz \
+	    --download-fblaslapack=../fblaslapack-3.4.2.tar.gz \
 	    --with-pic=1 \
 	    --with-shared-libraries=1; \
 	    make all \
