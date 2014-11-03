@@ -23,3 +23,6 @@ if {! [info exists mpi]} {
 setenv PETSCHOME /opt/petsc/ROLLCOMPILER/$mpi
 prepend-path LD_LIBRARY_PATH /opt/petsc/ROLLCOMPILER/$mpi/lib
 prepend-path LIBPATH /opt/petsc/ROLLCOMPILER/$mpi/lib
+module load scalapack
+module load parmetis
+module load superlu
