@@ -10,8 +10,8 @@ my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = '.';
 my @packages = (
-  'eigen', 'gsl', 'lapack', 'octave', 'parmetis', 'petsc', 'scalapack',
-  'slepc', 'sprng', 'sundials', 'superlu', 'trilinos'
+  'eigen', 'gsl', 'lapack', 'parmetis', 'petsc', 'scalapack',
+  'slepc', 'sprng', 'sundials', 'superlu'
 );
 my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
@@ -39,8 +39,8 @@ SKIP: {
       my $compilername = (split('/', $compiler))[0];
       next if $SKIP =~ "${package}_${compilername}";
       my $path = '/opt/modulefiles/applications' .
-                 ($package =~ /eigen|octave/ ? '' : "/.$compilername");
-      my $subpackage = $package =~ /eigen|octave/ ? $package : "$package/$compilername";
+                 ($package =~ /eigen/ ? '' : "/.$compilername");
+      my $subpackage = $package =~ /eigen/ ? $package : "$package/$compilername";
       `/bin/ls $path/$package/[0-9]* 2>&1`;
       ok($? == 0, "$subpackage module installed");
       `/bin/ls $path/$package/.version.[0-9]* 2>&1`;
@@ -163,21 +163,6 @@ END
     ok($output <= 31, "lapack $compilername tests");
     `rm -rf $TESTFILE*`;
   }
-}
-
-# octave
-$packageHome = '/opt/octave';
-SKIP: {
-  skip 'octave not installed', 1 if ! -d $packageHome;
-  open(OUT, ">$TESTFILE.sh");
-  print OUT <<END;
-#!/bin/bash
-module load intel octave
-echo 'exp(i*pi)' | octave
-END
-  close(OUT);
-  $output = `/bin/bash $TESTFILE.sh 2>&1`;
-  like($output, qr/ans = -1\.0000e\+00/, 'simple octave test');
 }
 
 # parmetis
@@ -391,43 +376,6 @@ END
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
       like($output, qr/nonzeros in L\+U\s+11694/,
            "Superlu/$compilername/$mpi test run");
-    }
-  }
-}
-
-# trilinos
-open(OUT, ">$TESTFILE.tril.cxx");
-print OUT <<END;
-#include "Teuchos_Version.hpp"
-using namespace Teuchos;
-int main(int argc, char* argv[]) {
-  std::cout << Teuchos::Teuchos_Version() << std::endl;
-  return 0;
-}
-END
-close(OUT);
-foreach my $compiler(@COMPILERS) {
-  my $compilername = (split('/', $compiler))[0];
-  foreach my $mpi(@MPIS) {
-    $packageHome = "/opt/trilinos/$compilername";
-    SKIP: {
-      skip "trilinos/$compilername not installed", 2 if ! -d $packageHome;
-      open(OUT, ">$TESTFILE.sh");
-      print OUT <<END;
-#!/bin/bash
-module load $compiler $mpi trilinos
-export LD_LIBRARY_PATH=/opt/intel/composer_xe_2013.1.117/mkl/lib/intel64:\${LD_LIBRARY_PATH}
-mpicxx -I\${TRILINOSHOME}/include -o $TESTFILE.tril.exe $TESTFILE.tril.cxx -L\${TRILINOSHOME}/lib -lteuchoscore
-ls -l *.exe
-./$TESTFILE.tril.exe
-rm -f $TESTFILE.tril.exe
-END
-      close(OUT);
-      $output = `/bin/bash $TESTFILE.sh 2>&1`;
-      like($output, qr/$TESTFILE.tril.exe/,
-           "Trilinos/$compilername/$mpi compilation");
-      like($output, qr/Teuchos in Trilinos [\d\.]+/,
-           "Trilinos/$compilername/$mpi run");
     }
   }
 }
