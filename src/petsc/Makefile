@@ -56,7 +56,7 @@
 #
 # $Log$
 
-REDHAT.ROOT = $(CURDIR)/../../
+REDHAT.ROOT = $(shell readlink -f $(CURDIR)/../..)
 RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
@@ -86,12 +86,24 @@ MPISETUP = \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PETSC_CACHE = $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(ROLLMPI)
-PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
-SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)
-SCALAPACK_CACHE = $(REDHAT.ROOT)/src/build-scalapack_$(COMPILERNAME)_$(ROLLMPI)
+PETSC_CACHE = $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(MPINAME)
+PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(MPINAME)
+PARMETIS_INSTALL = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
+SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(MPINAME)
+SUPERLU_INSTALL = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
+SCALAPACK_CACHE = $(REDHAT.ROOT)/src/build-scalapack_$(COMPILERNAME)_$(MPINAME)
+SCALAPACK_INSTALL = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
 
 build: $(SRC_PKGS)
+	# petsc includes dependent package paths in its installed files,
+	# including its libraries, so we have to use bind mounts to avoid
+	# having the installed s/w look for the cache dirs.
+	-mkdir -p $(PARMETIS_INSTALL)
+	mount --bind $(PARMETIS_CACHE) $(PARMETIS_INSTALL)
+	-mkdir -p $(SUPERLU_INSTALL)
+	mount --bind $(SUPERLU_CACHE) $(SUPERLU_INSTALL)
+	-mkdir -p $(SCALAPACK_INSTALL)
+	mount --bind $(SCALAPACK_CACHE) $(SCALAPACK_INSTALL)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MKLSETUP); \
@@ -102,25 +114,31 @@ build: $(SRC_PKGS)
 	           $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a \
 	           -Wl,--end-group -lpthread -lm"; \
 	  export PETSC_DIR=`pwd`; \
-	  export PETSC_ARCH=$(COMPILERNAME)-$(ROLLMPI); \
+	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
 	  ./configure --prefix=$(PKGROOT) \
 	    --with-mpi=1 \
 	    --download-pastix=../pastix_5.2.2.12.tar.bz2 \
 	    --download-ptscotch=../scotch_6.0.0_esmumps.tar.gz \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
-	    --with-superlu_dist-include=$(SUPERLU_CACHE)/include \
-	    --with-superlu_dist-lib="-L$(SUPERLU_CACHE)/lib -lsuperlu" \
-	    --with-parmetis-dir=$(PARMETIS_CACHE) \
-	    --with-metis-dir=$(PARMETIS_CACHE) \
+	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
+	    --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib -lsuperlu" \
+	    --with-parmetis-dir=$(PARMETIS_INSTALL) \
+	    --with-metis-dir=$(PARMETIS_INSTALL) \
 	    --with-mpi-dir=$${MPIHOME} \
-	    --with-scalapack-dir=$(SCALAPACK_CACHE) \
+	    --with-scalapack-dir=$(SCALAPACK_INSTALL) \
 	    --download-mumps=../MUMPS_4.10.0-p3.tar.gz \
 	    --download-blacs=../blacs-dev.tar.gz \
 	    --download-fblaslapack=../fblaslapack-3.4.2.tar.gz \
 	    --with-pic=1 \
 	    --with-shared-libraries=1; \
-	    make all \
+	    make all; \
 	)
+	umount $(SCALAPACK_INSTALL)
+	-rmdir -p $(SCALAPACK_INSTALL)
+	umount $(SUPERLU_INSTALL)
+	-rmdir -p $(SUPERLU_INSTALL)
+	umount $(PARMETIS_INSTALL)
+	-rmdir -p $(PARMETIS_INSTALL)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
@@ -140,6 +158,7 @@ install::
 	-rmdir -p $(PKGROOT)
 	# Get rid of configure.log files that contain build dir path
 	rm `find $(ROOT)/$(PKGROOT) -name configure.log`
+	# Cache install for use by slepc
 	mkdir -p $(PETSC_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PETSC_CACHE)
 	# Fix paths in copy--slepc config checks for mismatch

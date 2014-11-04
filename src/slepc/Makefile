@@ -80,10 +80,27 @@ MPISETUP = \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PETSC_CACHE = $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(ROLLMPI)
-SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(ROLLMPI)
+PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(MPINAME)
+PARMETIS_INSTALL = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
+PETSC_CACHE = $(REDHAT.ROOT)/src/build-petsc_$(COMPILERNAME)_$(MPINAME)
+PETSC_INSTALL = /opt/petsc/$(COMPILERNAME)/$(MPINAME)
+SCALAPACK_CACHE = $(REDHAT.ROOT)/src/build-scalapack_$(COMPILERNAME)_$(MPINAME)
+SCALAPACK_INSTALL = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
+SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-superlu_$(COMPILERNAME)_$(MPINAME)
+SUPERLU_INSTALL = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 
 build: $(SRC_DIRS)
+	# slepc includes dependent package paths in its installed files,
+	# including its libraries, so we have to use bind mounts to avoid
+	# having the installed s/w look for the cache dirs.
+	-mkdir -p $(PARMETIS_INSTALL)
+	mount --bind $(PARMETIS_CACHE) $(PARMETIS_INSTALL)
+	-mkdir -p $(PETSC_INSTALL)
+	mount --bind $(PETSC_CACHE) $(PETSC_INSTALL)
+	-mkdir -p $(SCALAPACK_INSTALL)
+	mount --bind $(SCALAPACK_CACHE) $(SCALAPACK_INSTALL)
+	-mkdir -p $(SUPERLU_INSTALL)
+	mount --bind $(SUPERLU_CACHE) $(SUPERLU_INSTALL)
 	( \
 	  $(COMPILERSETUP); \
 	  $(MPISETUP); \
@@ -94,6 +111,14 @@ build: $(SRC_DIRS)
 	  ./configure --prefix=$(PKGROOT); \
 	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) \
 	)
+	umount $(SUPERLU_INSTALL)
+	-rmdir -p $(SUPERLU_INSTALL)
+	umount $(SCALAPACK_INSTALL)
+	-rmdir -p $(SCALAPACK_INSTALL)
+	umount $(PETSC_INSTALL)
+	-rmdir -p $(PETSC_INSTALL)
+	umount $(PARMETIS_INSTALL)
+	-rmdir -p $(PARMETIS_INSTALL)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
