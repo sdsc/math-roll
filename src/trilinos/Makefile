@@ -99,7 +99,7 @@ PYSETUP = \
   echo === Python and version ===; \
   echo `which python; python --version`
 
-SWIG_CACHE = $(REDHAT.ROOT)/src/build-swig
+SWIG_CACHE = $(REDHAT.ROOT)/cache/build-swig
 
 build: $(SRC_DIRS)
 	mkdir $(SOURCE_DIR)/build

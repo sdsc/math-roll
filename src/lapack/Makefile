@@ -85,7 +85,7 @@ COMPILERSETUP =  \
   echo === Compiler and version ===; \
   $(CC) --version
 
-LAPACK_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
+LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 build: $(SRC_DIRS)
 	cp patch-files/make.inc.lapack $(SOURCE_DIR)/make.inc

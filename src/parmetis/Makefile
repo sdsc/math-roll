@@ -85,7 +85,7 @@ MPISETUP = \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
+PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 build: $(SRC_DIRS)
 	patch $(SOURCE_DIR)/Makefile patch-files/Makefile.parmetis.patch

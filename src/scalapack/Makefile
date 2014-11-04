@@ -96,8 +96,8 @@ MPISETUP = \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-LAPACK_CACHE = $(REDHAT.ROOT)/src/build-lapack_$(COMPILERNAME)
-SCALAPACK_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
+LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-lapack_$(COMPILERNAME)
+SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 build: $(SRC_DIRS)
 	( \

@@ -85,8 +85,8 @@ MPISETUP = \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
-PARMETIS_CACHE = $(REDHAT.ROOT)/src/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
-SUPERLU_CACHE = $(REDHAT.ROOT)/src/build-$(NAME)
+PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
+SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
 MKLLINK = -Wl,--start-group $${MKL_ROOT}/lib/intel64/libmkl_intel_lp64.a $${MKL_ROOT}/lib/intel64/libmkl_sequential.a $${MKL_ROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm
