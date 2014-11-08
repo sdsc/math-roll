@@ -84,11 +84,7 @@ default:
 	  done; \
 	  perl -pi -e '$$_ = "" if m/COMPILERNAME|MPINAME/' $$o; \
 	done
-	SKIP=''; \
-	if test -f packages_to_skip; then \
-	  SKIP=`sed 's/#.*//' packages_to_skip | tr '\n' ' '`; \
-	fi; \
-	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" SKIP="$${SKIP}" roll
+	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" roll
 
 clean::
 	rm -f _arch bootstrap.py

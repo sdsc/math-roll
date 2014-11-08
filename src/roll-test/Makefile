@@ -15,6 +15,5 @@ install::
 	         -e 's#ROLLPY#$(ROLLPY)#g;' \
 	         -e 's#VERSION#$(VERSION)#g;' \
 	  $(ROOT)/$(PKGROOT)/*.t
-	perl -pi -e 's#ROLLSKIP#$(SKIP)#g' $(ROOT)/$(PKGROOT)/*.t
 
 clean::

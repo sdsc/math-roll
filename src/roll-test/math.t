@@ -16,15 +16,13 @@ my @packages = (
 my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
-my $SKIP = 'ROLLSKIP';
 my $TESTFILE = 'tmpmath';
 my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 
 # math-install.xml
 my @compilerNames = map {(split('/', $_))[0]} @COMPILERS;
 foreach my $package(@packages) {
-  if($appliance =~ /$installedOnAppliancesPattern/ &&
-     int(map {$SKIP =~ "${package}_$_"} @compilerNames) < int(@compilerNames)) {
+  if($appliance =~ /$installedOnAppliancesPattern/) {
     ok(-d "/opt/$package", "$package installed");
   } else {
     ok(! -d "/opt/$package", "$package not installed");
@@ -37,7 +35,6 @@ SKIP: {
     skip "$package not installed", 3 if ! -d "/opt/$package";
     foreach my $compiler(@COMPILERS) {
       my $compilername = (split('/', $compiler))[0];
-      next if $SKIP =~ "${package}_${compilername}";
       my $path = '/opt/modulefiles/applications' .
                  ($package =~ /eigen/ ? '' : "/.$compilername");
       my $subpackage = $package =~ /eigen/ ? $package : "$package/$compilername";
