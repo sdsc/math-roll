@@ -9,7 +9,6 @@ For more information about the various packages included in the math roll please
 - <a href="http://http://eigen.tuxfamily.org/" target="_blank">eigen</a> is a C++ template library for linear algebra: matrices, vectors, numerical solvers, and related algorithms.
 - <a href="http://www.gnu.org/software/gsl/" target="_blank">GSL</a> is a numerical library for C and C++ programmers.
 - <a href="http://www.netlib.org/lapack/" target="_blank">LAPACK</a> provides routines for solving systems of simultaneous linear equations, least-squares solutions of linear systems of equations, eigenvalue problems, and singular value problems.
-- <a href="http://www.gnu.org/software/octave/" target="_blank">Octave</a> is a high-level interpreted language, primarily intended for numerical computations. It provides capabilities for the numerical solution of linear and nonlinear problems, and for performing other numerical experiments.
 - <a href="http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview" target="_blank">ParMETIS</a> is an MPI-based parallel library that implements a variety of algorithms for partitioning unstructured graphs, meshes, and for computing fill-reducing orderings of sparse matrices.
 - <a href="http://www.mcs.anl.gov/petsc/" target="_blank">petsc</a>  is a suite of data structures and routines for the scalable (parallel) solution of scientific applications modeled by partial differential equations
 - <a href="http://www.netlib.org/scalapack/" target="_blank">ScaLAPACK</a> is a library of high-performance linear algebra routines for parallel distributed memory machines.
@@ -17,7 +16,6 @@ For more information about the various packages included in the math roll please
 - <a href="http://computation.llnl.gov/casc/sundials/main.html" target="_blank">sundials</a>  solves nonlinear and diffential equations
 - <a href="http://www.sprng.org" target="_blank">SPRNG</a> is a scalable package for parallel pseudo random number generation which will be easy to use on a variety of architectures, especially in large-scale parallel Monte Carlo applications.
 - <a href="http://crd-legacy.lbl.gov/~xiaoye/SuperLU/" target="_blank">SuperLU</a> is a general purpose library for the direct solution of large, sparse, nonsymmetric systems of linear equations on high performance machines.
-- <a href="http://trilinos.sandia.gov/citing.html" target="_blank">Trilinos</a> is an effort to develop algorithms and enabling technologies within an object-oriented software framework for the solution of large-scale, complex multi-physics engineering and scientific problems.
 
 
 ## Requirements
@@ -38,13 +36,9 @@ an mkl modulefile present (the mkl-roll provides this), then the build process
 will pick these up automatically.  Otherwise, you'll need to set the MKL_ROOT
 environment variable to the library location.
 
-FFTW libraries.  If there is an fftw modulefile present (the fftw-roll provides
+GMP libraries.  If there is an gmp modulefile present (the gnucompiler-roll provides
 this), then the build process will pick these up automatically.  Otherwise,
-you'll need to set the FFTWHOME environment variable to the library location.
-
-HDF5 libraries.  If there is an hdf5 modulefile present (the hdf5-roll provides
-this), then the build process will pick these up automatically.  Otherwise,
-you'll need to set the HDF5HOME environment variable to the library location.
+you'll need to set the GMPHOME environment variable to the library location.
 
 cmake.  If there is an cmake modulefile present (the cmake-roll provides
 this), then the build process will pick this up automatically.  Otherwise,
@@ -52,11 +46,11 @@ you'll need to add the appropriate directory to your PATH environment variable.
 
 ## Building
 
-To build the math-roll, execute these instructions on a Rocks development
+To build the math-roll, execute this on a Rocks development
 machine (e.g., a frontend or development appliance):
 
 ```shell
-% make default 2>&1 | tee build.log
+% make 2>&1 | tee build.log
 ```
 
 A successful build will create the file `math-*.disk1.iso`.  If you built the
@@ -76,16 +70,6 @@ make ROLLCOMPILER=intel ROLLMPI=mvapich2_ib 2>&1 | tee build.log
 The build process recognizes "gnu", "intel" or "pgi" as the value for the
 `ROLLCOMPILER` variable; any MPI modulefile name may be used as the value of
 the `ROLLMPI` variable.  The default values are "gnu" and "rocks-openmpi".
-
-The values of the `ROLLCOMPILER` and `ROLLMPI` variables are incorporated into
-the names of the produced rpms.  For example,
-
-```shell
-make ROLLCOMPILER=intel ROLLMPI=mvapich2_ib 2>&1 | tee build.log
-```
-
-produces a roll containing an rpm with a name that begins
-`petsc_intel_mvapich2_ib`.
 
 For gnu compilers, the roll also supports a `ROLLOPTS` make variable value of
 'avx', indicating that the target architecture supports AVX instructions.
