@@ -78,6 +78,8 @@ MPISETUP = \
   echo === MPIHOME ===; \
   echo $${MPIHOME}
 
+MPIDEF = -DSPRNG_MPI -DOMPI_WANT_MPI_INTERFACE_WARNING=0
+
 build: $(SRC_DIRS)
 	cp patch-files/make.GENERIC $(SOURCE_DIR)/SRC/
 	( \
@@ -90,8 +92,7 @@ build: $(SRC_DIRS)
 	  else \
 	    export GMPLINK=""; \
 	  fi; \
-	  echo $(MAKE) PLAT=GENERIC MPIDEF=-DSPRNG_MPI GMPLIB="$${GMPLINK}"; \
-	  $(MAKE) PLAT=GENERIC MPIDEF=-DSPRNG_MPI GMPLIB="$${GMPLINK}" \
+	  $(MAKE) PLAT=GENERIC MPIDEF="$(MPIDEF)" GMPLIB="$${GMPLINK}" \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
