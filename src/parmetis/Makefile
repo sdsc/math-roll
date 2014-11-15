@@ -96,8 +96,8 @@ build: $(SRC_DIRS)
 	  $(CMAKESETUP); \
 	  $(MPISETUP); \
 	  cd $(SOURCE_DIR); \
-	  export CFLAGS=-fPIC; \
-	  export CXXFLAGS=-fPIC; \
+	  export CFLAGS="-fPIC -DOMPI_WANT_MPI_INTERFACE_WARNING=0"; \
+	  export CXXFLAGS="-fPIC -DOMPI_WANT_MPI_INTERFACE_WARNING=0"; \
 	  $(MAKE) -j 16 prefix=$(ROOT)/$(PKGROOT) config; \
 	  $(MAKE) \
 	)
