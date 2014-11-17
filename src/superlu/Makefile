@@ -88,7 +88,8 @@ MPISETUP = \
 PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
 SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
-CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
+CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include -DOMPI_WANT_MPI_INTERFACE_WARNING=0
+NOOPTS = -O0 -I$(PARMETIS_CACHE)/include -DOMPI_WANT_MPI_INTERFACE_WARNING=0
 MKLLINK = -Wl,--start-group $${MKL_ROOT}/lib/intel64/libmkl_intel_lp64.a $${MKL_ROOT}/lib/intel64/libmkl_sequential.a $${MKL_ROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm
 
 build: $(SRC_DIRS)
@@ -101,7 +102,7 @@ build: $(SRC_DIRS)
 	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_CACHE)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_MKLLINK!$(MKLLINK)!" $(SOURCE_DIR)/make.inc; \
 	  cd $(SOURCE_DIR); \
-	  $(MAKE) CFLAGS="$(CFLAGS)" \
+	  $(MAKE) CFLAGS="$(CFLAGS)" NOOPTS="$(NOOPTS)" \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
