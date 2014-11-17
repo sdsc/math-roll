@@ -71,8 +71,8 @@ ROLLCOMMENT =
 ifeq ("$(COMPILERNAME)", "intel")
   FC = ifort
   CC = icc
-  CFLAGS = -O2 -fPIC
-  FFLAGS = -O2 -fPIC
+  CFLAGS = -O2 -fPIC -DOMPI_WANT_MPI_INTERFACE_WARNING=0
+  FFLAGS = -O2 -fPIC -DOMPI_WANT_MPI_INTERFACE_WARNING=0
 else ifeq ("$(COMPILERNAME)", "pgi")
   FC = pgf90
   CC = pgcc
