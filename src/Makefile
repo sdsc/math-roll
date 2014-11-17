@@ -67,8 +67,7 @@ default:
 copyright rpm pkg clean::
 	for i in $(SRCDIRS); do \
 	  package=`echo $$i | sed 's/\.\///'`; \
-	  if test `grep -c "\<NAME.*COMPILER" $$i/version.mk` -gt 0 -a \
-	          `grep -c FIRSTCOMPILER $$i/version.mk` -eq 0; then \
+	  if test `grep -c "\<NAME.*COMPILER" $$i/version.mk` -gt 0; then \
 	    for c in $(ROLLCOMPILER); do \
 	      grep -q ROLLMPI $$i/version.mk; \
 	      if test $$? -eq 0; then \

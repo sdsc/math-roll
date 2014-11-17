@@ -6,8 +6,8 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 PACKAGE     = parmetis
 CATEGORY    = applications
 
-NAME        = $(PACKAGE)_$(COMPILERNAME)-modules
-RELEASE     = 2
+NAME        = sdsc-$(PACKAGE)_$(COMPILERNAME)-modules
+RELEASE     = 3
 PKGROOT     = /opt/modulefiles/$(CATEGORY)/.$(COMPILERNAME)/$(PACKAGE)
 
 VERSION_SRC = $(REDHAT.ROOT)/src/$(PACKAGE)/version.mk

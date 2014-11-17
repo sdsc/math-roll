@@ -8,9 +8,9 @@ ifndef ROLLMPI
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = sundials_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-sundials_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.5.0
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/sundials/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = sundials

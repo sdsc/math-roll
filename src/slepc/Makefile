@@ -61,49 +61,47 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
-ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-endif
-
-COMPILERSETUP =  \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
-
-PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-parmetis_$(COMPILERNAME)_$(MPINAME)
+PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(MPINAME)
 PARMETIS_INSTALL = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
-PETSC_CACHE = $(REDHAT.ROOT)/cache/build-petsc_$(COMPILERNAME)_$(MPINAME)
+PETSC_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
 PETSC_INSTALL = /opt/petsc/$(COMPILERNAME)/$(MPINAME)
-SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-scalapack_$(COMPILERNAME)_$(MPINAME)
+SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-scalapack_$(COMPILERNAME)_$(MPINAME)
 SCALAPACK_INSTALL = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
-SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-superlu_$(COMPILERNAME)_$(MPINAME)
+SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
 SUPERLU_INSTALL = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
+
+LICENSE_FILES = $(SOURCE_DIR)/{COPYING,COPYING.LESSER,README}
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if ! grep -qF "version 3 of the GNU Lesser" $(SOURCE_DIR)/README; then \
+	  exit 2; \
+	fi
+	echo LGPLv3 > $@
 
 build: $(SRC_DIRS)
 	# slepc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
 	# having the installed s/w look for the cache dirs.
-	-mkdir -p $(PARMETIS_INSTALL)
-	mount --bind $(PARMETIS_CACHE) $(PARMETIS_INSTALL)
-	-mkdir -p $(PETSC_INSTALL)
-	mount --bind $(PETSC_CACHE) $(PETSC_INSTALL)
-	-mkdir -p $(SCALAPACK_INSTALL)
-	mount --bind $(SCALAPACK_CACHE) $(SCALAPACK_INSTALL)
-	-mkdir -p $(SUPERLU_INSTALL)
-	mount --bind $(SUPERLU_CACHE) $(SUPERLU_INSTALL)
+	$(call BIND_MOUNT, $(PARMETIS_INSTALL), $(PARMETIS_CACHE))
+	$(call BIND_MOUNT, $(PETSC_INSTALL), $(PETSC_CACHE))
+	$(call BIND_MOUNT, $(SCALAPACK_INSTALL), $(SCALAPACK_CACHE))
+	$(call BIND_MOUNT, $(SUPERLU_INSTALL), $(SUPERLU_CACHE))
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  export LD_LIBRARY_PATH=$(SUPERLU_CACHE):$${LD_LIBRARY_PATH}; \
 	  export PETSC_DIR=$(PETSC_CACHE); \
@@ -111,30 +109,25 @@ build: $(SRC_DIRS)
 	  ./configure --prefix=$(PKGROOT); \
 	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) \
 	)
-	umount $(SUPERLU_INSTALL)
-	-rmdir -p $(SUPERLU_INSTALL)
-	umount $(SCALAPACK_INSTALL)
-	-rmdir -p $(SCALAPACK_INSTALL)
-	umount $(PETSC_INSTALL)
-	-rmdir -p $(PETSC_INSTALL)
-	umount $(PARMETIS_INSTALL)
-	-rmdir -p $(PARMETIS_INSTALL)
+	$(call BIND_UMOUNT, $(SUPERLU_INSTALL))
+	$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))
+	$(call BIND_UMOUNT, $(PETSC_INSTALL))
+	$(call BIND_UMOUNT, $(PARMETIS_INSTALL))
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	# Using a bind mount appears to be the only way to prevent the build
 	# from incorporating $(ROOT) in binary files.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	-mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	$(PKGROOT_BIND_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
 	  make SLEPC_DIR=`pwd` PETSC_DIR=$(PETSC_CACHE) install; \
 	  cp -r src/eps/examples $(ROOT)/$(PKGROOT)/ \
 	)
-	umount $(PKGROOT)
-	-rmdir -p $(PKGROOT)
+	$(PKGROOT_BIND_UMOUNT)
+	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE

@@ -8,9 +8,9 @@ ifndef ROLLMPI
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = scalapack_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-scalapack_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0.2
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = scalapack

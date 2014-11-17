@@ -8,9 +8,9 @@ ifndef ROLLMPI
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = parmetis_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-parmetis_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 4.0.3
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = parmetis

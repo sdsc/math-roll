@@ -61,43 +61,43 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
-ifeq ("$(COMPILERNAME)","intel")
-   CC = icc
-else ifeq ("$(COMPILERNAME)","pgi")
-   CC = pgcc
-endif
-
-COMPILERSETUP =  \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
-MKLSETUP = \
-  module load mkl || true; \
-  echo === MKL_ROOT ===; \
-  echo $${MKL_ROOT}
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
-
-PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-parmetis_$(COMPILERNAME)_$(ROLLMPI)
+PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(ROLLMPI)
 SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include -DOMPI_WANT_MPI_INTERFACE_WARNING=0
 NOOPTS = -O0 -I$(PARMETIS_CACHE)/include -DOMPI_WANT_MPI_INTERFACE_WARNING=0
-MKLLINK = -Wl,--start-group $${MKL_ROOT}/lib/intel64/libmkl_intel_lp64.a $${MKL_ROOT}/lib/intel64/libmkl_sequential.a $${MKL_ROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -lpthread -lm
+
+MKLLINK = -Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm
+
+LICENSE_FILES = $(SOURCE_DIR)/README
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MKL); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if ! grep -qF "Regents of the University of California" $(LICENSE_FILES); then \
+	  exit 2; \
+	fi
+	echo BSD > $@
 
 build: $(SRC_DIRS)
 	cp patch-files/make.inc $(SOURCE_DIR)
 	( \
-	  $(COMPILERSETUP); \
-	  $(MKLSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MKL); \
+	  export MKLLIB=`find $${MKLHOME}/lib/* -maxdepth 0 | head -1`; \
+	  $(MODULE_LOAD_MPI); \
 	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE_DIR)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_CACHE)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_MKLLINK!$(MKLLINK)!" $(SOURCE_DIR)/make.inc; \
@@ -120,9 +120,10 @@ install::
 	  chmod go+rx $(ROOT)/$(PKGROOT)/EXAMPLE; \
 	  chmod go+rX $(ROOT)/$(PKGROOT)/EXAMPLE/* \
 	)
+	$(INSTALL_LICENSE_FILES)
 	mkdir $(SUPERLU_CACHE)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(SUPERLU_CACHE)/
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE

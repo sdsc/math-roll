@@ -3,9 +3,9 @@ ifndef ROLLCOMPILER
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-NAME           = gsl_$(COMPILERNAME)
+NAME           = sdsc-gsl_$(COMPILERNAME)
 VERSION        = 1.16
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/gsl/$(COMPILERNAME)
 
 SRC_SUBDIR     = gsl

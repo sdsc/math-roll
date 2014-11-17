@@ -8,9 +8,9 @@ ifndef ROLLMPI
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = petsc_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 3.5.2
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/petsc/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = petsc

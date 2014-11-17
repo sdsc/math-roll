@@ -61,31 +61,36 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
-
-COMPILERSETUP = \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
-GMPSETUP = \
-  module load gmp || true; \
-  echo === GMPHOME ===; \
-  echo $${GMPHOME}
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
 MPIDEF = -DSPRNG_MPI -DOMPI_WANT_MPI_INTERFACE_WARNING=0
+
+LICENSE_FILES = sprng-README
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_GMP); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	#if ! grep -q "GNU GENERAL PUBLIC LICENSE" $(SOURCE_DIR)/COPYING; then \
+	#  exit 2; \
+	#fi
+	echo Creative Commons > $@
 
 build: $(SRC_DIRS)
 	cp patch-files/make.GENERIC $(SOURCE_DIR)/SRC/
 	( \
-	  $(COMPILERSETUP); \
-	  $(GMPSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_GMP); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  if test -n "$${GMPHOME}"; then \
 	    export GMPLINK="-L$${GMPHOME}/lib -lgmp"; \
@@ -105,8 +110,9 @@ install::
 	chmod 0755 $(ROOT)/$(PKGROOT)/EXAMPLES
 	chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLES/*.[cCF]
 	chmod 0644 $(ROOT)/$(PKGROOT)/include/*
+	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) build complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
 

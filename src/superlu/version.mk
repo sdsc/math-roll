@@ -8,9 +8,9 @@ ifndef ROLLMPI
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = superlu_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 3.3
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = superlu

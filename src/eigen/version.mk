@@ -1,6 +1,6 @@
-NAME           = eigen
+NAME           = sdsc-eigen
 VERSION        = 3.2.2
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/eigen
 
 SRC_SUBDIR     = eigen

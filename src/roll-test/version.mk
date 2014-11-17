@@ -1,6 +1,6 @@
-NAME       = math-roll-test
+NAME       = sdsc-math-roll-test
 VERSION    = 1
-RELEASE    = 6
+RELEASE    = 7
 PKGROOT    = /root/rolltests
 
 RPM.EXTRAS = AutoReq:No

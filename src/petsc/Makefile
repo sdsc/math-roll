@@ -61,53 +61,47 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
-ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-endif
-
-COMPILERSETUP =  \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
-MKLSETUP = \
-  module load mkl || true; \
-  echo === MKL_ROOT ===; \
-  echo $${MKL_ROOT}; \
-  export MKLLIB=`find $${MKL_ROOT}/lib/* -maxdepth 0 | head -1`
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
-
-PETSC_CACHE = $(REDHAT.ROOT)/cache/build-petsc_$(COMPILERNAME)_$(MPINAME)
-PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-parmetis_$(COMPILERNAME)_$(MPINAME)
+PETSC_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
+PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(MPINAME)
 PARMETIS_INSTALL = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
-SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-superlu_$(COMPILERNAME)_$(MPINAME)
+SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
 SUPERLU_INSTALL = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
-SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-scalapack_$(COMPILERNAME)_$(MPINAME)
+SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-scalapack_$(COMPILERNAME)_$(MPINAME)
 SCALAPACK_INSTALL = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
+
+LICENSE_FILES = $(SOURCE_DIR)/LICENSE
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if ! grep -qF "2014, UChicago Argonne" $(LICENSE_FILES); then \
+	  exit 2; \
+	fi
+	echo University of Chicago > $@
 
 build: $(SRC_PKGS)
 	# petsc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
 	# having the installed s/w look for the cache dirs.
-	-mkdir -p $(PARMETIS_INSTALL)
-	mount --bind $(PARMETIS_CACHE) $(PARMETIS_INSTALL)
-	-mkdir -p $(SUPERLU_INSTALL)
-	mount --bind $(SUPERLU_CACHE) $(SUPERLU_INSTALL)
-	-mkdir -p $(SCALAPACK_INSTALL)
-	mount --bind $(SCALAPACK_CACHE) $(SCALAPACK_INSTALL)
+	$(call BIND_MOUNT, $(PARMETIS_INSTALL), $(PARMETIS_CACHE))
+	$(call BIND_MOUNT, $(SUPERLU_INSTALL), $(SUPERLU_CACHE))
+	$(call BIND_MOUNT, $(SCALAPACK_INSTALL), $(SCALAPACK_CACHE))
 	( \
-	  $(COMPILERSETUP); \
-	  $(MKLSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MKL); \
+	  export MKLLIB=`find $${MKLHOME}/lib/* -maxdepth 0 | head -1`; \
+	  $(MODULE_LOAD_MPI); \
 	  tar -xzf $(SOURCE_PKG); \
 	  cd $(SOURCE_DIR); \
 	  MKLLINK="-Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a \
@@ -133,20 +127,16 @@ build: $(SRC_PKGS)
 	    --with-shared-libraries=1; \
 	    make all; \
 	)
-	umount $(SCALAPACK_INSTALL)
-	-rmdir -p $(SCALAPACK_INSTALL)
-	umount $(SUPERLU_INSTALL)
-	-rmdir -p $(SUPERLU_INSTALL)
-	umount $(PARMETIS_INSTALL)
-	-rmdir -p $(PARMETIS_INSTALL)
+	$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))
+	$(call BIND_UMOUNT, $(SUPERLU_INSTALL))
+	$(call BIND_UMOUNT, $(PARMETIS_INSTALL))
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	# Using a bind mount appears to be the only way to prevent the build
 	# from incorporating $(ROOT) in binary files.
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	-mkdir -p -m 755 $(PKGROOT)
-	mount --bind $(ROOT)/$(PKGROOT) $(PKGROOT)
+	$(PKGROOT_BIND_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
 	  export PETSC_DIR=`pwd`; \
@@ -154,8 +144,8 @@ install::
 	  make install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/ \
 	)
-	umount $(PKGROOT)
-	-rmdir -p $(PKGROOT)
+	$(PKGROOT_BIND_UMOUNT)
+	$(INSTALL_LICENSE_FILES)
 	# Get rid of configure.log files that contain build dir path
 	rm `find $(ROOT)/$(PKGROOT) -name configure.log`
 	# Cache install for use by slepc
@@ -167,4 +157,4 @@ install::
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE

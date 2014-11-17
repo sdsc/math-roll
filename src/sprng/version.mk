@@ -8,9 +8,9 @@ ifndef ROLLMPI
 endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
-NAME           = sprng_$(COMPILERNAME)_$(MPINAME)
+NAME           = sdsc-sprng_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0b
-RELEASE        = 3
+RELEASE        = 4
 PKGROOT        = /opt/sprng/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = sprng

@@ -61,55 +61,68 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-FC = gfortran -fimplicit-none -O2 -fPIC
-CC = gcc -O2 -fPIC
+COPTS = -O2 -fPIC
+FOPTS = -fimplicit-none -O2 -fPIC
 ifeq ("$(COMPILERNAME)", "intel")
-  FC = ifort -O2 -xHOST -fPIC
-  CC = icc -O2 -xHOST -fPIC
+  COPTS = -O2 -xHOST -fPIC
+  FOPTS = -O2 -xHOST -fPIC
 else ifeq ("$(COMPILERNAME)", "pgi")
-  FC = pgf90 -fast -fPIC
-  CC = pcc -fast -fPIC
+  COPTS = -fast -fPIC
+  FOPTS = -fast -fPIC
 endif
 
 ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   ifeq ("$(COMPILERNAME)", "gnu")
-    CC += -mavx
-    FC += -mavx
+    COPTS += -mavx
+    FOPTS += -mavx
   endif
 endif
 
-COMPILERSETUP =  \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
 LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
+
+LICENSE_FILES = $(SOURCE_DIR)/LICENSE
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if ! grep -q "2012 The University of Colorado Denver" $(LICENSE_FILES); then \
+	  exit 2; \
+	fi
+	echo BSD > $@
 
 build: $(SRC_DIRS)
 	cp patch-files/make.inc.lapack $(SOURCE_DIR)/make.inc
 	cp patch-files/make.inc.blas BLAS/make.inc
 	( \
-	  perl -pi -e "s!ROLL_FORTRAN!$(FC)!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!ROLL_CC!$(CC)!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!ROLL_FORTRAN!$(FC)!" BLAS/make.inc; \
-	  $(COMPILERSETUP); \
+	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" $(SOURCE_DIR)/make.inc; \
+	  perl -pi -e "s!ROLL_CC!$(CC) $(COPTS)!" $(SOURCE_DIR)/make.inc; \
+	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" BLAS/make.inc; \
+	  $(MODULE_LOAD_CC); \
 	  cd BLAS; \
 	  make; \
 	  mkdir tmp; \
 	  cd tmp; \
 	  ar -x ../blas.a; \
-	  $(FC) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
+	  $(FC) $(FOPTS) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
 	  cd ../../$(SOURCE_DIR); \
 	  $(MAKE); \
 	  mkdir tmp; \
 	  cd tmp; \
 	  ar -x ../liblapack.a; \
-	  $(FC) -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
+	  $(FC) $(FOPTS) -fPIC -shared *.o -Wl,-soname,liblapack.so -o liblapack.so; \
 	  rm *.o; \
 	  ar -x ../libtmglib.a; \
-$(FC) -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
+	  $(FC) $(FOPTS) -fPIC -shared *.o -Wl,-soname,libtmglib.so -o libtmglib.so; \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 	
@@ -130,10 +143,11 @@ install::
 	       $(ROOT)/$(PKGROOT)/runtests; \
 	  fi \
 	)
+	$(INSTALL_LICENSE_FILES)
 	mkdir -p -m 755 $(LAPACK_CACHE)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(LAPACK_CACHE)/
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR) BLAS
+	rm -rf $(SOURCE_DIR) BLAS DESCRIPTION LICENSE
 

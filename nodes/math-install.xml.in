@@ -24,27 +24,27 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>gnuplot.x86_64</package>
 <package>gmp-static</package> <!-- Required by sprng examples -->
 
-<package>eigen</package>
-<package>eigen-modules</package>
-<package>gsl_COMPILERNAME</package>
-<package>gsl_COMPILERNAME-modules</package>
-<package>lapack_COMPILERNAME</package>
-<package>lapack_COMPILERNAME-modules</package>
-<package>parmetis_COMPILERNAME_MPINAME</package>
-<package>parmetis_COMPILERNAME-modules</package>
-<package>petsc_COMPILERNAME_MPINAME</package>
-<package>petsc_COMPILERNAME-modules</package>
-<package>scalapack_COMPILERNAME_MPINAME</package>
-<package>scalapack_COMPILERNAME-modules</package>
-<package>slepc_COMPILERNAME_MPINAME</package>
-<package>slepc_COMPILERNAME-modules</package>
-<package>sprng_COMPILERNAME_MPINAME</package>
-<package>sprng_COMPILERNAME-modules</package>
-<package>sundials_COMPILERNAME_MPINAME</package>
-<package>sundials_COMPILERNAME-modules</package>
-<package>superlu_COMPILERNAME_MPINAME</package>
-<package>superlu_COMPILERNAME-modules</package>
+<package>sdsc-eigen</package>
+<package>sdsc-eigen-modules</package>
+<package>sdsc-gsl_COMPILERNAME</package>
+<package>sdsc-gsl_COMPILERNAME-modules</package>
+<package>sdsc-lapack_COMPILERNAME</package>
+<package>sdsc-lapack_COMPILERNAME-modules</package>
+<package>sdsc-parmetis_COMPILERNAME_MPINAME</package>
+<package>sdsc-parmetis_COMPILERNAME-modules</package>
+<package>sdsc-petsc_COMPILERNAME_MPINAME</package>
+<package>sdsc-petsc_COMPILERNAME-modules</package>
+<package>sdsc-scalapack_COMPILERNAME_MPINAME</package>
+<package>sdsc-scalapack_COMPILERNAME-modules</package>
+<package>sdsc-slepc_COMPILERNAME_MPINAME</package>
+<package>sdsc-slepc_COMPILERNAME-modules</package>
+<package>sdsc-sprng_COMPILERNAME_MPINAME</package>
+<package>sdsc-sprng_COMPILERNAME-modules</package>
+<package>sdsc-sundials_COMPILERNAME_MPINAME</package>
+<package>sdsc-sundials_COMPILERNAME-modules</package>
+<package>sdsc-superlu_COMPILERNAME_MPINAME</package>
+<package>sdsc-superlu_COMPILERNAME-modules</package>
 
-<package>math-roll-test</package>
+<package>sdsc-math-roll-test</package>
 
 </kickstart>

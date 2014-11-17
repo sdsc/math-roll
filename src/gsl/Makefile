@@ -61,15 +61,13 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-CC = gcc
 COMPILE_FLAGS = -O2
 ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
   COMPILE_FLAGS = -O2 -fp-model precise
 else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
   COMPILE_FLAGS = -O1 -Mdaz 
 endif
 
@@ -79,14 +77,26 @@ ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   endif
 endif
 
-COMPILERSETUP =  \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
+LICENSE_FILES = $(SOURCE_DIR)/{COPYING,README}
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if ! grep -q "terms of the GNU" $(SOURCE_DIR)/README; then \
+	  exit 2; \
+	fi
+	echo GPLv3 > $@
 
 build: $(SRC_DIRS)
 	( \
-	  $(COMPILERSETUP); \
+	  $(MODULE_LOAD_CC); \
 	  cd $(SOURCE_DIR); \
 	  ./configure CC=$(CC) CFLAGS="$(COMPILE_FLAGS)" --prefix=$(PKGROOT); \
 	  if test "$(COMPILERNAME)" = "pgi"; then \
@@ -98,7 +108,7 @@ build: $(SRC_DIRS)
 	
 install::
 	( \
-	  $(COMPILERSETUP); \
+	  $(MODULE_LOAD_CC); \
 	  cd $(SOURCE_DIR); \
 	  $(MAKE) prefix=$(ROOT)/$(PKGROOT) install; \
 	  $(MAKE) check; \
@@ -107,8 +117,9 @@ install::
 	    cp -r $$file $(ROOT)/$(PKGROOT)/tests; \
 	  done; \
 	)
+	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
 

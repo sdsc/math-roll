@@ -62,43 +62,37 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
 # We only build with gnu; these make vars are defined for future development.
 ifndef ROLLCOMPILER
   ROLLCOMPILER = gnu
 endif
-FIRSTCOMPILER = $(firstword $(ROLLCOMPILER))
-COMPILERNAME := $(firstword $(subst /, ,$(FIRSTCOMPILER)))
+COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-CC = gcc
-CXX = g++
-F90 = gfortran
-ifeq ("$(COMPILERNAME)", "intel")
-  CC = icc
-  CXX = icpc
-  F90 = ifort
-else ifeq ("$(COMPILERNAME)", "pgi")
-  CC = pgcc
-  CXX = pgCC
-  F90 = pgf90
-endif
- 
-CMAKESETUP = \
-  module load cmake || true; \
-  echo === cmake version ===; \
-  cmake --version
+LICENSE_FILES = $(SOURCE_DIR)/COPYING*
 
-COMPILERSETUP =  \
-    module load $(FIRSTCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if ! grep -qF "primarily MPL2" $(SOURCE_DIR)/COPYING.README; then \
+	  exit 2; \
+	fi
+	echo MPL2 and BSD and LGPL > $@
 
 build: $(SRC_DIRS)
 	cp patch-files/EigenTesting.cmake $(SOURCE_DIR)/cmake/
 	( \
-	  $(COMPILERSETUP); \
-	  $(CMAKESETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_CMAKE); \
 	  cd $(SOURCE_DIR); \
 	  mkdir build; \
 	  cd build; \
@@ -110,17 +104,18 @@ build: $(SRC_DIRS)
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
-	  $(COMPILERSETUP); \
+	  $(MODULE_LOAD_CC); \
 	  cd $(SOURCE_DIR)/build; \
 	  $(MAKE) install; \
 	  cd $(ROOT)/$(PKGROOT)/include; \
 	  ln -s eigen3/Eigen Eigen \
 	)
+	$(INSTALL_LICENSE_FILES)
 	# Fix references to install dir in rpm text files
 	perl -pi -e "s#$(ROOT)##g" \
 	  `find $(ROOT)/$(PKGROOT)/ -type f -exec grep -Il . {} ';'`
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
 

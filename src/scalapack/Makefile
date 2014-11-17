@@ -61,55 +61,53 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
-FC = gfortran
-CC = gcc
 CFLAGS = -O2 -fPIC
 FFLAGS= -fimplicit-none -O2 -fPIC
 ROLLCOMMENT =
 ifeq ("$(COMPILERNAME)", "intel")
-  FC = ifort
-  CC = icc
   CFLAGS = -O2 -fPIC -DOMPI_WANT_MPI_INTERFACE_WARNING=0
   FFLAGS = -O2 -fPIC -DOMPI_WANT_MPI_INTERFACE_WARNING=0
 else ifeq ("$(COMPILERNAME)", "pgi")
-  FC = pgf90
-  CC = pgcc
   CFLAGS = -O2 -fPIC
   FFLAGS = -O2 -fPIC
   ROLLPGI = -pgf90libs
 endif
 
-CMAKESETUP = \
-  module load cmake || true; \
-  echo === cmake version ===; \
-  cmake --version
-
-COMPILERSETUP =  \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CC) --version
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
-
-LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-lapack_$(COMPILERNAME)
+LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-lapack_$(COMPILERNAME)
 SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
+
+LICENSE_FILES = $(SOURCE_DIR)/LICENSE
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if ! grep -qF "2011 The University of Colorado" $(LICENSE_FILES); then \
+	  exit 2; \
+	fi
+	echo BSD > $@
 
 build: $(SRC_DIRS)
 	( \
-	  $(COMPILERSETUP); \
-	  $(CMAKESETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_CMAKE); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  mkdir build_shared; \
 	  cd build_shared; \
 	  cmake .. \
 	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=mpicc \
-	    -DMPI_Fortran_COMPILER=mpif90  \
+	    -DMPI_Fortran_COMPILER=mpif90 \
 	    -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
 	    -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
 	    -DBUILD_SHARED_LIBS=ON \
@@ -121,7 +119,7 @@ build: $(SRC_DIRS)
 	  cd build_static; \
 	  cmake .. \
 	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=mpicc \
-	    -DMPI_Fortran_COMPILER=mpif90  \
+	    -DMPI_Fortran_COMPILER=mpif90 \
 	    -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
 	    -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
 	    -DLAPACK_LIBRARIES=$(LAPACK_CACHE)/lib/liblapack.a \
@@ -139,6 +137,7 @@ install::
 	  make install; \
 	  cp -r TESTING ../EXAMPLE $(ROOT)/$(PKGROOT)/ \
 	)
+	$(INSTALL_LICENSE_FILES)
 	# Fix references to install dir in rpm text files
 	perl -pi -e "s#$(ROOT)##g" \
 	  `find $(ROOT)/$(PKGROOT)/ -type f -exec grep -Il . {} ';'`
@@ -147,4 +146,4 @@ install::
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR) BLACS
+	rm -rf $(SOURCE_DIR) BLACS DESCRIPTION LICENSE
