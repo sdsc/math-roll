@@ -61,40 +61,37 @@ RPM.EXTRAS=%define __os_install_post /usr/lib/rpm/brp-compress
 
 -include $(ROCKSROOT)/etc/Rules.mk
 include Rules.mk
-include pull.mk
-
-CXX = g++
-ifeq ("$(COMPILERNAME)", "intel")
-  CXX = icpc
-else ifeq ("$(COMPILERNAME)", "pgi")
-  CXX = pgCC
-endif
-
-CMAKESETUP = \
-  module load cmake || true; \
-  echo === cmake version ===; \
-  cmake --version
-
-COMPILERSETUP =  \
-  module load $(ROLLCOMPILER) || true; \
-  echo === Compiler and version ===; \
-  $(CXX) --version
-
-MPISETUP = \
-  module load $(ROLLMPI) || true; \
-  echo === MPIHOME ===; \
-  echo $${MPIHOME}
+include $(SDSCDEVEL)/Pull.mk
+include $(SDSCDEVEL)/Rules.mk
 
 PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
+
+LICENSE_FILES = $(SOURCE_DIR)/LICENSE.txt
+
+$(NAME).spec: DESCRIPTION LICENSE
+
+DESCRIPTION:
+	$(MODULE_LOAD_CC); \
+	( \
+	  $(DESCRIBE_PKG); \
+	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MPI) \
+	) > $@
+
+LICENSE: $(SRC_DIRS)
+	if ! grep -qF "University of Minnesota" $(LICENSE_FILES); then \
+	  exit 2; \
+	fi
+	echo University of Minnesota > $@
 
 build: $(SRC_DIRS)
 	patch $(SOURCE_DIR)/Makefile patch-files/Makefile.parmetis.patch
 	patch $(SOURCE_DIR)/metis/Makefile patch-files/Makefile.metis.patch
 	patch $(SOURCE_DIR)/CMakeLists.txt patch-files/CMakeLists.txt.patch
 	( \
-	  $(COMPILERSETUP); \
-	  $(CMAKESETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_CMAKE); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  export CFLAGS="-fPIC -DOMPI_WANT_MPI_INTERFACE_WARNING=0"; \
 	  export CXXFLAGS="-fPIC -DOMPI_WANT_MPI_INTERFACE_WARNING=0"; \
@@ -105,8 +102,8 @@ build: $(SRC_DIRS)
 	
 install::
 	( \
-	  $(COMPILERSETUP); \
-	  $(MPISETUP); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
 	  export CFLAGS=-fPIC; \
 	  export CXXFLAGS=-fPIC; \
@@ -115,10 +112,11 @@ install::
 	  cp build/Linux-x86_64/libmetis/libmetis.a $(ROOT)/$(PKGROOT)/lib; \
 	  cp -r Graphs $(ROOT)/$(PKGROOT) \
 	)
+	$(INSTALL_LICENSE_FILES)
 	mkdir -p -m 755 $(PARMETIS_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PARMETIS_CACHE)/
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR)
+	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
 
