@@ -2,7 +2,7 @@
 
 ## Overview
 
-This roll bundles a collection of Math packages: eigen, GSL, LAPACK, Octave, Parmetis,petsc, ScaLAPACK, slepc, SPRNG, sundials, superLU, and Trilinos.
+This roll bundles a collection of Math packages: eigen, GSL, LAPACK, Parmetis,petsc, ScaLAPACK, slepc, SPRNG, sundials, and superLU.
 
 For more information about the various packages included in the math roll please visit their official web pages:
 
@@ -31,18 +31,18 @@ Rocks development machine.
 
 ## Dependencies
 
-Intel MKL libraries.  If you're building with the Intel compiler or there is
-an mkl modulefile present (the mkl-roll provides this), then the build process
-will pick these up automatically.  Otherwise, you'll need to set the MKL_ROOT
-environment variable to the library location.
+The sdsc-roll must be installed on the build machine, since the build process
+depends on make include files provided by that roll.
 
-GMP libraries.  If there is an gmp modulefile present (the gnucompiler-roll provides
-this), then the build process will pick these up automatically.  Otherwise,
-you'll need to set the GMPHOME environment variable to the library location.
+The roll sources assume that modulefiles provided by SDSC compiler, python, and
+cmake rolls are available, but it will build without them as long as the
+environment variables they provide are otherwise defined.
 
-cmake.  If there is an cmake modulefile present (the cmake-roll provides
-this), then the build process will pick this up automatically.  Otherwise,
-you'll need to add the appropriate directory to your PATH environment variable.
+The build process requires the MKL and GMP libraries and assumes that the
+modulefiles provided by the SDSC compiler rolls are available.  It will build
+without the modulefiles as long as the environment variables they provide are
+otherwise defined.
+
 
 ## Building
 
