@@ -72,8 +72,6 @@ NOOPTS = -O0 -I$(PARMETIS_CACHE)/include -DOMPI_WANT_MPI_INTERFACE_WARNING=0
 
 MKLLINK = -Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm
 
-LICENSE_FILES = $(SOURCE_DIR)/README
-
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -86,9 +84,7 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if ! grep -qF "Regents of the University of California" $(LICENSE_FILES); then \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
 	echo BSD > $@
 
 build: $(SRC_DIRS)

@@ -72,8 +72,6 @@ SUPERLU_INSTALL = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-scalapack_$(COMPILERNAME)_$(MPINAME)
 SCALAPACK_INSTALL = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
 
-LICENSE_FILES = $(SOURCE_DIR)/LICENSE
-
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -85,9 +83,7 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if ! grep -qF "2014, UChicago Argonne" $(LICENSE_FILES); then \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
 	echo University of Chicago > $@
 
 build: $(SRC_PKGS)

@@ -71,8 +71,6 @@ ifndef ROLLCOMPILER
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-LICENSE_FILES = $(SOURCE_DIR)/COPYING*
-
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -83,9 +81,7 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if ! grep -qF "primarily MPL2" $(SOURCE_DIR)/COPYING.README; then \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
 	echo MPL2 and BSD and LGPL > $@
 
 build: $(SRC_DIRS)

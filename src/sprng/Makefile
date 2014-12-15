@@ -66,8 +66,6 @@ include $(SDSCDEVEL)/Rules.mk
 
 MPIDEF = -DSPRNG_MPI -DOMPI_WANT_MPI_INTERFACE_WARNING=0
 
-LICENSE_FILES = sprng-README
-
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -80,9 +78,8 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	#if ! grep -q "GNU GENERAL PUBLIC LICENSE" $(SOURCE_DIR)/COPYING; then \
-	#  exit 2; \
-	#fi
+	cp license-files/LICENSE $(SOURCE_DIR)/
+	$(CHECK_LICENSE_FILES)
 	echo Creative Commons > $@
 
 build: $(SRC_DIRS)

@@ -73,8 +73,6 @@ SCALAPACK_INSTALL = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
 SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
 SUPERLU_INSTALL = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 
-LICENSE_FILES = $(SOURCE_DIR)/{COPYING,COPYING.LESSER,README}
-
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -86,9 +84,7 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if ! grep -qF "version 3 of the GNU Lesser" $(SOURCE_DIR)/README; then \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
 	echo LGPLv3 > $@
 
 build: $(SRC_DIRS)

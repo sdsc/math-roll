@@ -79,8 +79,6 @@ endif
 LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-lapack_$(COMPILERNAME)
 SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
-LICENSE_FILES = $(SOURCE_DIR)/LICENSE
-
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -92,9 +90,7 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if ! grep -qF "2011 The University of Colorado" $(LICENSE_FILES); then \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
 	echo BSD > $@
 
 build: $(SRC_DIRS)

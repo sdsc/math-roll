@@ -83,8 +83,6 @@ endif
 
 LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
-LICENSE_FILES = $(SOURCE_DIR)/LICENSE
-
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -95,9 +93,7 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if ! grep -q "2012 The University of Colorado Denver" $(LICENSE_FILES); then \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
 	echo BSD > $@
 
 build: $(SRC_DIRS)

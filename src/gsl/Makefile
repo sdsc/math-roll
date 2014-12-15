@@ -77,8 +77,6 @@ ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   endif
 endif
 
-LICENSE_FILES = $(SOURCE_DIR)/{COPYING,README}
-
 $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
@@ -89,9 +87,7 @@ DESCRIPTION:
 	) > $@
 
 LICENSE: $(SRC_DIRS)
-	if ! grep -q "terms of the GNU" $(SOURCE_DIR)/README; then \
-	  exit 2; \
-	fi
+	$(CHECK_LICENSE_FILES)
 	echo GPLv3 > $@
 
 build: $(SRC_DIRS)
