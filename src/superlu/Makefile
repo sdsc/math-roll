@@ -67,8 +67,8 @@ include $(SDSCDEVEL)/Rules.mk
 PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(ROLLMPI)
 SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
-CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include -DOMPI_WANT_MPI_INTERFACE_WARNING=0
-NOOPTS = -O0 -I$(PARMETIS_CACHE)/include -DOMPI_WANT_MPI_INTERFACE_WARNING=0
+CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
+NOOPTS = -O0 -I$(PARMETIS_CACHE)/include
 
 MKLLINK = -Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm
 

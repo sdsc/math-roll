@@ -64,7 +64,7 @@ include Rules.mk
 include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
-MPIDEF = -DSPRNG_MPI -DOMPI_WANT_MPI_INTERFACE_WARNING=0
+MPIDEF = -DSPRNG_MPI
 
 $(NAME).spec: DESCRIPTION LICENSE
 
