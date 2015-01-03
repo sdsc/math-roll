@@ -19,6 +19,13 @@ my @MPIS = split(/\s+/, 'ROLLMPI');
 my $TESTFILE = 'tmpmath';
 my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 
+if ($ENV{"USER"} eq "root") {
+  print STDERR "Aborting\n";
+  print STDERR "Due to openmpi restictions, this test reports spurious errors when run by root\n";
+  print STDERR "Rerun as a non-root user\n";
+  exit(1);
+}
+
 # math-install.xml
 my @compilerNames = map {(split('/', $_))[0]} @COMPILERS;
 foreach my $package(@packages) {
