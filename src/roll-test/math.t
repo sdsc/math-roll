@@ -14,8 +14,8 @@ my @packages = (
   'slepc', 'sprng', 'sundials', 'superlu'
 );
 my $output;
-my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
-my @MPIS = split(/\s+/, 'ROLLMPI');
+my @COMPILERS = split(/\s+/, 'gnu intel pgi');
+my @MPIS = split(/\s+/, 'openmpi_ib mvapich2_ib');
 my $TESTFILE = 'tmpmath';
 my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
 
@@ -258,8 +258,16 @@ cd $TESTFILE.dir
 cp -r \$SLEPCHOME/examples/* .
 cd tests
 unset PETSC_ARCH
-make SLEPC_DIR=/opt/slepc/${compilername}/${mpi} PETSC_DIR=/opt/petsc/${compilername}/${mpi} testtest10
-make SLEPC_DIR=/opt/slepc/${compilername}/${mpi} PETSC_DIR=/opt/petsc/${compilername}/${mpi} testtest7f
+output=`make SLEPC_DIR=/opt/slepc/${compilername}/${mpi} PETSC_DIR=/opt/petsc/${compilername}/${mpi} testtest10`
+if [[ "\$output" =~ "run-as-root" ]]; then
+  output=`make SLEPC_DIR=/opt/slepc/${compilername}/${mpi} PETSC_DIR=/opt/petsc/${compilername}/${mpi} MPIEXEC='mpiexec --allow-run-as-root' testtest10`
+fi
+echo \$output
+output=`make SLEPC_DIR=/opt/slepc/${compilername}/${mpi} PETSC_DIR=/opt/petsc/${compilername}/${mpi} testtest7f`
+if [[ "\$output" =~ "run-as-root" ]]; then
+  output=`make SLEPC_DIR=/opt/slepc/${compilername}/${mpi} PETSC_DIR=/opt/petsc/${compilername}/${mpi} MPIEXEC='mpiexec --allow-run-as-root' testtest7f`
+fi
+echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh | grep -c successfully 2>&1`;
