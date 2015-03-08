@@ -64,6 +64,21 @@ include Rules.mk
 include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
+AVX_FLAG=
+ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx2
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xcore-avx2
+  endif
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xavx
+  endif
+endif
+
 MPIDEF = -DSPRNG_MPI
 
 $(NAME).spec: DESCRIPTION LICENSE
@@ -88,6 +103,8 @@ build: $(SRC_DIRS)
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_GMP); \
 	  $(MODULE_LOAD_MPI); \
+          export CFLAGS=$(AVX_FLAG); \
+          export FFLAGS=$(AVX_FLAG); \
 	  cd $(SOURCE_DIR); \
 	  if test -n "$${GMPHOME}"; then \
 	    export GMPLINK="-L$${GMPHOME}/lib -lgmp"; \

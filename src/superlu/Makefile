@@ -87,6 +87,21 @@ LICENSE: $(SRC_DIRS)
 	$(CHECK_LICENSE_FILES)
 	echo BSD > $@
 
+AVX_FLAG=
+ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx2
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xcore-avx2
+  endif
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xavx
+  endif
+endif
+
 build: $(SRC_DIRS)
 	cp patch-files/make.inc $(SOURCE_DIR)
 	( \
@@ -98,6 +113,7 @@ build: $(SRC_DIRS)
 	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_CACHE)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_MKLLINK!$(MKLLINK)!" $(SOURCE_DIR)/make.inc; \
 	  cd $(SOURCE_DIR); \
+          CFLAGS="$(CFLAGS) $(AVX_FLAG)"; \
 	  $(MAKE) CFLAGS="$(CFLAGS)" NOOPTS="$(NOOPTS)" \
 	)
 	@echo "::: Package $(NAME) build complete :::"

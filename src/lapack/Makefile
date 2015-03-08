@@ -74,10 +74,22 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   FOPTS = -fast -fPIC
 endif
 
-ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+AVX_FLAG=
+ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    COPTS += -mavx2
+    FOPTS += -mavx2
+  else ifeq ("$(COMPILERNAME)", "intel")
+    COPTS += -xcore-avx2
+    FOPTS += -xcore-avx2
+  endif
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   ifeq ("$(COMPILERNAME)", "gnu")
     COPTS += -mavx
     FOPTS += -mavx
+  else ifeq ("$(COMPILERNAME)", "intel")
+    COPTS += -xavx
+    FOPTS += -xavx
   endif
 endif
 

@@ -78,12 +78,29 @@ LICENSE: $(SRC_DIRS)
 	$(CHECK_LICENSE_FILES)
 	echo BSD > $@
 
+AVX_FLAG=
+ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx2
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xcore-avx2
+  endif
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xavx
+  endif
+endif
+
 build: $(SRC_DIRS)
 	tar zxvf $(SOURCE_DIR).tar.gz
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
+          export CFLAGS=$(AVX_FLAG); \
+          export FFLAGS=$(AVX_FLAG); \
 	  ./configure CC=$(CC) F77=$(F77) \
 	    --prefix=$(ROOT)/$(PKGROOT) --enable-examples \
 	    --with-mpicc=$${MPIHOME}/bin/mpicc \

@@ -64,6 +64,21 @@ include Rules.mk
 include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
+AVX_FLAG=
+ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx2
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xcore-avx2
+  endif
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xavx
+  endif
+endif
+
 PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
@@ -89,8 +104,8 @@ build: $(SRC_DIRS)
 	  $(MODULE_LOAD_CMAKE); \
 	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
-	  export CFLAGS="-fPIC"; \
-	  export CXXFLAGS="-fPIC"; \
+	  export CFLAGS="-fPIC $(AVX_FLAG)"; \
+	  export CXXFLAGS="-fPIC $(AVX_FLAG)"; \
 	  $(MAKE) -j 16 prefix=$(ROOT)/$(PKGROOT) config; \
 	  $(MAKE) \
 	)

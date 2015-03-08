@@ -92,6 +92,20 @@ DESCRIPTION:
 LICENSE: $(SRC_DIRS)
 	$(CHECK_LICENSE_FILES)
 	echo BSD > $@
+AVX_FLAG=
+ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx2
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xcore-avx2
+  endif
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xavx
+  endif
+endif
 
 build: $(SRC_DIRS)
 	( \
@@ -117,7 +131,7 @@ build: $(SRC_DIRS)
 	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=mpicc \
 	    -DMPI_Fortran_COMPILER=mpif90 \
 	    -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
-	    -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
+	    -DCMAKE_C_FLAGS="$(CFLAGS) $(AVX_FLAG)" -DCMAKE_Fortran_FLAGS="$(FFLAGS) $(AVX_FLAG)" \
 	    -DLAPACK_LIBRARIES=$(LAPACK_CACHE)/lib/liblapack.a \
 	    -DBLAS_LIBRARIES=$(LAPACK_CACHE)/lib/libblas.a; \
 	  make \

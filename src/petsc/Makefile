@@ -86,6 +86,21 @@ LICENSE: $(SRC_DIRS)
 	$(CHECK_LICENSE_FILES)
 	echo University of Chicago > $@
 
+AVX_FLAG=
+ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx2
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xcore-avx2
+  endif
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xavx
+  endif
+endif
+
 build: $(SRC_PKGS)
 	# petsc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
@@ -105,6 +120,9 @@ build: $(SRC_PKGS)
 	           -Wl,--end-group -lpthread -lm"; \
 	  export PETSC_DIR=`pwd`; \
 	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
+          export CFLAGS="$(AVX_FLAG)"; \
+          export FFLAGS="$(AVX_FLAG)"; \
+          export CXXFLAGS="$(AVX_FLAG)"; \
 	  ./configure --prefix=$(PKGROOT) \
 	    --with-mpi=1 \
 	    --download-pastix=../pastix_5.2.2.12.tar.bz2 \

@@ -71,9 +71,18 @@ else ifeq ("$(COMPILERNAME)", "pgi")
   COMPILE_FLAGS = -O1 -Mdaz 
 endif
 
-ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+AVX_FLAG=
+ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
   ifeq ("$(COMPILERNAME)", "gnu")
-    COMPILE_FLAGS += -mavx
+    AVX_FLAG = -mavx2
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xcore-avx2
+  endif
+else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
+  ifeq ("$(COMPILERNAME)", "gnu")
+    AVX_FLAG = -mavx
+  else ifeq ("$(COMPILERNAME)", "intel")
+    AVX_FLAG = -xavx
   endif
 endif
 
@@ -94,7 +103,7 @@ build: $(SRC_DIRS)
 	( \
 	  $(MODULE_LOAD_CC); \
 	  cd $(SOURCE_DIR); \
-	  ./configure CC=$(CC) CFLAGS="$(COMPILE_FLAGS)" --prefix=$(PKGROOT); \
+	  ./configure CC=$(CC) CFLAGS="$(COMPILE_FLAGS) $(AVX_FLAG)" --prefix=$(PKGROOT); \
 	  if test "$(COMPILERNAME)" = "pgi"; then \
 	    perl -pi -e 's!.*#define  *HAVE_INLINE.*!/* #undef HAVE_INLINE */!' config.h; \
 	  fi; \
