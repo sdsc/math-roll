@@ -120,10 +120,7 @@ build: $(SRC_PKGS)
 	           -Wl,--end-group -lpthread -lm"; \
 	  export PETSC_DIR=`pwd`; \
 	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
-          export CFLAGS="$(AVX_FLAG)"; \
-          export FFLAGS="$(AVX_FLAG)"; \
-          export CXXFLAGS="$(AVX_FLAG)"; \
-	  ./configure --prefix=$(PKGROOT) \
+	  ./configure CFLAGS=$(AVX_FLAG) FFLAGS=$(AVX_FLAG) CXXFLAGS=$(AVX_FLAG) --prefix=$(PKGROOT) \
 	    --with-mpi=1 \
 	    --download-pastix=../pastix_5.2.2.12.tar.bz2 \
 	    --download-ptscotch=../scotch_6.0.0_esmumps.tar.gz \
