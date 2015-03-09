@@ -116,8 +116,8 @@ install::
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
 	  cd $(SOURCE_DIR); \
-	  export CFLAGS=-fPIC; \
-	  export CXXFLAGS=-fPIC; \
+	  export CFLAGS="-fPIC $(AVX_FLAG)"; \
+	  export CXXFLAGS="-fPIC $(AVX_FLAG)"; \
 	  $(MAKE) -j 16 install; \
 	  cp metis/include/metis.h $(ROOT)/$(PKGROOT)/include; \
 	  cp build/Linux-x86_64/libmetis/libmetis.a $(ROOT)/$(PKGROOT)/lib; \
