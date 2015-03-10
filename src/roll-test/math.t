@@ -262,8 +262,8 @@ make SLEPC_DIR=/opt/slepc/$compilername/$mpi PETSC_DIR=/opt/petsc/$compilername/
 output=`mpirun -np 2 ./test10 -eps_nev 4 -eps_ncv 14 -m 11 -eps_largest_magnitude -eps_terse 2>&1`
 if [[ "\$output" =~ "run-as-root" ]]; then
     output=`mpirun --allow-run-as-root -np 2 ./test10 -eps_nev 4 -eps_ncv 14 -m 11 -eps_largest_magnitude -eps_terse 2>&1`
-echo \$output
 fi
+echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
