@@ -258,14 +258,15 @@ cd $TESTFILE.dir
 cp -r \$SLEPCHOME/examples/* .
 cd tests
 unset PETSC_ARCH
-make test10
-output=`mpirun -np 2 ./test10 -eps_nev 4 -eps_ncv 14 -m 11 -eps_largest_magnitude -eps_terse`
+make SLEPC_DIR=/opt/slepc/$compilername/$mpi PETSC_DIR=/opt/petsc/$compilername/$mpi  test10
+output=`mpirun -np 2 ./test10 -eps_nev 4 -eps_ncv 14 -m 11 -eps_largest_magnitude -eps_terse 2>&1`
 if [[ "\$output" =~ "run-as-root" ]]; then
-    output=`mpirun --allow-run-as-root -np 2 ./test10 -eps_nev 4 -eps_ncv 14 -m 11 -eps_largest_magnitude -eps_terse`
+    output=`mpirun --allow-run-as-root -np 2 ./test10 -eps_nev 4 -eps_ncv 14 -m 11 -eps_largest_magnitude -eps_terse 2>&1`
 echo \$output
+fi
 END
       close(OUT);
-      $output = `/bin/bash $TESTFILE.sh | grep -c successfully 2>&1`;
+      $output = `/bin/bash $TESTFILE.sh 2>&1`;
       like($output, qr/7.82110, 7.58462, 7.53702, 7.30054/,
            "slepc/$compilername/$mpi works");
       `rm -rf $TESTFILE*`;
