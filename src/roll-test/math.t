@@ -176,6 +176,10 @@ END
       ok(int(@oks) >= 80, "parmetis $compilername $mpi works");
     }
   }
+  $output = `module load $compiler parmetis; echo \$PARMETISHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/parmetis/$compiler/$firstmpi#, 'parmetis modulefile defaults to first mpi');
 }
 
 # petsc
@@ -210,6 +214,10 @@ END
        `rm -rf $TESTFILE*`;
     }
   }
+  $output = `module load $compiler petsc; echo \$PETSCHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/petsc/$compiler/$firstmpi#, 'petsc modulefile defaults to first mpi');
 }
 
 # scalapack
@@ -240,6 +248,10 @@ END
       `rm -rf $TESTFILE*`;
     }
   }
+  $output = `module load $compiler scalapack; echo \$SCALAPACKHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/scalapack/$compiler/$firstmpi#, 'scalapack modulefile defaults to first mpi');
 }
 
 # slepc
@@ -272,6 +284,10 @@ END
       `rm -rf $TESTFILE*`;
     }
   }
+  $output = `module load $compiler slepc; echo \$SLEPCHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/slepc/$compiler/$firstmpi#, 'slepc modulefile defaults to first mpi');
 }
 
         
@@ -315,6 +331,10 @@ END
       ok($? == 0, "sprng/$compilername/$mpi test run");
     }
   }
+  $output = `module load $compiler sprng; echo \$SPRNGHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/sprng/$compiler/$firstmpi#, 'sprng modulefile defaults to first mpi');
 }
 
 # sundials
@@ -351,6 +371,10 @@ END
       like($output, qr/0.9094/, "Sundials/$compilername/$mpi run");
     }
   }
+  $output = `module load $compiler sundials; echo \$SUNDIALSHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/sundials/$compiler/$firstmpi#, 'sundials modulefile defaults to first mpi');
 }
 
 # superlu
@@ -376,6 +400,10 @@ END
            "Superlu/$compilername/$mpi test run");
     }
   }
+  $output = `module load $compiler superlu; echo \$SUPERLUHOME 2>&1`;
+  my $firstmpi = $MPIS[0];
+  $firstmpi =~ s#/.*##;
+  like($output, qr#/opt/superlu/$compiler/$firstmpi#, 'superlu modulefile defaults to first mpi');
 }
 
 `rm -fr $TESTFILE*`;

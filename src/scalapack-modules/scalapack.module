@@ -4,21 +4,14 @@ module-whatis "Version: VERSION"
 module-whatis "Description: scalapack"
 module-whatis "Compiler: COMPILERNAME"
 module-whatis "MPI Flavors: ROLLMPI"
-if {! [info exists ::env(MPIHOME)] || ! [info exists ::env(LOADEDMODULES)]} {
-  puts stderr "Need to load an mpi module before loading scalapack
-  exit 1
-}
-foreach {x} [list ROLLMPI] {
-  # Look for flavor in LOADEDMODULES, delimited by colon or end of string.
-  # Can also be followed by / (version number).
-  if {[regexp [format {(:|^)%s([:/]|$)} $x] $::env(LOADEDMODULES)]} {
-    set mpi $x
-    break
+# Look for MPI flavor in LOADEDMODULES. If no MPI module is loaded, default to
+# first element in ROLLMPI.
+set mpi [lindex [split "ROLLMPI" "/ "] 0]
+foreach {module} [split $::env(LOADEDMODULES) :] {
+  set module [lindex [split $module /] 0]
+  if {[regexp [format {%s(/|\s|$)} $module] "ROLLMPI"]} {
+    set mpi $module
   }
-}
-if {! [info exists mpi]} {
-  puts stderr "No supported MPI flavor found"
-  exit 1
 }
 setenv SCALAPACKHOME /opt/scalapack/ROLLCOMPILER/$mpi
 prepend-path LD_LIBRARY_PATH /opt/scalapack/ROLLCOMPILER/$mpi/lib
