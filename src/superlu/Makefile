@@ -67,8 +67,8 @@ include $(SDSCDEVEL)/Rules.mk
 PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(ROLLMPI)
 SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
-CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
-NOOPTS = -O0 -I$(PARMETIS_CACHE)/include
+CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include -std=c99
+NOOPTS = -fPIC -O0 -I$(PARMETIS_CACHE)/include -std=c99
 
 MKLLINK = -Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm
 
@@ -103,7 +103,7 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
 endif
 
 build: $(SRC_DIRS)
-	cp patch-files/make.inc $(SOURCE_DIR)
+	patch $(SOURCE_DIR)/make.inc patch-files/make.inc.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MKL); \

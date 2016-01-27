@@ -79,7 +79,8 @@ DESCRIPTION:
 	( \
 	  $(DESCRIBE_PKG); \
 	  $(DESCRIBE_CC); \
-	  $(DESCRIBE_MPI) \
+	  $(DESCRIBE_MPI); \
+          $(DESCRIBE_HDF5) \
 	) > $@
 
 LICENSE: $(SRC_DIRS)
@@ -113,6 +114,7 @@ build: $(SRC_PKGS)
 	  $(MODULE_LOAD_MKL); \
 	  export MKLLIB=`find $${MKLHOME}/lib/* -maxdepth 0 | head -1`; \
 	  $(MODULE_LOAD_MPI); \
+          $(MODULE_LOAD_HDF5); \
 	  tar -xzf $(SOURCE_PKG); \
 	  cd $(SOURCE_DIR); \
 	  MKLLINK="-Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a \
@@ -120,9 +122,9 @@ build: $(SRC_PKGS)
 	           -Wl,--end-group -lpthread -lm"; \
 	  export PETSC_DIR=`pwd`; \
 	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
-	  ./configure CFLAGS=$(AVX_FLAG) FFLAGS=$(AVX_FLAG) CXXFLAGS=$(AVX_FLAG) --prefix=$(PKGROOT) \
-	    --with-mpi=1 \
-	    --download-pastix=../pastix_5.2.2.12.tar.bz2 \
+	  ./configure CFLAGS="-fPIC $(AVX_FLAG)" FFLAGS="-fPIC $(AVX_FLAG)" CXXFLAGS="-fPIC $(AVX_FLAG)" --prefix=$(PKGROOT) \
+	    --with-mpi=true \
+	    --download-pastix=../pastix_$(PASTIX_VERSION).tar.bz2 \
 	    --download-ptscotch=../scotch_6.0.0_esmumps.tar.gz \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
 	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
@@ -131,11 +133,14 @@ build: $(SRC_PKGS)
 	    --with-metis-dir=$(PARMETIS_INSTALL) \
 	    --with-mpi-dir=$${MPIHOME} \
 	    --with-scalapack-dir=$(SCALAPACK_INSTALL) \
-	    --download-mumps=../MUMPS_4.10.0-p3.tar.gz \
+	    --download-mumps=../MUMPS_$(MUMPS_VERSION).tar.gz \
 	    --download-blacs=../blacs-dev.tar.gz \
 	    --download-fblaslapack=../fblaslapack-3.4.2.tar.gz \
-	    --with-pic=1 \
-	    --with-shared-libraries=1; \
+	    --with-pic=true \
+	    --with-shared-libraries=1 \
+            --with-hdf5=true \
+            --with-hdf5-dir=$${HDF5HOME} \
+            --with-debugging=false; \
 	    make all; \
 	)
 	$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))

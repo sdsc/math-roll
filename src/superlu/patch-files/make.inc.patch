@@ -1,0 +1,54 @@
+--- SuperLU_DIST_4.2/make.inc	2015-09-25 11:36:37.000000000 -0700
++++ patch-files/make.inc	2016-01-25 22:22:23.840478893 -0800
+@@ -18,16 +18,16 @@
+ #  The machine (platform) identifier to append to the library names
+ #
+ ## edison at NERSC
+-PLAT		= _xc30
++PLAT		= _
+ 
+ #
+ #  The name of the libraries to be created/linked to
+ #
+-DSuperLUroot 	= ${HOME}/Release_Codes/SuperLU_DIST_4.2
++DSuperLUroot 	= ROLL_INSTALL
+ DSUPERLULIB   	= $(DSuperLUroot)/lib/libsuperlu_dist_4.2.a
+ #
+ BLASDEF	     	= -DUSE_VENDOR_BLAS
+-BLASLIB	        =
++BLASLIB	        = ROLL_MKLLINK
+ #
+ ############################################################################
+ ## parmetis 4.x.x, 32-bit integer
+@@ -35,9 +35,8 @@
+ ## parmetis 4.x.x, 64-bit integer
+ # PARMETIS_DIR	:= ${HOME}/Edison/lib/parmetis-4.0.3_64
+ 
+-METISLIB := -L${PARMETIS_DIR}/build/Linux-x86_64/libmetis -lmetis
+-PARMETISLIB := -L${PARMETIS_DIR}/build/Linux-x86_64/libparmetis -lparmetis
+-I_PARMETIS := -I${PARMETIS_DIR}/include -I${PARMETIS_DIR}/metis/include
++METISLIB   	= -LROLL_PARMETIS/lib -lmetis
++PARMETISLIB   	= -LROLL_PARMETIS/lib -lparmetis
+ ############################################################################
+ 
+ # Define the required Fortran libraries, if you use C compiler to link
+@@ -57,7 +56,7 @@
+ 
+ ############################################################################
+ # C compiler setup
+-CC           	= cc
++CC           	= mpicc
+ # CFLAGS should be set to be the C flags that include optimization
+ CFLAGS          = -fast -m64 -std=c99 -Wall -openmp \
+ 		$(I_PARMETIS) -DDEBUGlevel=0 -DPRNTlevel=0 -DPROFlevel=0 \
+@@ -68,8 +67,8 @@
+ NOOPTS		= -O0 -std=c99
+ ############################################################################
+ # FORTRAN compiler setup
+-FORTRAN         = ftn
+-F90FLAGS	= -fast #-Mipa=fast,safe
++FORTRAN         = mpif90
++F90FLAGS	=  -fPIC
+ # uncomment the following to use 64-bit integer
+ # F90FLAGS	+= -i8
+ ############################################################################
