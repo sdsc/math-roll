@@ -1,4 +1,4 @@
-		SuperLU_DIST (version 3.3)
+		SuperLU_DIST (version 4.2)
 		==========================
 
 Copyright (c) 2003, The Regents of the University of California, through
@@ -81,7 +81,7 @@ on your system setup:
    into make.inc. For example, if you wish to run SuperLU_DIST on a
    Cray XT5,  you can do
 
-        cp MAKE_INC/make.xt5 make.inc
+        cp MAKE_INC/make.xc30  make.inc
    
    For the systems other than listed above, some porting effort is needed
    for parallel factorization routines. Please refer to the Users' Guide 
@@ -131,7 +131,7 @@ on your system setup:
    After you have installed it, you should define the following in make.inc:
         METISLIB = -L<metis directory> -lmetis
         PARMETISLIB = -L<parmetis directory> -lparmetis
-
+        I_PARMETIS = -I<parmetis directory>/include -I<parmetis directory>/metis/include
 
 4. C preprocessor definition CDEFS.
 
@@ -148,8 +148,29 @@ on your system setup:
 		     that compiled by C;
        o -DUpCase: Fortran expects a C routine name to be all uppercase.
    
+5. Multicore and GPU (optional).
+   To use OpenMP parallelism, need to set the number of threads as follows:
+
+ 	setenv OMP_NUM_THREADS <##>
+
+   To enable Nvidia GPU access, need to take the following 2 step:
+      1) set the following Linux environment variable:
+
+	    setenv ACC GPU
+
+      2) Add the CUDA library location in make.inc:
+
+    	ifeq "${ACC}" "GPU"
+      	  CUDA_FLAGS = -DGPU_ACC
+          INCS += -I<CUDA directory>/include
+      	  LIBS += -L<CUDA directory>/lib64 -lcublas -lcudart 
+    	endif
+
+
+
 A Makefile is provided in each subdirectory. The installation can be done
 completely automatically by simply typing "make" at the top level.
+
 
 
 REFERENCES
@@ -159,11 +180,14 @@ REFERENCES
     ACM Trans. on Math. Solftware, Vol. 29, No. 2, June 2003, pp. 110-140.
 [2] Parallel Symbolic Factorization for Sparse LU with Static Pivoting.
     L. Grigori, J. Demmel and X.S. Li. SIAM J. Sci. Comp., Vol. 29, Issue 3,
-    1289-1314, 2007. 
+    1289-1314, 2007.
+[3] A distributed CPU-GPU sparse direct solver. P. Sao, R. Vuduc and X.S. Li,
+    Proc. of EuroPar-2014 Parallel Processing, August 25-29, 2014.
+    Porto, Portugal.
 
 Xiaoye S. Li         Lawrence Berkeley National Lab, xsli@lbl.gov
-James Demmel         Univ. of California Berkeley, demmel@cs.berkeley.edu
 Laura Grigori        INRIA, France, Laura.Grigori@inria.fr
+Piyush Sao           Georgia Institute of Technology, piyush.feynman@gmail.com
 Ichitaro Yamazaki    Univ. of Tennessee, ic.yamazaki@gmail.com
 
 --------------------
@@ -177,3 +201,6 @@ Ichitaro Yamazaki    Univ. of Tennessee, ic.yamazaki@gmail.com
   June 9, 2010       Version 2.4 
   November 23, 2010  Version 2.5
   March 31, 2013     Version 3.3
+  October 1, 2014    Version 4.0
+  July 15, 2014      Version 4.1
+  September 25, 2015 Version 4.2
