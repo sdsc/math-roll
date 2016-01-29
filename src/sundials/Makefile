@@ -68,10 +68,12 @@ $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
 	$(MODULE_LOAD_CC); \
+	$(MODULE_LOAD_PYTHON); \
 	( \
 	  $(DESCRIBE_PKG); \
 	  $(DESCRIBE_CC); \
-	  $(DESCRIBE_MPI) \
+	  $(DESCRIBE_MPI); \
+          $(DESCRIBE_PYTHON) \
 	) > $@
 
 LICENSE: $(SRC_DIRS)
@@ -98,21 +100,30 @@ build: $(SRC_DIRS)
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
+          $(MODULE_LOAD_CMAKE); \
+          $(MODULE_LOAD_PYTHON); \
 	  cd $(SOURCE_DIR); \
+          mkdir build; \
+          cd build; \
           export CFLAGS=$(AVX_FLAG); \
           export FFLAGS=$(AVX_FLAG); \
-	  ./configure CC=$(CC) F77=$(F77) \
-	    --prefix=$(ROOT)/$(PKGROOT) --enable-examples \
-	    --with-mpicc=$${MPIHOME}/bin/mpicc \
-	    --with-mpif77=$${MPIHOME}/bin/mpif77;  \
-	  make -j 16 \
+          cmake -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_ENABLE=ON \
+            -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)  \
+            -DCMAKE_Fortran_COMPILER=$(FC) -DMPI_MPICC=mpicc -DMPI_MPICXX=mpicxx \
+            -DMPI_MPIF77=mpif77 -DMPI_MPIF90=mpif90 -DFCMIX_ENABLE=ON \
+            -DF90_ENABLE=ON -DCXX_ENABLE=ON -DOPENMP_ENABLE=ON -DEXAMPLES_ENABLE=ON .. ; \
+             make -j 16 \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
-	  cd $(SOURCE_DIR); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
+          $(MODULE_LOAD_CMAKE); \
+          $(MODULE_LOAD_PYTHON); \
+	  cd $(SOURCE_DIR)/build; \
 	  make install \
 	)
 	$(INSTALL_LICENSE_FILES)
@@ -123,3 +134,4 @@ install::
 
 clean::
 	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
+
