@@ -1,16 +1,16 @@
 NAME           = sdsc-eigen
-VERSION        = 3.2.3
+VERSION        = 3.2.7
 RELEASE        = 0
 PKGROOT        = /opt/eigen
 
 SRC_SUBDIR     = eigen
 
 SOURCE_NAME    = eigen
-SOURCE_SUFFIX  = tar.gz
+SOURCE_SUFFIX  = tar.bz2
 SOURCE_VERSION = $(VERSION)
-SOURCE_PKG     = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
-SOURCE_DIR     = eigen-eigen-36fd1ba04c12
+SOURCE_PKG     = eigen-eigen-b30b87236a1b.$(SOURCE_SUFFIX)
+SOURCE_DIR     = eigen-eigen-b30b87236a1b
 
-TAR_GZ_PKGS    = $(SOURCE_PKG)
+TAR_BZ2_PKGS    = $(SOURCE_PKG)
 
 RPM.EXTRAS     = AutoReq:No

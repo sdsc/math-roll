@@ -1,0 +1,51 @@
+--- lapack-3.6.0/make.inc.example	2015-11-15 12:33:40.000000000 -0800
++++ patch-files/make.inc.example	2016-01-28 15:49:08.703377248 -0800
+@@ -16,11 +16,11 @@
+ #  and handle these quantities appropriately. As a consequence, one 
+ #  should not compile LAPACK with flags such as -ffpe-trap=overflow.
+ #
+-FORTRAN  = gfortran 
+-OPTS     = -O2 -frecursive
++FORTRAN  = ROLL_FORTRAN
++OPTS     = 
+ DRVOPTS  = $(OPTS)
+-NOOPT    = -O0 -frecursive
+-LOADER   = gfortran
++NOOPT    = 
++LOADER   = ROLL_FORTRAN
+ LOADOPTS =
+ #
+ #  Comment out the following line to include deprecated routines to the
+@@ -35,10 +35,10 @@
+ # For RS6K : SECOND and DSECND will use a call to the EXTERNAL FUNCTION ETIME_
+ # TIMER    = EXT_ETIME_
+ # For gfortran compiler: SECOND and DSECND will use a call to the INTERNAL FUNCTION ETIME
+-TIMER    = INT_ETIME
++#TIMER    = INT_ETIME
+ # If your Fortran compiler does not provide etime (like Nag Fortran Compiler, etc...)
+ # SECOND and DSECND will use a call to the INTERNAL FUNCTION CPU_TIME
+-# TIMER    = INT_CPU_TIME
++  TIMER    = INT_CPU_TIME
+ # If neither of this works...you can use the NONE value... In that case, SECOND and DSECND will always return 0
+ # TIMER     = NONE
+ #
+@@ -51,8 +51,8 @@
+ #
+ # CC is the C compiler, normally invoked with options CFLAGS.
+ #
+-CC = gcc
+-CFLAGS = -O3
++CC = ROLL_CC
++CFLAGS = 
+ #
+ #  The archiver and the flag(s) to use when building archive (library)
+ #  If you system has no ranlib, set RANLIB = echo.
+@@ -74,7 +74,7 @@
+ #  machine-specific, optimized BLAS library should be used whenever
+ #  possible.)
+ #
+-BLASLIB      = ../../librefblas.a
++BLASLIB      = BLAS_LIBRARY/blas_LINUX.a
+ CBLASLIB     = ../../libcblas.a
+ LAPACKLIB    = liblapack.a
+ TMGLIB       = libtmglib.a

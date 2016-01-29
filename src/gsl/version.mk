@@ -4,8 +4,8 @@ endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-gsl_$(COMPILERNAME)
-VERSION        = 1.16
-RELEASE        = 4
+VERSION        = 2.1
+RELEASE        = 0
 PKGROOT        = /opt/gsl/$(COMPILERNAME)
 
 SRC_SUBDIR     = gsl
