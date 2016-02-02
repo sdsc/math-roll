@@ -97,6 +97,11 @@ endif
 
 build: $(SRC_DIRS)
 	tar zxvf $(SOURCE_DIR).tar.gz
+	patch $(SOURCE_DIR)/src/kinsol/fcmix/fkinsol.c patch-files/fkinsol.c.patch
+	patch $(SOURCE_DIR)/include/idas/idas.h patch-files/idas.h.patch
+	patch $(SOURCE_DIR)/examples/idas/serial/idasRoberts_ASAi_dns.c patch-files/idasRoberts_ASAi_dns.c.patch
+	patch $(SOURCE_DIR)/examples/idas/serial/idasHessian_ASA_FSA.c  patch-files/idasHessian_ASA_FSA.c.patch
+	patch $(SOURCE_DIR)/examples/idas/serial/idasSlCrank_FSA_dns.c  patch-files/idasSlCrank_FSA_dns.c.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \

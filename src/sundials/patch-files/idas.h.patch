@@ -1,0 +1,11 @@
+--- sundials-2.6.2/include/idas/idas.h	2015-07-30 17:08:55.000000000 -0700
++++ patch-files/idas.h	2016-01-29 16:12:26.416530533 -0800
+@@ -1792,7 +1792,7 @@
+                                  IDAQuadRhsFnB rhsQB, N_Vector yQB0);
+ 
+ SUNDIALS_EXPORT int IDAQuadInitBS(void *ida_mem, int which, 
+-                                  IDAQuadRhsFnBS rhsQS, N_Vector yQB0);
++                                  IDAQuadRhsFnBS temprhsQS, N_Vector yQB0);
+ 
+ SUNDIALS_EXPORT int IDAQuadReInitB(void *ida_mem, int which, N_Vector yQB0);
+ 
