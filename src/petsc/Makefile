@@ -167,6 +167,11 @@ install::
 	# Cache install for use by slepc
 	mkdir -p $(PETSC_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PETSC_CACHE)
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/pastix_$(PASTIX_VERSION)/install/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/fblaslapack-$(FBLASLAPACK_VERSION)/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/PORD/lib/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/scotch_$(SCOTCH_VERSION)_esmumps/lib/*.a $(PETSC_CACHE)/lib
 	# Fix paths in copy--slepc config checks for mismatch
 	perl -pi -e "s#$(PKGROOT)#$(PETSC_CACHE)#g" \
 	  `find $(PETSC_CACHE) -type f -exec grep -Il . {} ';'`
