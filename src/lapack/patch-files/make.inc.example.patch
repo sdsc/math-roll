@@ -1,5 +1,5 @@
 --- lapack-3.6.0/make.inc.example	2015-11-15 12:33:40.000000000 -0800
-+++ patch-files/make.inc.example	2016-01-28 15:49:08.703377248 -0800
++++ patch-files/make.inc.example	2016-02-04 17:32:04.402501120 -0800
 @@ -16,11 +16,11 @@
  #  and handle these quantities appropriately. As a consequence, one 
  #  should not compile LAPACK with flags such as -ffpe-trap=overflow.
@@ -45,7 +45,7 @@
  #  possible.)
  #
 -BLASLIB      = ../../librefblas.a
-+BLASLIB      = BLAS_LIBRARY/blas_LINUX.a
++BLASLIB      = BLAS_LIBRARY/blas.a
  CBLASLIB     = ../../libcblas.a
  LAPACKLIB    = liblapack.a
  TMGLIB       = libtmglib.a

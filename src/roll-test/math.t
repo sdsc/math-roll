@@ -350,10 +350,6 @@ foreach my $compiler(@COMPILERS) {
 module load $compiler $mpi sundials
 if [ ! -e fcvDiag_kry_p.f ]; then
 cp $packageHome/$mpi/examples/cvode/fcmix_parallel/fcvDiag_kry_p.f .
-ex fcvDiag_kry_p.f <<EOF
-:1,32s/INTEGER\\*4/INTEGER*8/
-:w
-:q
 EOF
 fi
 mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/lib -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
@@ -368,7 +364,7 @@ END
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
       like($output, qr/$TESTFILE.sundials.exe/,
            "Sundials/$compilername/$mpi compilation");
-      like($output, qr/0.9094/, "Sundials/$compilername/$mpi run");
+      like($output, qr/number of conv. failures.. nonlinear = 0 linear = 0/, "Sundials/$compilername/$mpi run");
     }
   }
   $output = `module load $compiler sundials; echo \$SUNDIALSHOME 2>&1`;
@@ -396,7 +392,7 @@ echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
-      like($output, qr/nonzeros in L\+U\s+11694/,
+      like($output, qr/Sum-of-all/,
            "Superlu/$compilername/$mpi test run");
     }
   }

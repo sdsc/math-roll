@@ -114,8 +114,8 @@ build: $(SRC_DIRS)
           export FFLAGS=$(AVX_FLAG); \
           cmake -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_ENABLE=ON \
             -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)  \
-            -DCMAKE_Fortran_COMPILER=$(FC) -DMPI_MPICC=mpicc -DMPI_MPICXX=mpicxx \
-            -DMPI_MPIF77=mpif77 -DMPI_MPIF90=mpif90 -DFCMIX_ENABLE=ON \
+            -DCMAKE_Fortran_COMPILER=$(FC) -DMPI_MPICC=`which mpicc` -DMPI_MPICXX=mpicxx \
+            -DMPI_MPIF77=`which mpif77` -DMPI_MPIF90=`which mpif90` -DFCMIX_ENABLE=ON \
             -DF90_ENABLE=ON -DCXX_ENABLE=ON -DOPENMP_ENABLE=ON -DEXAMPLES_ENABLE=ON .. ; \
              make -j 16 \
 	)

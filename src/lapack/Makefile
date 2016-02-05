@@ -93,7 +93,7 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   endif
 endif
 
-BLAS_LIBRARY=$(REDHAT.ROOT)/src/lapack/BLAS
+BLAS_LIBRARY=$(PWD)/BLAS
 
 LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
@@ -151,7 +151,7 @@ install::
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
 	  if test -e TESTING/xeigtstd; then \
-	    cp tests TESTING/x* TESTING/*.in \
+	    cp TESTING/x* TESTING/*.in \
 	       $(ROOT)/$(PKGROOT)/runtests; \
 	  fi \
 	)
