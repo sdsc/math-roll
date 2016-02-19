@@ -10,7 +10,7 @@ my $appliance = $#ARGV >= 0 ? $ARGV[0] :
                 -d '/export/rocks/install' ? 'Frontend' : 'Compute';
 my $installedOnAppliancesPattern = '.';
 my @packages = (
-  'eigen', 'gsl', 'lapack', 'parmetis', 'petsc', 'scalapack',
+  'eigen', 'gsl','lapack', 'parmetis', 'petsc', 'scalapack',
   'slepc', 'sprng', 'sundials', 'superlu'
 );
 my $output;
@@ -95,11 +95,11 @@ close(OUT);
 # gsl
 foreach my $compiler (@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
-  $packageHome = "/opt/gsl/$compilername";
-  $testDir = "/opt/gsl/$compilername/tests";
+  $packageHome = "/opt/gsl/2.1/$compilername";
+  $testDir = "/opt/gsl/2.1/$compilername/tests";
   SKIP: {
-    skip "gsl/$compilername not installed", 1 if ! -d $packageHome;
-    skip "gsl/$compilername test not installed", 1 if ! -d $testDir;
+    skip "gsl/2.1/$compilername not installed", 1 if ! -d $packageHome;
+    skip "gsl/2.1/$compilername test not installed", 1 if ! -d $testDir;
     open(OUT, ">$TESTFILE.sh");
     print OUT <<END;
 #!/bin/bash
@@ -127,9 +127,53 @@ END
     }
     my $testcount = scalar(@crashes) + scalar(@failures) + scalar(@successes);
     if(scalar(@successes) == $testcount) {
-      pass("$testcount/$testcount gsl/$compilername tests passed");
+      pass("$testcount/$testcount gsl/2.1/$compilername tests passed");
     } else {
-      fail(scalar(@successes) . "/$testcount gsl/$compilername tests passed; " .
+      fail(scalar(@successes) . "/$testcount gsl/2.1/$compilername tests passed; " .
+           scalar(@crashes) . ' (' . join(',', @crashes) . ') crashed; ' .
+           scalar(@failures) . ' (' . join(',', @failures) . ') failed');
+    }
+  }
+}
+
+# gsl 1.16
+foreach my $compiler (@COMPILERS) {
+  my $compilername = (split('/', $compiler))[0];
+  $packageHome = "/opt/gsl/1.16/$compilername";
+  $testDir = "/opt/gsl/1.16/$compilername/tests";
+  SKIP: {
+    skip "gsl/1.16/$compilername not installed", 1 if ! -d $packageHome;
+    skip "gsl/1.16/$compilername test not installed", 1 if ! -d $testDir;
+    open(OUT, ">$TESTFILE.sh");
+    print OUT <<END;
+#!/bin/bash
+module load $compiler gsl/1.16
+cd $packageHome/tests
+for test in *; do
+if test -d \$test; then
+  cd $packageHome/tests
+  echo === \$test: `\$test/test`
+fi
+done
+END
+    close(OUT);
+    $output = `/bin/bash $TESTFILE.sh 2>&1`;
+    my (@crashes, @failures, @successes);
+    while ($output =~ s/=== (\w+): (.*)//) {
+      my ($testname, $testout) = ($1, $2);
+      if ($testout !~ /^Completed \[(\d+)\/(\d+)\]/) {
+        push(@crashes, $testname);
+      } elsif ($1 != $2) {
+        push(@failures, $testname);
+      } else {
+        push(@successes, $testname);
+      }
+    }
+    my $testcount = scalar(@crashes) + scalar(@failures) + scalar(@successes);
+    if(scalar(@successes) == $testcount) {
+      pass("$testcount/$testcount gsl/1.16/$compilername tests passed");
+    } else {
+      fail(scalar(@successes) . "/$testcount gsl/1.16/$compilername tests passed; " .
            scalar(@crashes) . ' (' . join(',', @crashes) . ') crashed; ' .
            scalar(@failures) . ' (' . join(',', @failures) . ') failed');
     }
