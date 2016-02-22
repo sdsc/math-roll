@@ -118,7 +118,7 @@ install::
 	  $(MAKE) prefix=$(ROOT)/$(PKGROOT) install; \
 	  $(MAKE) check; \
 	  mkdir -p -m 755 $(ROOT)/$(PKGROOT)/tests; \
-	  for file in `cat tests`; do \
+	  for file in `cat ../tests`; do \
 	    cp -r $$file $(ROOT)/$(PKGROOT)/tests; \
 	  done; \
 	)
