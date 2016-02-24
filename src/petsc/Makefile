@@ -168,6 +168,7 @@ install::
 	mkdir -p $(PETSC_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PETSC_CACHE)
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/pastix_$(PASTIX_VERSION)/install/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/pastix_$(PASTIX_VERSION)/install/*.a $(ROOT)$(PKGROOT)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(ROOT)/$(PKGROOT)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/fblaslapack-$(FBLASLAPACK_VERSION)/*.a $(PETSC_CACHE)/lib
