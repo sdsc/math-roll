@@ -9,7 +9,7 @@ endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-slepc_$(COMPILERNAME)_$(MPINAME)
-VERSION        = 3.5.3
+VERSION        = 3.6.2
 RELEASE        = 0
 PKGROOT        = /opt/slepc/$(COMPILERNAME)/$(MPINAME)
 

@@ -1,0 +1,22 @@
+--- sundials-2.6.2/src/kinsol/fcmix/fkinsol.c	2015-07-30 17:09:13.000000000 -0700
++++ patch-files/fkinsol.c	2016-01-29 15:39:05.729087333 -0800
+@@ -274,19 +274,6 @@
+ 
+ /*
+  * ----------------------------------------------------------------
+- * Function : FKIN_SPFGMR
+- * ----------------------------------------------------------------
+- */
+-
+-void FKIN_SPFGMR(int *maxl, int *maxlrst, int *ier)
+-{
+-  *ier = KINSpfgmr(KIN_kinmem, *maxl);
+-  KINSpilsSetMaxRestarts(KIN_kinmem, *maxlrst);
+-  KIN_ls = KIN_LS_SPFGMR;
+-}
+-
+-/*
+- * ----------------------------------------------------------------
+  * Function : FKIN_SOL
+  * ----------------------------------------------------------------
+  */

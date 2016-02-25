@@ -67,8 +67,8 @@ include $(SDSCDEVEL)/Rules.mk
 COPTS = -O2 -fPIC
 FOPTS = -fimplicit-none -O2 -fPIC
 ifeq ("$(COMPILERNAME)", "intel")
-  COPTS = -O2 -xHOST -fPIC
-  FOPTS = -O2 -xHOST -fPIC
+  COPTS = -fPIC -O2
+  FOPTS = -fPIC -O2
 else ifeq ("$(COMPILERNAME)", "pgi")
   COPTS = -fast -fPIC
   FOPTS = -fast -fPIC
@@ -80,8 +80,8 @@ ifneq ("$(ROLLOPTS)", "$(subst avx2,,$(ROLLOPTS))")
     COPTS += -mavx2
     FOPTS += -mavx2
   else ifeq ("$(COMPILERNAME)", "intel")
-    COPTS += -xcore-avx2
-    FOPTS += -xcore-avx2
+    COPTS += -xHOST -xcore-avx2
+    FOPTS += -xHOST -xcore-avx2
   endif
 else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   ifeq ("$(COMPILERNAME)", "gnu")
@@ -92,6 +92,8 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
     FOPTS += -xavx
   endif
 endif
+
+BLAS_LIBRARY=$(PWD)/BLAS
 
 LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
@@ -109,11 +111,13 @@ LICENSE: $(SRC_DIRS)
 	echo BSD > $@
 
 build: $(SRC_DIRS)
-	cp patch-files/make.inc.lapack $(SOURCE_DIR)/make.inc
-	cp patch-files/make.inc.blas BLAS/make.inc
+	patch -o $(SOURCE_DIR)/make.inc $(SOURCE_DIR)/make.inc.example patch-files/make.inc.example.patch
+	patch BLAS/make.inc patch-files/make.inc.patch
 	( \
 	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_CC!$(CC) $(COPTS)!" $(SOURCE_DIR)/make.inc; \
+	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" $(SOURCE_DIR)/make.inc; \
+	  perl -pi -e "s!BLAS_LIBRARY!$(BLAS_LIBRARY)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" BLAS/make.inc; \
 	  $(MODULE_LOAD_CC); \
 	  cd BLAS; \
@@ -147,7 +151,7 @@ install::
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
 	  if test -e TESTING/xeigtstd; then \
-	    cp ../patch-files/tests TESTING/x* TESTING/*.in \
+	    cp TESTING/x* TESTING/*.in \
 	       $(ROOT)/$(PKGROOT)/runtests; \
 	  fi \
 	)

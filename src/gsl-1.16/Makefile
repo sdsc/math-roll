@@ -66,7 +66,7 @@ include $(SDSCDEVEL)/Rules.mk
 
 COMPILE_FLAGS = -O2
 ifeq ("$(COMPILERNAME)", "intel")
-  COMPILE_FLAGS = -O2 -fp-model strict
+  COMPILE_FLAGS = -O2 -fp-model precise
 else ifeq ("$(COMPILERNAME)", "pgi")
   COMPILE_FLAGS = -O1 -Mdaz 
 endif

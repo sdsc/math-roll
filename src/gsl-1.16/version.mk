@@ -3,9 +3,9 @@ ifndef ROLLCOMPILER
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
-NAME           = sdsc-gsl_$(COMPILERNAME)
-VERSION        = 2.1
-RELEASE        = 1
+VERSION        = 1.16
+NAME           = sdsc-gsl-$(VERSION)_$(COMPILERNAME)
+RELEASE        = 0
 PKGROOT        = /opt/gsl/$(VERSION)/$(COMPILERNAME)
 
 SRC_SUBDIR     = gsl
@@ -17,7 +17,5 @@ SOURCE_PKG     = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
 SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 
 TAR_GZ_PKGS    = $(SOURCE_PKG)
-
-EXTRA_MODULE_VERSIONS = 1.16
 
 RPM.EXTRAS     = AutoReq:No

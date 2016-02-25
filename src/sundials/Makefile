@@ -68,10 +68,12 @@ $(NAME).spec: DESCRIPTION LICENSE
 
 DESCRIPTION:
 	$(MODULE_LOAD_CC); \
+	$(MODULE_LOAD_PYTHON); \
 	( \
 	  $(DESCRIBE_PKG); \
 	  $(DESCRIBE_CC); \
-	  $(DESCRIBE_MPI) \
+	  $(DESCRIBE_MPI); \
+          $(DESCRIBE_PYTHON) \
 	) > $@
 
 LICENSE: $(SRC_DIRS)
@@ -95,24 +97,38 @@ endif
 
 build: $(SRC_DIRS)
 	tar zxvf $(SOURCE_DIR).tar.gz
+	patch $(SOURCE_DIR)/src/kinsol/fcmix/fkinsol.c patch-files/fkinsol.c.patch
+	patch $(SOURCE_DIR)/include/idas/idas.h patch-files/idas.h.patch
+	patch $(SOURCE_DIR)/examples/idas/serial/idasRoberts_ASAi_dns.c patch-files/idasRoberts_ASAi_dns.c.patch
+	patch $(SOURCE_DIR)/examples/idas/serial/idasHessian_ASA_FSA.c  patch-files/idasHessian_ASA_FSA.c.patch
+	patch $(SOURCE_DIR)/examples/idas/serial/idasSlCrank_FSA_dns.c  patch-files/idasSlCrank_FSA_dns.c.patch
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
+          $(MODULE_LOAD_CMAKE); \
+          $(MODULE_LOAD_PYTHON); \
 	  cd $(SOURCE_DIR); \
+          mkdir build; \
+          cd build; \
           export CFLAGS=$(AVX_FLAG); \
           export FFLAGS=$(AVX_FLAG); \
-	  ./configure CC=$(CC) F77=$(F77) \
-	    --prefix=$(ROOT)/$(PKGROOT) --enable-examples \
-	    --with-mpicc=$${MPIHOME}/bin/mpicc \
-	    --with-mpif77=$${MPIHOME}/bin/mpif77;  \
-	  make -j 16 \
+          cmake -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_ENABLE=ON \
+            -DCMAKE_C_COMPILER=$(CC) -DCMAKE_CXX_COMPILER=$(CXX)  \
+            -DCMAKE_Fortran_COMPILER=$(FC) -DMPI_MPICC=`which mpicc` -DMPI_MPICXX=mpicxx \
+            -DMPI_MPIF77=`which mpif77` -DMPI_MPIF90=`which mpif90` -DFCMIX_ENABLE=ON \
+            -DF90_ENABLE=ON -DCXX_ENABLE=ON -DOPENMP_ENABLE=ON -DEXAMPLES_ENABLE=ON .. ; \
+             make -j 16 \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	( \
-	  cd $(SOURCE_DIR); \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
+          $(MODULE_LOAD_CMAKE); \
+          $(MODULE_LOAD_PYTHON); \
+	  cd $(SOURCE_DIR)/build; \
 	  make install \
 	)
 	$(INSTALL_LICENSE_FILES)
@@ -123,3 +139,4 @@ install::
 
 clean::
 	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
+

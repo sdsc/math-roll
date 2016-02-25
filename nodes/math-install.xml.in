@@ -27,6 +27,7 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>sdsc-eigen</package>
 <package>sdsc-eigen-modules</package>
 <package>sdsc-gsl_COMPILERNAME</package>
+<package>sdsc-gsl-1.16_COMPILERNAME</package>
 <package>sdsc-gsl_COMPILERNAME-modules</package>
 <package>sdsc-lapack_COMPILERNAME</package>
 <package>sdsc-lapack_COMPILERNAME-modules</package>
