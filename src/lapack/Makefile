@@ -113,6 +113,8 @@ LICENSE: $(SRC_DIRS)
 build: $(SRC_DIRS)
 	patch -o $(SOURCE_DIR)/make.inc $(SOURCE_DIR)/make.inc.example patch-files/make.inc.example.patch
 	patch BLAS/make.inc patch-files/make.inc.patch
+	patch $(SOURCE_DIR)/SRC/zgetrf2.f patch-files/zgetrf2.f.patch
+	patch $(SOURCE_DIR)/SRC/zggsvd3.f patch-files/zggsvd3.f.patch
 	( \
 	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_CC!$(CC) $(COPTS)!" $(SOURCE_DIR)/make.inc; \
