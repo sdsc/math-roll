@@ -1,0 +1,11 @@
+--- zggsvd3.f	2016-03-21 19:36:30.000000000 -0700
++++ patch-files/zggsvd3.f	2016-03-21 19:37:39.000000000 -0700
+@@ -383,7 +383,7 @@
+       EXTERNAL           LSAME, DLAMCH, ZLANGE
+ *     ..
+ *     .. External Subroutines ..
+-      EXTERNAL           DCOPY, XERBLA, ZGGSVP, ZTGSJA
++      EXTERNAL           DCOPY, XERBLA, ZTGSJA
+ *     ..
+ *     .. Intrinsic Functions ..
+       INTRINSIC          MAX, MIN
