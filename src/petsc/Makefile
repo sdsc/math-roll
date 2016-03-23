@@ -109,6 +109,10 @@ build: $(SRC_PKGS)
 	$(call BIND_MOUNT, $(PARMETIS_INSTALL), $(PARMETIS_CACHE))
 	$(call BIND_MOUNT, $(SUPERLU_INSTALL), $(SUPERLU_CACHE))
 	$(call BIND_MOUNT, $(SCALAPACK_INSTALL), $(SCALAPACK_CACHE))
+	# Some files get installed during the configure step (?!?), so we have
+	# to use a bind mount here to avoid polluting the build machine.
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	$(PKGROOT_BIND_MOUNT)
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MKL); \
@@ -141,17 +145,18 @@ build: $(SRC_PKGS)
             --with-hdf5=true \
             --with-hdf5-dir=$${HDF5HOME} \
             --with-debugging=false; \
-	    make all; \
+	  make all; \
 	)
+	$(PKGROOT_BIND_UMOUNT)
 	$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))
 	$(call BIND_UMOUNT, $(SUPERLU_INSTALL))
 	$(call BIND_UMOUNT, $(PARMETIS_INSTALL))
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	# Using a bind mount appears to be the only way to prevent the build
 	# from incorporating $(ROOT) in binary files.
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT) || true
 	$(PKGROOT_BIND_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
