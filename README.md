@@ -74,6 +74,14 @@ the `ROLLMPI` variable.  The default values are "gnu" and "rocks-openmpi".
 For gnu compilers, the roll also supports a `ROLLOPTS` make variable value of
 'avx', indicating that the target architecture supports AVX instructions.
 
+The roll also supports specifying building with/for python versions other than
+the one included with the o/s.  To use this feature, specify a `ROLLPY` make
+variable that includes a space-delimited list of python modulefiles, e.g.,
+
+```shell
+% make ROLLPY=opt-python 2>&1 | tee build.log
+```
+
 
 ## Installation
 
