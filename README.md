@@ -76,7 +76,7 @@ For gnu compilers, the roll also supports a `ROLLOPTS` make variable value of
 
 The roll also supports specifying building with/for python versions other than
 the one included with the o/s.  To use this feature, specify a `ROLLPY` make
-variable that includes a space-delimited list of python modulefiles, e.g.,
+variable that includes a python modulefile, e.g.,
 
 ```shell
 % make ROLLPY=opt-python 2>&1 | tee build.log
