@@ -79,6 +79,7 @@ DESCRIPTION:
 	( \
 	  $(DESCRIBE_PKG); \
 	  $(DESCRIBE_CC); \
+	  $(DESCRIBE_MKL); \
 	  $(DESCRIBE_MPI); \
           $(DESCRIBE_HDF5) \
 	) > $@
