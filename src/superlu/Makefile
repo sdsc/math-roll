@@ -64,7 +64,7 @@ include Rules.mk
 include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
-PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(ROLLMPI)
+PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(MPINAME)
 SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
