@@ -72,19 +72,19 @@ copyright rpm pkg clean::
 	      grep -q ROLLMPI $$i/version.mk; \
 	      if test $$? -eq 0; then \
 	        for m in $(ROLLMPI); do \
-	          echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI=$$m ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
-	          (cd $$i && $(MAKE) ROLLCOMPILER=$$c ROLLMPI=$$m ROLLPY="$(ROLLPY)" $@) || exit 2; \
-	          echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI=$$m ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
+	          echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI=$$m starting at `date +"%F %T"`; \
+	          (cd $$i && $(MAKE) ROLLCOMPILER=$$c ROLLMPI=$$m $@) || exit 2; \
+	          echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI=$$m completed at `date +"%F %T"`; \
 	        done; \
 	      else \
-	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
-	        (cd $$i && $(MAKE) ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" $@) || exit 2; \
-	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
+	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" starting at `date +"%F %T"`; \
+	        (cd $$i && $(MAKE) ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" $@) || exit 2; \
+	        echo make $@ in $$i with ROLLCOMPILER=$$c ROLLMPI="$(ROLLMPI)" completed at `date +"%F %T"`; \
 	      fi; \
 	    done; \
 	  else \
-	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" starting at `date +"%F %T"`; \
-	    (cd $$i && $(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" $@) || exit 2; \
-	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" completed at `date +"%F %T"`; \
+	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" starting at `date +"%F %T"`; \
+	    (cd $$i && $(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" $@) || exit 2; \
+	    echo make $@ in $$i with ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" completed at `date +"%F %T"`; \
 	  fi; \
 	done
