@@ -63,10 +63,6 @@ ifndef ROLLMPI
   ROLLMPI = rocks-openmpi
 endif
 
-ifndef ROLLPY
-  ROLLPY = python
-endif
-
 -include $(ROLLSROOT)/etc/Rolls.mk
 include Rolls.mk
 
@@ -84,7 +80,7 @@ default:
 	  done; \
 	  perl -pi -e '$$_ = "" if m/COMPILERNAME|MPINAME/' $$o; \
 	done
-	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" ROLLPY="$(ROLLPY)" roll
+	$(MAKE) ROLLCOMPILER="$(ROLLCOMPILER)" ROLLMPI="$(ROLLMPI)" roll
 
 clean::
 	rm -f _arch bootstrap.py
