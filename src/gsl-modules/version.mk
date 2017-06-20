@@ -7,7 +7,7 @@ PACKAGE     = gsl
 CATEGORY    = applications
 
 NAME        = sdsc-$(PACKAGE)_$(COMPILERNAME)-modules
-RELEASE     = 4
+RELEASE     = 5
 PKGROOT     = /opt/modulefiles/$(CATEGORY)/.$(COMPILERNAME)/$(PACKAGE)
 
 VERSION_SRC = $(REDHAT.ROOT)/src/$(PACKAGE)/version.mk
