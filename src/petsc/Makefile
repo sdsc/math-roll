@@ -122,7 +122,7 @@ build: $(SRC_PKGS)
 	  ./configure CFLAGS="-fPIC $(AVX_FLAG)" FFLAGS="-fPIC $(AVX_FLAG)" CXXFLAGS="-fPIC $(AVX_FLAG)" --prefix=$(PKGROOT) \
 	    --with-mpi=true \
 	    --download-pastix=../pastix_$(PASTIX_VERSION).tar.bz2 \
-	    --download-ptscotch=../scotch_$(MUMPS_VERSION)_esmumps.tar.gz \
+	    --download-ptscotch=../scotch_$(SCOTCH_VERSION)_esmumps.tar.gz \
 	    --download-hypre=../hypre-$(HYPRE_VERSION).tar.gz \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
 	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
