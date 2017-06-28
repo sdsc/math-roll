@@ -134,7 +134,7 @@ build: $(SRC_PKGS)
 	    --download-mumps=../MUMPS_$(MUMPS_VERSION).tar.gz \
 	    --download-blacs=../blacs-dev.tar.gz \
 	    --download-fblaslapack=../fblaslapack-$(FBLASLAPACK_VERSION).tar.gz \
-            --with-scalar-type=complex; \
+            --with-scalar-type=complex \
 	    --with-pic=true \
 	    --with-shared-libraries=1 \
             --with-hdf5=true \
