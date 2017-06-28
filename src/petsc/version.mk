@@ -9,9 +9,9 @@ endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
-VERSION        = 3.6.3
-RELEASE        = 3
-PKGROOT        = /opt/petsc/$(COMPILERNAME)/$(MPINAME)
+VERSION        = 3.7.5
+RELEASE        = 0
+PKGROOT        = /share/apps/compute/petsc/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = petsc
 
@@ -45,6 +45,11 @@ SCOTCH_NAME    = scotch
 SCOTCH_VERSION = 6.0.0
 SCOTCH_PKG     = $(SCOTCH_NAME)_$(SCOTCH_VERSION)_esmumps.$(SOURCE_SUFFIX)
 SCOTCH_DIR     = $(SCOTCH_PKG:%.$(SOURCE_SUFFIX)=%)
+
+HYPRE_NAME    = hypre
+HYPRE_VERSION = 2.11.2
+HYPRE_PKG     = $(HYPRE_NAME)_$(HYPRE_VERSION).$(SOURCE_SUFFIX)
+HYPRE_DIR     = $(HYPRE_PKG:%.$(SOURCE_SUFFIX)=%)
 
 TAR_GZ_PKGS    = $(SOURCE_PKG) $(BLACS_PKG) $(FBLASLAPACK_PKG) $(MUMPS_PKG) $(SCOTCH_PKG)
 TAR_BZ2_PKGS   = $(PASTIX_PKG)

@@ -64,12 +64,8 @@ include Rules.mk
 include $(SDSCDEVEL)/Pull.mk
 include $(SDSCDEVEL)/Rules.mk
 
-PETSC_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
-PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(MPINAME)
-PARMETIS_INSTALL = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
-SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
+PARMETIS_INSTALL = /opt//parmetis/$(COMPILERNAME)/$(MPINAME)
 SUPERLU_INSTALL = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
-SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-scalapack_$(COMPILERNAME)_$(MPINAME)
 SCALAPACK_INSTALL = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
@@ -107,13 +103,9 @@ build: $(SRC_PKGS)
 	# petsc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
 	# having the installed s/w look for the cache dirs.
-	$(call BIND_MOUNT, $(PARMETIS_INSTALL), $(PARMETIS_CACHE))
-	$(call BIND_MOUNT, $(SUPERLU_INSTALL), $(SUPERLU_CACHE))
-	$(call BIND_MOUNT, $(SCALAPACK_INSTALL), $(SCALAPACK_CACHE))
 	# Some files get installed during the configure step (?!?), so we have
 	# to use a bind mount here to avoid polluting the build machine.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-	$(PKGROOT_BIND_MOUNT)
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MKL); \
@@ -130,7 +122,8 @@ build: $(SRC_PKGS)
 	  ./configure CFLAGS="-fPIC $(AVX_FLAG)" FFLAGS="-fPIC $(AVX_FLAG)" CXXFLAGS="-fPIC $(AVX_FLAG)" --prefix=$(PKGROOT) \
 	    --with-mpi=true \
 	    --download-pastix=../pastix_$(PASTIX_VERSION).tar.bz2 \
-	    --download-ptscotch=../scotch_6.0.0_esmumps.tar.gz \
+	    --download-ptscotch=../scotch_$(MUMPS_VERSION)_esmumps.tar.gz \
+	    --download-hypre=../hypre-$(HYPRE_VERSION).tar.gz \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
 	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
 	    --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib -lsuperlu" \
@@ -140,7 +133,8 @@ build: $(SRC_PKGS)
 	    --with-scalapack-dir=$(SCALAPACK_INSTALL) \
 	    --download-mumps=../MUMPS_$(MUMPS_VERSION).tar.gz \
 	    --download-blacs=../blacs-dev.tar.gz \
-	    --download-fblaslapack=../fblaslapack-3.4.2.tar.gz \
+	    --download-fblaslapack=../fblaslapack-$(FBLASLAPACK_VERSION).tar.gz \
+            --with-scalar-type=complex; \
 	    --with-pic=true \
 	    --with-shared-libraries=1 \
             --with-hdf5=true \
@@ -148,17 +142,12 @@ build: $(SRC_PKGS)
             --with-debugging=false; \
 	  make all; \
 	)
-	$(PKGROOT_BIND_UMOUNT)
-	$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))
-	$(call BIND_UMOUNT, $(SUPERLU_INSTALL))
-	$(call BIND_UMOUNT, $(PARMETIS_INSTALL))
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	# Using a bind mount appears to be the only way to prevent the build
 	# from incorporating $(ROOT) in binary files.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT) || true
-	$(PKGROOT_BIND_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
 	  export PETSC_DIR=`pwd`; \
@@ -166,26 +155,16 @@ install::
 	  make install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/ \
 	)
-	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
 	# Get rid of configure.log files that contain build dir path
 	rm `find $(ROOT)/$(PKGROOT) -name configure.log`
 	# Cache install for use by slepc
-	mkdir -p $(PETSC_CACHE)
-	cp -r $(ROOT)/$(PKGROOT)/* $(PETSC_CACHE)
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/pastix_$(PASTIX_VERSION)/install/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/pastix_$(PASTIX_VERSION)/install/*.a $(ROOT)$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/fblaslapack-$(FBLASLAPACK_VERSION)/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/fblaslapack-$(FBLASLAPACK_VERSION)/*.a $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/PORD/lib/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/PORD/lib/*.a $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/scotch_$(SCOTCH_VERSION)_esmumps/lib/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/scotch_$(SCOTCH_VERSION)_esmumps/lib/*.a $(ROOT)/$(PKGROOT)/lib
 	# Fix paths in copy--slepc config checks for mismatch
-	perl -pi -e "s#$(PKGROOT)#$(PETSC_CACHE)#g" \
-	  `find $(PETSC_CACHE) -type f -exec grep -Il . {} ';'`
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
