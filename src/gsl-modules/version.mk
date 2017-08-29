@@ -1,14 +1,9 @@
-ifndef ROLLCOMPILER
-  ROLLCOMPILER = gnu
-endif
-COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
-
 PACKAGE     = gsl
 CATEGORY    = applications
 
-NAME        = sdsc-$(PACKAGE)_$(COMPILERNAME)-modules
-RELEASE     = 5
-PKGROOT     = /opt/modulefiles/$(CATEGORY)/.$(COMPILERNAME)/$(PACKAGE)
+NAME        = sdsc-$(PACKAGE)-modules
+RELEASE     = 6
+PKGROOT     = /opt/modulefiles/$(CATEGORY)/$(PACKAGE)
 
 VERSION_SRC = $(REDHAT.ROOT)/src/$(PACKAGE)/version.mk
 VERSION_INC = version.inc
@@ -16,4 +11,4 @@ include $(VERSION_INC)
 
 EXTRA_MODULE_VERSIONS = 1.16
 
-RPM.EXTRAS  = AutoReq:No
+RPM.EXTRAS  = AutoReq:No\nObsoletes:sdsc-gsl_gnu-modules,sdsc-gsl_intel-modules,sdsc-gsl_pgi-modules
