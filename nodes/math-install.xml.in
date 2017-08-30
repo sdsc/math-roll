@@ -28,23 +28,23 @@ All rights reserved. Rocks(r) v5.1 www.rocksclusters.org
 <package>sdsc-eigen-modules</package>
 <package>sdsc-gsl_COMPILERNAME</package>
 <package>sdsc-gsl-1.16_COMPILERNAME</package>
-<package>sdsc-gsl_COMPILERNAME-modules</package>
+<package>sdsc-gsl-modules</package>
 <package>sdsc-lapack_COMPILERNAME</package>
-<package>sdsc-lapack_COMPILERNAME-modules</package>
+<package>sdsc-lapack-modules</package>
 <package>sdsc-parmetis_COMPILERNAME_MPINAME</package>
-<package>sdsc-parmetis_COMPILERNAME-modules</package>
+<package>sdsc-parmetis-modules</package>
 <package>sdsc-petsc_COMPILERNAME_MPINAME</package>
-<package>sdsc-petsc_COMPILERNAME-modules</package>
+<package>sdsc-petsc-modules</package>
 <package>sdsc-scalapack_COMPILERNAME_MPINAME</package>
-<package>sdsc-scalapack_COMPILERNAME-modules</package>
+<package>sdsc-scalapack-modules</package>
 <package>sdsc-slepc_COMPILERNAME_MPINAME</package>
-<package>sdsc-slepc_COMPILERNAME-modules</package>
+<package>sdsc-slepc-modules</package>
 <package>sdsc-sprng_COMPILERNAME_MPINAME</package>
-<package>sdsc-sprng_COMPILERNAME-modules</package>
+<package>sdsc-sprng-modules</package>
 <package>sdsc-sundials_COMPILERNAME_MPINAME</package>
-<package>sdsc-sundials_COMPILERNAME-modules</package>
+<package>sdsc-sundials-modules</package>
 <package>sdsc-superlu_COMPILERNAME_MPINAME</package>
-<package>sdsc-superlu_COMPILERNAME-modules</package>
+<package>sdsc-superlu-modules</package>
 
 <package>sdsc-math-roll-test</package>
 

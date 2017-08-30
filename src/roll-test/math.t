@@ -33,18 +33,12 @@ SKIP: {
 
   foreach my $package(@packages) {
     skip "$package not installed", 3 if ! -d "/opt/$package";
-    foreach my $compiler(@COMPILERS) {
-      my $compilername = (split('/', $compiler))[0];
-      my $path = '/opt/modulefiles/applications' .
-                 ($package =~ /eigen/ ? '' : "/.$compilername");
-      my $subpackage = $package =~ /eigen/ ? $package : "$package/$compilername";
-      `/bin/ls $path/$package/[0-9]* 2>&1`;
-      ok($? == 0, "$subpackage module installed");
-      `/bin/ls $path/$package/.version.[0-9]* 2>&1`;
-      ok($? == 0, "$subpackage version module installed");
-      ok(-l "$path/$package/.version",
-         "$subpackage version module link created");
-    }
+    `/bin/ls /opt/modulefiles/applications/$package/[0-9]* 2>&1`;
+    ok($? == 0, "$package module installed");
+    `/bin/ls /opt/modulefiles/applications/$package/.version.[0-9]* 2>&1`;
+    ok($? == 0, "$package version module installed");
+    ok(-l "/opt/modulefiles/applications/$package/.version",
+       "$package version module link created");
   }
 
 }
