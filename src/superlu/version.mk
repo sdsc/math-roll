@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 4.2
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = superlu
@@ -24,3 +24,4 @@ SOURCE_DIR     = SuperLU_DIST_$(SOURCE_VERSION)
 TAR_GZ_PKGS    = $(SOURCE_PKG)
 
 RPM.EXTRAS     = AutoReq:No
+RPM.PREFIX     = $(PKGROOT)

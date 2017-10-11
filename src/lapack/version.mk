@@ -5,7 +5,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-lapack_$(COMPILERNAME)
 VERSION        = 3.6.0
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/lapack/$(COMPILERNAME)
 
 SRC_SUBDIR     = lapack
@@ -24,3 +24,4 @@ BLAS_DIR       = $(BLAS_PKG:%.$(BLAS_SUFFIX)=%)
 TGZ_PKGS       = $(SOURCE_PKG) $(BLAS_PKG)
 
 RPM.EXTRAS     = AutoReq:No
+RPM.PREFIX     = $(PKGROOT)

@@ -1,6 +1,6 @@
 NAME           = sdsc-eigen
 VERSION        = 3.2.7
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/eigen
 
 SRC_SUBDIR     = eigen
@@ -14,3 +14,4 @@ SOURCE_DIR     = eigen-eigen-b30b87236a1b
 TAR_BZ2_PKGS    = $(SOURCE_PKG)
 
 RPM.EXTRAS     = AutoReq:No
+RPM.PREFIX     = $(PKGROOT)

@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-scalapack_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0.2
-RELEASE        = 4
+RELEASE        = 5
 PKGROOT        = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = scalapack
@@ -24,3 +24,4 @@ SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 TGZ_PKGS       = $(SOURCE_PKG)
 
 RPM.EXTRAS     = AutoReq:No
+RPM.PREFIX     = $(PKGROOT)
