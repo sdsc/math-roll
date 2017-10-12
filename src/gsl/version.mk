@@ -5,7 +5,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-gsl_$(COMPILERNAME)
 VERSION        = 2.1
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/gsl/$(VERSION)/$(COMPILERNAME)
 
 SRC_SUBDIR     = gsl
@@ -19,3 +19,4 @@ SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 TAR_GZ_PKGS    = $(SOURCE_PKG)
 
 RPM.EXTRAS     = AutoReq:No
+RPM.PREFIX     = $(PKGROOT)
