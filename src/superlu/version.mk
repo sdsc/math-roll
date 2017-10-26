@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 4.2
-RELEASE        = 1
+RELEASE        = 2
 PKGROOT        = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = superlu

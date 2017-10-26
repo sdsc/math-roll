@@ -103,6 +103,12 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
 endif
 
 build: $(SRC_PKGS)
+	tar zxvf $(MUMPS_PKG)
+	patch `find $(MUMPS_DIR) -name cana_aux_par.F` patch-files/cana_aux_par.F.patch
+	patch `find $(MUMPS_DIR) -name dana_aux_par.F` patch-files/dana_aux_par.F.patch
+	patch `find $(MUMPS_DIR) -name sana_aux_par.F` patch-files/sana_aux_par.F.patch
+	patch `find $(MUMPS_DIR) -name zana_aux_par.F` patch-files/zana_aux_par.F.patch
+	tar zcvf $(MUMPS_PKG) $(MUMPS_DIR)
 	# petsc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
 	# having the installed s/w look for the cache dirs.

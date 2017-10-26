@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 3.6.3
-RELEASE        = 4
+RELEASE        = 5
 PKGROOT        = /opt/petsc/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = petsc

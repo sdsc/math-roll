@@ -107,6 +107,9 @@ endif
 
 build: $(SRC_DIRS)
 	patch $(SOURCE_DIR)/make.inc patch-files/make.inc.patch
+	if test "$(COMPILERNAME)" = "intel"; then \
+	  perl -pi -e 's/-openmp/-qopenmp/' $(SOURCE_DIR)/make.inc; \
+	fi
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MKL); \
