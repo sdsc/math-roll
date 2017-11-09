@@ -82,8 +82,8 @@ DESCRIPTION:
 	( \
 	  $(DESCRIBE_PKG); \
 	  $(DESCRIBE_CC); \
-	  $(DESCRIBE_MKL); \
-	  $(DESCRIBE_MPI) \
+	  $(DESCRIBE_MPI); \
+	  $(DESCRIBE_MKL) \
 	) > $@
 
 LICENSE: $(SRC_DIRS)
@@ -112,9 +112,9 @@ build: $(SRC_DIRS)
 	fi
 	( \
 	  $(MODULE_LOAD_CC); \
-	  $(MODULE_LOAD_MKL); \
-	  export MKLLIB=`find $${MKLHOME}/lib/* -maxdepth 0 | head -1`; \
 	  $(MODULE_LOAD_MPI); \
+	  $(MODULE_LOAD_MKL); \
+	  export MKLLIB=$${MKLHOME}/lib/intel64; \
 	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE_DIR)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_CACHE)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_MKLLINK!$(MKLLINK)!" $(SOURCE_DIR)/make.inc; \
