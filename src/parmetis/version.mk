@@ -10,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-parmetis_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 4.0.3
-RELEASE        = 5
+RELEASE        = 6
 PKGROOT        = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = parmetis
