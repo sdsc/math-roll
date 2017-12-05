@@ -73,7 +73,7 @@ ifneq ("$(COMPILERNAME)", "pgi")
   NOOPTS += -std=c99
 endif
 
-MKLLINK = -Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a -Wl,--end-group -lpthread -lm
+MKLLINK = -Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a -Wl,--end-group -ldl -lpthread -lm
 
 $(NAME).spec: DESCRIPTION LICENSE
 
