@@ -66,8 +66,8 @@ include $(SDSCDEVEL)/Rules.mk
 COPTS = -O2 -fPIC
 FOPTS = -fimplicit-none -O2 -fPIC
 ifeq ("$(COMPILERNAME)", "intel")
-  COPTS = -fPIC -O2
-  FOPTS = -fPIC -O2
+  COPTS = -fPIC -O0
+  FOPTS = -fPIC -O0
 else ifeq ("$(COMPILERNAME)", "pgi")
   COPTS = -fast -fPIC
   FOPTS = -fast -fPIC
