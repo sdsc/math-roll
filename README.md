@@ -84,8 +84,19 @@ To install, execute these instructions on a Rocks frontend:
 % rocks enable roll math
 % cd /export/rocks/install
 % rocks create distro
-% rocks run roll math | bash
 ```
+
+Subsequent installs of compute and login nodes will then include the contents
+of the math-roll.  To avoid cluttering the cluster frontend with unused
+software, the math-roll is configured to install only on compute and
+login nodes. To force installation on your frontend, run this command after
+adding the math-roll to your distro
+
+```shell
+% rocks run roll math host=NAME | bash
+```
+
+where NAME is the DNS name of a compute or login node in your cluster.
 
 In addition to the software itself, the roll installs individual environment
 module files for each tool in:
