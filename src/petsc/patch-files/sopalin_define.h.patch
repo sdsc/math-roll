@@ -1,0 +1,12 @@
+--- sopalin_define.h	2018-04-20 09:15:06.517933424 -0700
++++ patch-files/sopalin_define.h	2018-04-20 09:17:53.961938567 -0700
+@@ -35,6 +35,9 @@
+  */
+ #ifndef SOPALIN_DEFINE_H
+ #define SOPALIN_DEFINE_H
++
++#include <pthread.h>
++
+ /*
+  * Enum: TAG_COMM
+  *
