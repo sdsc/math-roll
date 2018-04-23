@@ -109,6 +109,14 @@ build: $(SRC_PKGS)
 	patch `find $(MUMPS_DIR) -name sana_aux_par.F` patch-files/sana_aux_par.F.patch
 	patch `find $(MUMPS_DIR) -name zana_aux_par.F` patch-files/zana_aux_par.F.patch
 	tar zcvf $(MUMPS_PKG) $(MUMPS_DIR)
+	tar jxvf $(PASTIX_PKG)
+	patch `find $(PASTIX_DIR) -name coefinit.h` patch-files/coefinit.h.patch
+	patch `find $(PASTIX_DIR) -name murge_defines.h` patch-files/murge_defines.h.patch
+	patch `find $(PASTIX_DIR) -name raff_functions.h` patch-files/raff_functions.h.patch
+	patch `find $(PASTIX_DIR) -name sopalin3d.h` patch-files/sopalin3d.h.patch
+	patch `find $(PASTIX_DIR) -name sopalin_define.h` patch-files/sopalin_define.h.patch
+	patch `find $(PASTIX_DIR) -name sopalin_thread.h` patch-files/sopalin_thread.h.patch
+	tar jcvf $(PASTIX_PKG) $(PASTIX_DIR)
 	# petsc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
 	# having the installed s/w look for the cache dirs.
@@ -134,7 +142,7 @@ build: $(SRC_PKGS)
 	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
 	  ./configure CFLAGS="-fPIC $(AVX_FLAG)" FFLAGS="-fPIC $(AVX_FLAG)" CXXFLAGS="-fPIC $(AVX_FLAG)" --prefix=$(PKGROOT) \
 	    --with-mpi=true \
-	    --download-pastix=../pastix_$(PASTIX_VERSION).tar.bz2 \
+	    --download-pastix=../$(PASTIX_PKG) \
 	    --download-ptscotch=../scotch_6.0.0_esmumps.tar.gz \
 	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
 	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
@@ -178,8 +186,8 @@ install::
 	# Cache install for use by slepc
 	mkdir -p $(PETSC_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PETSC_CACHE)
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/pastix_$(PASTIX_VERSION)/install/*.a $(PETSC_CACHE)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/pastix_$(PASTIX_VERSION)/install/*.a $(ROOT)$(PKGROOT)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(PASTIX_DIR)/install/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(PASTIX_DIR)/install/*.a $(ROOT)$(PKGROOT)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(ROOT)/$(PKGROOT)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/fblaslapack-$(FBLASLAPACK_VERSION)/*.a $(PETSC_CACHE)/lib
