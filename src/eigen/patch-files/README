@@ -1,3 +1,0 @@
-EigenTesting.cmake:
-  Packaged file assumed compiler version number appears in the first line of
-  the output of "CC --version", which is not true for pgCC.
