@@ -103,20 +103,6 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
 endif
 
 build: $(SRC_PKGS)
-	tar zxvf $(MUMPS_PKG)
-	patch `find $(MUMPS_DIR) -name cana_aux_par.F` patch-files/cana_aux_par.F.patch
-	patch `find $(MUMPS_DIR) -name dana_aux_par.F` patch-files/dana_aux_par.F.patch
-	patch `find $(MUMPS_DIR) -name sana_aux_par.F` patch-files/sana_aux_par.F.patch
-	patch `find $(MUMPS_DIR) -name zana_aux_par.F` patch-files/zana_aux_par.F.patch
-	tar zcvf $(MUMPS_PKG) $(MUMPS_DIR)
-	tar jxvf $(PASTIX_PKG)
-	patch `find $(PASTIX_DIR) -name coefinit.h` patch-files/coefinit.h.patch
-	patch `find $(PASTIX_DIR) -name murge_defines.h` patch-files/murge_defines.h.patch
-	patch `find $(PASTIX_DIR) -name raff_functions.h` patch-files/raff_functions.h.patch
-	patch `find $(PASTIX_DIR) -name sopalin3d.h` patch-files/sopalin3d.h.patch
-	patch `find $(PASTIX_DIR) -name sopalin_define.h` patch-files/sopalin_define.h.patch
-	patch `find $(PASTIX_DIR) -name sopalin_thread.h` patch-files/sopalin_thread.h.patch
-	tar jcvf $(PASTIX_PKG) $(PASTIX_DIR)
 	# petsc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
 	# having the installed s/w look for the cache dirs.
@@ -130,30 +116,24 @@ build: $(SRC_PKGS)
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MKL); \
-	  export MKLLIB=$${MKLHOME}/lib/intel64; \
 	  $(MODULE_LOAD_MPI); \
           $(MODULE_LOAD_HDF5); \
 	  tar -xzf $(SOURCE_PKG); \
 	  cd $(SOURCE_DIR); \
-	  MKLLINK="-Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a \
-	           $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a \
-	           -Wl,--end-group -lpthread -lm"; \
 	  export PETSC_DIR=`pwd`; \
 	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
 	  ./configure CFLAGS="-fPIC $(AVX_FLAG)" FFLAGS="-fPIC $(AVX_FLAG)" CXXFLAGS="-fPIC $(AVX_FLAG)" --prefix=$(PKGROOT) \
 	    --with-mpi=true \
 	    --download-pastix=../$(PASTIX_PKG) \
-	    --download-ptscotch=../scotch_6.0.0_esmumps.tar.gz \
-	    --with-blas-lib="$${MKLLINK}" --with-lapack-lib="$${MKLLINK}" \
+	    --download-ptscotch=../$(SCOTCH_PKG) \
+            --with-blas-lapack-dir=$${MKLHOME} \
 	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
-	    --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib -lsuperlu" \
+	    --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib64 -lsuperlu_dist" \
 	    --with-parmetis-dir=$(PARMETIS_INSTALL) \
 	    --with-metis-dir=$(PARMETIS_INSTALL) \
 	    --with-mpi-dir=$${MPIHOME} \
 	    --with-scalapack-dir=$(SCALAPACK_INSTALL) \
-	    --download-mumps=../MUMPS_$(MUMPS_VERSION).tar.gz \
-	    --download-blacs=../blacs-dev.tar.gz \
-	    --download-fblaslapack=../fblaslapack-3.4.2.tar.gz \
+	    --download-mumps=../$(MUMPS_PKG) \
 	    --with-pic=true \
 	    --with-shared-libraries=1 \
             --with-hdf5=true \
@@ -182,7 +162,7 @@ install::
 	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
 	# Get rid of configure.log files that contain build dir path
-	rm `find $(ROOT)/$(PKGROOT) -name configure.log`
+	-rm `find $(ROOT)/$(PKGROOT) -name configure.log`
 	# Cache install for use by slepc
 	mkdir -p $(PETSC_CACHE)
 	cp -r $(ROOT)/$(PKGROOT)/* $(PETSC_CACHE)
@@ -190,8 +170,6 @@ install::
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(PASTIX_DIR)/install/*.a $(ROOT)$(PKGROOT)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/fblaslapack-$(FBLASLAPACK_VERSION)/*.a $(PETSC_CACHE)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/fblaslapack-$(FBLASLAPACK_VERSION)/*.a $(ROOT)/$(PKGROOT)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/PORD/lib/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/PORD/lib/*.a $(ROOT)/$(PKGROOT)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/scotch_$(SCOTCH_VERSION)_esmumps/lib/*.a $(PETSC_CACHE)/lib

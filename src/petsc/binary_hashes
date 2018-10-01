@@ -1,6 +1,4 @@
-         135351  561d75327b1d94318e57294a7c8db9741390fac1  blacs-dev.tar.gz
-        3231743  bb7e4e08bfdec0c0cbbf89986abe3f9ffae16179  fblaslapack-3.4.2.tar.gz
         2528666  389157a3a2bfbc5aef84dcfbcb83af205372e776  pastix_5.2.2.12.tar.bz2
+       30858694  256319a82c35cbfc7e548af33b246a22a930ed7d  petsc-3.10.1.tar.gz
         4534976  0aea3f31f82868d4535a4aa2ca1b4d533ffb316c  scotch_6.0.0_esmumps.tar.gz
-       21802974  2aa3c32c709f43369c9063bd76f3fbbf642ee9b3  petsc-3.6.3.tar.gz
-        3066191  489298db7081dbf37a87b9cb6551e693d1bd41c7  MUMPS_5.0.1.tar.gz
+       28307756  e6c7c6e6cc44c0870a1fe831a6b7438ffc26c2ea  petsc-pkg-mumps_5.1.2.tar.gz
