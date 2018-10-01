@@ -168,12 +168,12 @@ install::
 	cp -r $(ROOT)/$(PKGROOT)/* $(PETSC_CACHE)
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(PASTIX_DIR)/install/*.a $(PETSC_CACHE)/lib
 	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(PASTIX_DIR)/install/*.a $(ROOT)$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(PETSC_CACHE)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/lib/*.a $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/PORD/lib/*.a $(PETSC_CACHE)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/MUMPS_$(MUMPS_VERSION)/PORD/lib/*.a $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/scotch_$(SCOTCH_VERSION)_esmumps/lib/*.a $(PETSC_CACHE)/lib
-	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/scotch_$(SCOTCH_VERSION)_esmumps/lib/*.a $(ROOT)/$(PKGROOT)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(MUMPS_DIR)/lib/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(MUMPS_DIR)/lib/*.a $(ROOT)/$(PKGROOT)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(MUMPS_DIR)/PORD/lib/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(MUMPS_DIR)/PORD/lib/*.a $(ROOT)/$(PKGROOT)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(SCOTCH_DIR)/lib/*.a $(PETSC_CACHE)/lib
+	cp $(SOURCE_DIR)/$(COMPILERNAME)-$(MPINAME)/externalpackages/$(SCOTCH_DIR)/lib/*.a $(ROOT)/$(PKGROOT)/lib
 	# Fix paths in copy--slepc config checks for mismatch
 	perl -pi -e "s#$(PKGROOT)#$(PETSC_CACHE)#g" \
 	  `find $(PETSC_CACHE) -type f -exec grep -Il . {} ';'`
