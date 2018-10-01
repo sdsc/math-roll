@@ -92,7 +92,7 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   endif
 endif
 
-BLAS_LIBRARY=$(PWD)/BLAS
+BLAS_LIBRARY=$(PWD)/$(BLAS_DIR)
 
 LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
@@ -111,23 +111,21 @@ LICENSE: $(SRC_DIRS)
 
 build: $(SRC_DIRS)
 	patch -o $(SOURCE_DIR)/make.inc $(SOURCE_DIR)/make.inc.example patch-files/make.inc.example.patch
-	patch BLAS/make.inc patch-files/make.inc.patch
-	patch $(SOURCE_DIR)/SRC/zgetrf2.f patch-files/zgetrf2.f.patch
-	patch $(SOURCE_DIR)/SRC/zggsvd3.f patch-files/zggsvd3.f.patch
 	( \
 	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_CC!$(CC) $(COPTS)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!BLAS_LIBRARY!$(BLAS_LIBRARY)!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" BLAS/make.inc; \
 	  $(MODULE_LOAD_CC); \
-	  cd BLAS; \
+	  cd $(SOURCE_DIR)/BLAS; \
 	  make; \
-	  mkdir tmp; \
-	  cd tmp; \
-	  ar -x ../blas.a; \
+          cd SRC; \
 	  $(FC) $(FOPTS) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
-	  cd ../../$(SOURCE_DIR); \
+          cd ../../CBLAS; \
+          make; \
+          cd src; \
+	  $(CC) $(COPTS) -fPIC -shared *.o -Wl,-soname,libcblas.so -o libcblas.so; \
+	  cd ../..; \
 	  $(MAKE); \
 	  mkdir tmp; \
 	  cd tmp; \
@@ -144,9 +142,10 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/runtests
 	( \
-	  cp BLAS/blas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
-	  cp BLAS/tmp/libblas.so $(ROOT)/$(PKGROOT)/lib; \
-	  cd $(SOURCE_DIR); \
+	  cp libblas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
+          cd $(SOURCE_DIR); \
+	  cp BLAS/SRC/libblas.so $(ROOT)/$(PKGROOT)/lib; \
+	  cp CBLAS/SRC/licbblas.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp liblapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
 	  cp libtmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
@@ -162,5 +161,5 @@ install::
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR) BLAS DESCRIPTION LICENSE
+	rm -rf $(SOURCE_DIR) $(BLAS_DIR) DESCRIPTION LICENSE
 
