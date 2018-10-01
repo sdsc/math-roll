@@ -114,6 +114,12 @@ build: $(SRC_PKGS)
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	$(PKGROOT_BIND_MOUNT)
 	( \
+          if test "$(ROLLCOMPILER)" = "pgi"; then \
+              tar xjf $(PASTIX_PKG); \
+              patch $(PASTIX_DIR)/src/sopalin/src/pastix.c patch-files/pastix.c.patch; \
+              patch $(PASTIX_DIR)/src/sparse-matrix/src/pastix_sparse_matrix.c patch-files/pastix_sparse_matrix.c.patch; \
+              tar cjf $(PASTIX_PKG) $(PASTIX_DIR); \
+          fi; \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MKL); \
 	  $(MODULE_LOAD_MPI); \
