@@ -124,7 +124,7 @@ build: $(SRC_DIRS)
           -DCMAKE_Fortran_COMPILER=mpif90 \
           -DCMAKE_C_COMPILER=mpicc \
           -DCMAKE_CXX_COMPILER=mpicxx \
-          -DCMAKE_CXX_FLAGS="-std=c++11" \
+          -DCMAKE_CXX_FLAGS="$(CFLAGS) -std=c++11" \
           -DBUILD_SHARED_LIBS=OFF \
           -DTPL_BLAS_LIBRARIES="$${MKLLINK}"; \
           make \
