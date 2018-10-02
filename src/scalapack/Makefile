@@ -133,7 +133,7 @@ build: $(SRC_DIRS)
 	    -DCMAKE_C_FLAGS="$(CFLAGS) $(AVX_FLAG)" -DCMAKE_Fortran_FLAGS="$(FFLAGS) $(AVX_FLAG)" \
 	    -DLAPACK_LIBRARIES=$(LAPACK_CACHE)/lib/liblapack.a \
 	    -DBLAS_LIBRARIES=$(LAPACK_CACHE)/lib/libblas.a; \
-	  make \
+	  make -j 16 \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
