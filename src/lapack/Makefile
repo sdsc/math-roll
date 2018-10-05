@@ -118,15 +118,15 @@ build: $(SRC_DIRS)
 	  perl -pi -e "s!BLAS_LIBRARY!$(BLAS_LIBRARY)!" $(SOURCE_DIR)/make.inc; \
 	  $(MODULE_LOAD_CC); \
 	  cd $(SOURCE_DIR)/BLAS; \
-	  make; \
+	  make -j 16; \
           cd SRC; \
 	  $(FC) $(FOPTS) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
           cd ../../CBLAS; \
-          make; \
+          make -j 16; \
           cd src; \
 	  $(CC) $(COPTS) -fPIC -shared *.o -Wl,-soname,libcblas.so -o libcblas.so; \
 	  cd ../..; \
-	  $(MAKE); \
+	  $(MAKE) -j 16; \
 	  mkdir tmp; \
 	  cd tmp; \
 	  ar -x ../liblapack.a; \
