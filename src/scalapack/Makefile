@@ -122,7 +122,7 @@ build: $(SRC_DIRS)
 	    -DBUILD_SHARED_LIBS=ON \
 	    -DLAPACK_LIBRARIES=$(LAPACK_CACHE)/lib/liblapack.a \
 	    -DBLAS_LIBRARIES=$(LAPACK_CACHE)/lib/libblas.a; \
-	  make; \
+	  make -j 16; \
 	  cd ..; \
 	  mkdir build_static; \
 	  cd build_static; \
