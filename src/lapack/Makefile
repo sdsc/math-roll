@@ -122,13 +122,13 @@ build: $(SRC_DIRS)
 	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" BLAS/make.inc; \
 	  $(MODULE_LOAD_CC); \
 	  cd BLAS; \
-	  make; \
+	  make -j 16; \
 	  mkdir tmp; \
 	  cd tmp; \
 	  ar -x ../blas.a; \
 	  $(FC) $(FOPTS) -fPIC -shared *.o -Wl,-soname,libblas.so -o libblas.so; \
 	  cd ../../$(SOURCE_DIR); \
-	  $(MAKE); \
+	  $(MAKE) -j 16; \
 	  mkdir tmp; \
 	  cd tmp; \
 	  ar -x ../liblapack.a; \
