@@ -102,6 +102,11 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   endif
 endif
 
+LIBIOMP5=
+ifeq ("$(COMPILERNAME),"intel")
+LIBIOMP5=-liomp5
+endif
+
 build: $(SRC_PKGS)
 	# petsc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
@@ -134,7 +139,7 @@ build: $(SRC_PKGS)
 	    --download-ptscotch=../$(SCOTCH_PKG) \
             --with-blas-lapack-dir=$${MKLHOME} \
 	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
-            --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib64 -lsuperlu_dist -liomp5" \
+            --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib64 -lsuperlu_dist $(LIBIOMP5)" \
 	    --with-parmetis-dir=$(PARMETIS_INSTALL) \
 	    --with-metis-dir=$(PARMETIS_INSTALL) \
 	    --with-mpi-dir=$${MPIHOME} \
