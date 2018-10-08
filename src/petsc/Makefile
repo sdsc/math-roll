@@ -102,9 +102,11 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   endif
 endif
 
-LIBIOMP5=
+LIBMP=
 ifeq ("$(COMPILERNAME),"intel")
-LIBIOMP5=-liomp5
+LIBMP=-liomp5
+else ifeq ("$(COMPILERNAME),"gnu")
+LIBMP=-lgomp
 endif
 
 build: $(SRC_PKGS)
@@ -139,7 +141,7 @@ build: $(SRC_PKGS)
 	    --download-ptscotch=../$(SCOTCH_PKG) \
             --with-blas-lapack-dir=$${MKLHOME} \
 	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
-            --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib64 -lsuperlu_dist $(LIBIOMP5)" \
+            --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib64 -lsuperlu_dist $(LIBMP)" \
 	    --with-parmetis-dir=$(PARMETIS_INSTALL) \
 	    --with-metis-dir=$(PARMETIS_INSTALL) \
 	    --with-mpi-dir=$${MPIHOME} \
@@ -162,7 +164,6 @@ install::
 	# Using a bind mount appears to be the only way to prevent the build
 	# from incorporating $(ROOT) in binary files.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT) || true
-	$(PKGROOT_BIND_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
 	  export PETSC_DIR=`pwd`; \
@@ -170,7 +171,6 @@ install::
 	  make install; \
 	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/ \
 	)
-	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
 	# Get rid of configure.log files that contain build dir path
 	-rm `find $(ROOT)/$(PKGROOT) -name configure.log`
