@@ -11,7 +11,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 NAME           = sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 3.10.1
 RELEASE        = 0
-PKGROOT        = /home/jpg/opt/petsc/$(COMPILERNAME)/$(MPINAME)
+PKGROOT        = /opt/petsc/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = petsc
 
@@ -22,6 +22,7 @@ SOURCE_PKG     = $(SOURCE_NAME)-$(SOURCE_VERSION).$(SOURCE_SUFFIX)
 SOURCE_DIR     = $(SOURCE_PKG:%.$(SOURCE_SUFFIX)=%)
 
 MUMPS_NAME    = petsc-pkg-mumps
+MUMPS_SUFFIX  = tar.gz
 MUMPS_VERSION = 5.1.2
 MUMPS_PKG     = $(MUMPS_NAME)-$(MUMPS_VERSION).$(SOURCE_SUFFIX)
 MUMPS_DIR     = $(MUMPS_PKG:%.$(MUMPS_SUFFIX)=%)

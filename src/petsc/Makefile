@@ -134,7 +134,7 @@ build: $(SRC_PKGS)
 	    --download-ptscotch=../$(SCOTCH_PKG) \
             --with-blas-lapack-dir=$${MKLHOME} \
 	    --with-superlu_dist-include=$(SUPERLU_INSTALL)/include \
-	    --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib64 -lsuperlu_dist" \
+            --with-superlu_dist-lib="-L$(SUPERLU_INSTALL)/lib64 -lsuperlu_dist -liomp5" \
 	    --with-parmetis-dir=$(PARMETIS_INSTALL) \
 	    --with-metis-dir=$(PARMETIS_INSTALL) \
 	    --with-mpi-dir=$${MPIHOME} \
