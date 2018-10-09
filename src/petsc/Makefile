@@ -103,9 +103,9 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
 endif
 
 LIBMP=
-ifeq ("$(COMPILERNAME),"intel")
+ifeq ("$(COMPILERNAME)","intel")
 LIBMP=-liomp5
-else ifeq ("$(COMPILERNAME),"gnu")
+else ifeq ("$(COMPILERNAME)","gnu")
 LIBMP=-lgomp
 endif
 
