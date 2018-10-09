@@ -17,7 +17,7 @@ my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
 my $TESTFILE = 'tmpmath';
-my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
+my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgc++');
 
 # math-install.xml
 my @compilerNames = map {(split('/', $_))[0]} @COMPILERS;
