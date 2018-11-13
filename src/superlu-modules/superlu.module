@@ -51,5 +51,5 @@ if [info exists env(SUPERLUHOME)] {
 }
 
 setenv SUPERLUHOME /opt/superlu/$compiler/$mpi
-prepend-path LD_LIBRARY_PATH /opt/superlu/$compiler/$mpi/lib
-prepend-path LIBPATH /opt/superlu/$compiler/$mpi/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/$compiler/$mpi/lib64
+prepend-path LIBPATH /opt/superlu/$compiler/$mpi/lib64
