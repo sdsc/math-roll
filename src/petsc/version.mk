@@ -9,7 +9,7 @@ endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
-VERSION        = 3.10.1
+VERSION        = 3.10.2
 RELEASE        = 0
 PKGROOT        = /opt/petsc/$(COMPILERNAME)/$(MPINAME)
 
