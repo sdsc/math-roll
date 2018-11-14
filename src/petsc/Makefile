@@ -65,11 +65,11 @@ include $(SDSCDEVEL)/Rules.mk
 
 PETSC_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-petsc_$(COMPILERNAME)_$(MPINAME)
 PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(MPINAME)
-PARMETIS_INSTALL = /home/jpg/opt/parmetis/$(COMPILERNAME)/$(MPINAME)
+PARMETIS_INSTALL = /opt/parmetis/$(COMPILERNAME)/$(MPINAME)
 SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
-SUPERLU_INSTALL = /home/jpg/opt/superlu/$(COMPILERNAME)/$(MPINAME)
+SUPERLU_INSTALL = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 SCALAPACK_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-scalapack_$(COMPILERNAME)_$(MPINAME)
-SCALAPACK_INSTALL = /home/jpg/opt/scalapack/$(COMPILERNAME)/$(MPINAME)
+SCALAPACK_INSTALL = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
 
@@ -113,9 +113,9 @@ build: $(SRC_PKGS)
 	# petsc includes dependent package paths in its installed files,
 	# including its libraries, so we have to use bind mounts to avoid
 	# having the installed s/w look for the cache dirs.
-#$(call BIND_MOUNT, $(PARMETIS_INSTALL), $(PARMETIS_CACHE))
-#$(call BIND_MOUNT, $(SUPERLU_INSTALL), $(SUPERLU_CACHE))
-#$(call BIND_MOUNT, $(SCALAPACK_INSTALL), $(SCALAPACK_CACHE))
+	$(call BIND_MOUNT, $(PARMETIS_INSTALL), $(PARMETIS_CACHE))
+	$(call BIND_MOUNT, $(SUPERLU_INSTALL), $(SUPERLU_CACHE))
+	$(call BIND_MOUNT, $(SCALAPACK_INSTALL), $(SCALAPACK_CACHE))
 	# Some files get installed during the configure step (?!?), so we have
 	# to use a bind mount here to avoid polluting the build machine.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
@@ -154,10 +154,10 @@ build: $(SRC_PKGS)
             --with-debugging=false; \
 	  make all; \
 	)
-#$(PKGROOT_BIND_UMOUNT)
-#$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))
-#$(call BIND_UMOUNT, $(SUPERLU_INSTALL))
-#$(call BIND_UMOUNT, $(PARMETIS_INSTALL))
+	$(PKGROOT_BIND_UMOUNT)
+	$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))
+	$(call BIND_UMOUNT, $(SUPERLU_INSTALL))
+	$(call BIND_UMOUNT, $(PARMETIS_INSTALL))
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
