@@ -1,4 +1,5 @@
-ifndef ROLLCOMPILER ROLLCOMPILER = gnu
+ifndef ROLLCOMPILER
+  ROLLCOMPILER = gnu
 endif
 COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
@@ -9,7 +10,7 @@ MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-scalapack_$(COMPILERNAME)_$(MPINAME)
 VERSION        = 2.0.2
-RELEASE        = 8
+RELEASE        = 6
 PKGROOT        = /opt/scalapack/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = scalapack
