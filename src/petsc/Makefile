@@ -130,7 +130,6 @@ build: $(SRC_PKGS)
           $(MODULE_LOAD_HDF5); \
 	  tar -xzf $(SOURCE_PKG); \
 	  cd $(SOURCE_DIR); \
-          export CPPFLAGS=-DMARCEL; \
 	  export PETSC_DIR=`pwd`; \
 	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
 	  ./configure CFLAGS="-fPIC $(AVX_FLAG)" FFLAGS="-fPIC $(AVX_FLAG)" CXXFLAGS="-fPIC $(AVX_FLAG)" --prefix=$(PKGROOT) \
