@@ -121,8 +121,7 @@ build: $(SRC_PKGS)
 	( \
           if test "$(ROLLCOMPILER)" = "pgi"; then \
               tar xjf $(PASTIX_PKG); \
-              patch $(PASTIX_DIR)/src/sopalin/src/pastix.c patch-files/pastix.c.patch; \
-              patch $(PASTIX_DIR)/src/sparse-matrix/src/pastix_sparse_matrix.c patch-files/pastix_sparse_matrix.c.patch; \
+              patch $(PASTIX_DIR)/src/sopalin/src/sopalin_thread.h  patch-files/sopalin_thread.h.patch; \
               tar cjf $(PASTIX_PKG) $(PASTIX_DIR); \
           fi; \
 	  $(MODULE_LOAD_CC); \
@@ -131,6 +130,7 @@ build: $(SRC_PKGS)
           $(MODULE_LOAD_HDF5); \
 	  tar -xzf $(SOURCE_PKG); \
 	  cd $(SOURCE_DIR); \
+          export CPPFLAGS=-DMARCEL; \
 	  export PETSC_DIR=`pwd`; \
 	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
 	  ./configure CFLAGS="-fPIC $(AVX_FLAG)" FFLAGS="-fPIC $(AVX_FLAG)" CXXFLAGS="-fPIC $(AVX_FLAG)" --prefix=$(PKGROOT) \
@@ -150,7 +150,7 @@ build: $(SRC_PKGS)
             --with-hdf5=true \
             --with-hdf5-dir=$${HDF5HOME} \
             --with-debugging=false; \
-	  make all; \
+	  make -j 16 all; \
 	)
 	$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))
 	$(call BIND_UMOUNT, $(SUPERLU_INSTALL))
@@ -190,4 +190,4 @@ install::
 	@echo "::: Package $(NAME) install complete :::"
 
 clean::
-	rm -rf $(SOURCE_DIR) DESCRIPTION LICENSE
+	rm -rf $(SOURCE_DIR) $(PASTIX_PKG) DESCRIPTION LICENSE

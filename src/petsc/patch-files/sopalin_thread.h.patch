@@ -1,0 +1,10 @@
+--- pastix_5.2.2.22/src/sopalin/src/sopalin_thread.h	2015-09-02 03:14:16.000000000 -0700
++++ patch-files/sopalin_thread.h	2018-11-15 11:01:42.055290781 -0800
+@@ -38,6 +38,7 @@
+ 
+ #include <sys/time.h>
+ #include <time.h>
++#include <pthread.h>
+ 
+ 
+ /*
