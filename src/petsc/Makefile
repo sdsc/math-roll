@@ -118,8 +118,6 @@ build: $(SRC_PKGS)
 	$(call BIND_MOUNT, $(SCALAPACK_INSTALL), $(SCALAPACK_CACHE))
 	# Some files get installed during the configure step (?!?), so we have
 	# to use a bind mount here to avoid polluting the build machine.
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
-#$(PKGROOT_BIND_MOUNT)
 	( \
           if test "$(ROLLCOMPILER)" = "pgi"; then \
               tar xjf $(PASTIX_PKG); \
@@ -154,7 +152,6 @@ build: $(SRC_PKGS)
             --with-debugging=false; \
 	  make all; \
 	)
-	$(PKGROOT_BIND_UMOUNT)
 	$(call BIND_UMOUNT, $(SCALAPACK_INSTALL))
 	$(call BIND_UMOUNT, $(SUPERLU_INSTALL))
 	$(call BIND_UMOUNT, $(PARMETIS_INSTALL))
@@ -164,13 +161,15 @@ install::
 	# Using a bind mount appears to be the only way to prevent the build
 	# from incorporating $(ROOT) in binary files.
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT) || true
+	$(PKGROOT_BIND_MOUNT)
 	( \
 	  cd $(SOURCE_DIR); \
 	  export PETSC_DIR=`pwd`; \
 	  make BOPT=g shared; \
 	  make install; \
-	  cp -r src/snes/examples $(ROOT)/$(PKGROOT)/ \
+	  cp -r src/snes/examples $(PKGROOT)/ \
 	)
+	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
 	# Get rid of configure.log files that contain build dir path
 	-rm `find $(ROOT)/$(PKGROOT) -name configure.log`
