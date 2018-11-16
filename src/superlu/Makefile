@@ -137,6 +137,7 @@ install::
 	( \
           cd $(SOURCE_DIR)/build; \
           make install; \
+          cp -r ../EXAMPLE $(PKGROOT); \
           cp -r EXAMPLE $(PKGROOT); \
           chmod go+rx $(PKGROOT)/EXAMPLE; \
           chmod go+rX $(PKGROOT)/EXAMPLE/* \
