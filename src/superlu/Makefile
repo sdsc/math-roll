@@ -135,7 +135,11 @@ install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
 	$(PKGROOT_BIND_MOUNT)
 	( \
-	  cd $(SOURCE_DIR)/build; \
+          cd $(SOURCE_DIR); \
+          cp -r EXAMPLE $(ROOT)/$(PKGROOT); \
+          chmod go+rx $(ROOT)/$(PKGROOT)/EXAMPLE; \
+          chmod go+rX $(ROOT)/$(PKGROOT)/EXAMPLE/* \
+	  cd build; \
           make install; \
 	)
 	$(PKGROOT_BIND_UMOUNT)
