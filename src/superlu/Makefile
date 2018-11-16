@@ -138,9 +138,9 @@ install::
           cd $(SOURCE_DIR); \
           cp -r EXAMPLE $(ROOT)/$(PKGROOT); \
           chmod go+rx $(ROOT)/$(PKGROOT)/EXAMPLE; \
-          chmod go+rX $(ROOT)/$(PKGROOT)/EXAMPLE/* \
-	  cd build; \
-          make install; \
+          chmod go+rX $(ROOT)/$(PKGROOT)/EXAMPLE/*; \
+          cd build; \
+          make install \
 	)
 	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
