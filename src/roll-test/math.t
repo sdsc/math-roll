@@ -210,7 +210,7 @@ echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
-      like($output, qr/Number of SNES iterations = 6/,
+      like($output, qr/6 SNES Function norm/,
            "petsc/$compilername/$mpi tutorial run");
        `rm -rf $TESTFILE*`;
     }
