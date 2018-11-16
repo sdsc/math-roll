@@ -107,7 +107,7 @@ mkdir $TESTFILE.gsl.$version.$compilername.dir
 cd $TESTFILE.gsl.$version.$compilername.dir
 /bin/cp -r \$GSLHOME/tests/* .
 for test in *; do
-if test -d \$test; then
+if test -d \$test -a \$test != "poly"; then
   echo === \$test: `\$test/test`
 fi
 done
