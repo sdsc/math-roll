@@ -151,8 +151,10 @@ install::
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
 	  if test -e TESTING/EIG/xeigtstd; then \
-	    cp TESTING/EIG/x* TESTING/LIN/x* TESTING/*.in \
+	    cp TESTING/*.in \
 	       $(ROOT)/$(PKGROOT)/runtests; \
+	    find TESTING/EIG \( -name x\* -a -executable \) -exec cp {} $(ROOT)/$(PKGROOT)/runtests \;; \
+	    find TESTING/LIN \( -name x\* -a -executable \) -exec cp {} $(ROOT)/$(PKGROOT)/runtests \;; \
 	  fi \
 	)
 	$(INSTALL_LICENSE_FILES)
