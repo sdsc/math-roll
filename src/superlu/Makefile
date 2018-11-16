@@ -136,9 +136,9 @@ install::
 	$(PKGROOT_BIND_MOUNT)
 	( \
           cd $(SOURCE_DIR); \
-          cp -r EXAMPLE $(ROOT)/$(PKGROOT); \
-          chmod go+rx $(ROOT)/$(PKGROOT)/EXAMPLE; \
-          chmod go+rX $(ROOT)/$(PKGROOT)/EXAMPLE/*; \
+          cp -r EXAMPLE $(PKGROOT); \
+          chmod go+rx $(PKGROOT)/EXAMPLE; \
+          chmod go+rX $(PKGROOT)/EXAMPLE/*; \
           cd build; \
           make install \
 	)
