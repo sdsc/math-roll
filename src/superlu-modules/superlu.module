@@ -14,7 +14,7 @@ module-whatis "MPI Flavors: $mpinames"
 # module.  Report an error if neither applies.
 if [info exists env(SUPERLUHOME)] {
   foreach {compiler} $compilernames {
-    if {[string first "/$compiler" $::env(SUPERLUHOME)] >= 0} {
+    if {[string first "/$compiler/" $::env(SUPERLUHOME)] >= 0} {
       break
     }
   }
