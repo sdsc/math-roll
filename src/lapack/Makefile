@@ -150,8 +150,8 @@ install::
 	  cp libtmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
-	  if test -e TESTING/xeigtstd; then \
-	    cp TESTING/x* TESTING/*.in \
+	  if test -e TESTING/EIG/xeigtstd; then \
+	    cp TESTING/EIG/x* TESTING/LIN/x* TESTING/*.in \
 	       $(ROOT)/$(PKGROOT)/runtests; \
 	  fi \
 	)
