@@ -84,7 +84,6 @@ LICENSE: $(SRC_DIRS)
 	echo MPL2 and BSD and LGPL > $@
 
 build: $(SRC_DIRS)
-	cp patch-files/EigenTesting.cmake $(SOURCE_DIR)/cmake/
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_CMAKE); \
