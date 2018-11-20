@@ -1,5 +1,5 @@
 --- lapack-3.8.0/make.inc.example	2017-11-12 20:15:54.000000000 -0800
-+++ patch-files/make.inc.example	2018-09-22 16:41:28.000000000 -0700
++++ patch-files/make.inc.example	2018-11-20 12:12:08.119482878 -0800
 @@ -8,8 +8,8 @@
  
  #  CC is the C compiler, normally invoked with options CFLAGS.
@@ -7,7 +7,7 @@
 -CC     = gcc
 -CFLAGS = -O3
 +CC     = ROLL_CC
-+CFLAGS = 
++CFLAGS =
  
  #  Modify the FORTRAN and OPTS definitions to refer to the compiler
  #  and desired compiler options for your machine.  NOOPT refers to
@@ -21,7 +21,7 @@
 +OPTS    = 
  DRVOPTS = $(OPTS)
 -NOOPT   = -O0 -frecursive
-+NOOPT   =  
++NOOPT   = 
  
  #  Define LOADER and LOADOPTS to refer to the loader and desired
  #  load options for your machine.
@@ -40,14 +40,3 @@
  #  If your Fortran compiler does not provide etime (like Nag Fortran
  #  Compiler, etc...) SECOND and DSECND will use a call to the
  #  INTERNAL FUNCTION CPU_TIME
-@@ -78,8 +78,8 @@
- #  machine-specific, optimized BLAS library should be used whenever
- #  possible.)
- #
--BLASLIB      = ../../librefblas.a
--CBLASLIB     = ../../libcblas.a
-+BLASLIB      = BLAS_LIBRARY/libblas.a
-+CBLASLIB     = BLAS_LIBRARY/libcblas.a
- LAPACKLIB    = liblapack.a
- TMGLIB       = libtmglib.a
- LAPACKELIB   = liblapacke.a
