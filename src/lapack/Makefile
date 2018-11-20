@@ -92,8 +92,6 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   endif
 endif
 
-BLAS_LIBRARY=$(PWD)/$(BLAS_DIR)
-
 LAPACK_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 $(NAME).spec: DESCRIPTION LICENSE
@@ -115,7 +113,6 @@ build: $(SRC_DIRS)
 	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_CC!$(CC) $(COPTS)!" $(SOURCE_DIR)/make.inc; \
 	  perl -pi -e "s!ROLL_FORTRAN!$(FC) $(FOPTS)!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!BLAS_LIBRARY!$(BLAS_LIBRARY)!" $(SOURCE_DIR)/make.inc; \
 	  $(MODULE_LOAD_CC); \
 	  cd $(SOURCE_DIR)/BLAS; \
 	  make -j 16; \
