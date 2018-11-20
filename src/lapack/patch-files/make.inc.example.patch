@@ -1,51 +1,42 @@
---- lapack-3.6.0/make.inc.example	2015-11-15 12:33:40.000000000 -0800
-+++ patch-files/make.inc.example	2016-02-04 17:32:04.402501120 -0800
-@@ -16,11 +16,11 @@
- #  and handle these quantities appropriately. As a consequence, one 
+--- lapack-3.8.0/make.inc.example	2017-11-12 20:15:54.000000000 -0800
++++ patch-files/make.inc.example	2018-11-20 12:12:08.119482878 -0800
+@@ -8,8 +8,8 @@
+ 
+ #  CC is the C compiler, normally invoked with options CFLAGS.
+ #
+-CC     = gcc
+-CFLAGS = -O3
++CC     = ROLL_CC
++CFLAGS =
+ 
+ #  Modify the FORTRAN and OPTS definitions to refer to the compiler
+ #  and desired compiler options for your machine.  NOOPT refers to
+@@ -19,15 +19,15 @@
+ #  and handle these quantities appropriately. As a consequence, one
  #  should not compile LAPACK with flags such as -ffpe-trap=overflow.
  #
--FORTRAN  = gfortran 
--OPTS     = -O2 -frecursive
-+FORTRAN  = ROLL_FORTRAN
-+OPTS     = 
- DRVOPTS  = $(OPTS)
--NOOPT    = -O0 -frecursive
+-FORTRAN = gfortran
+-OPTS    = -O2 -frecursive
++FORTRAN = ROLL_FORTRAN
++OPTS    = 
+ DRVOPTS = $(OPTS)
+-NOOPT   = -O0 -frecursive
++NOOPT   = 
+ 
+ #  Define LOADER and LOADOPTS to refer to the loader and desired
+ #  load options for your machine.
+ #
 -LOADER   = gfortran
-+NOOPT    = 
 +LOADER   = ROLL_FORTRAN
  LOADOPTS =
- #
- #  Comment out the following line to include deprecated routines to the
-@@ -35,10 +35,10 @@
- # For RS6K : SECOND and DSECND will use a call to the EXTERNAL FUNCTION ETIME_
- # TIMER    = EXT_ETIME_
- # For gfortran compiler: SECOND and DSECND will use a call to the INTERNAL FUNCTION ETIME
--TIMER    = INT_ETIME
-+#TIMER    = INT_ETIME
- # If your Fortran compiler does not provide etime (like Nag Fortran Compiler, etc...)
- # SECOND and DSECND will use a call to the INTERNAL FUNCTION CPU_TIME
--# TIMER    = INT_CPU_TIME
-+  TIMER    = INT_CPU_TIME
- # If neither of this works...you can use the NONE value... In that case, SECOND and DSECND will always return 0
- # TIMER     = NONE
- #
-@@ -51,8 +51,8 @@
- #
- # CC is the C compiler, normally invoked with options CFLAGS.
- #
--CC = gcc
--CFLAGS = -O3
-+CC = ROLL_CC
-+CFLAGS = 
- #
- #  The archiver and the flag(s) to use when building archive (library)
- #  If you system has no ranlib, set RANLIB = echo.
-@@ -74,7 +74,7 @@
- #  machine-specific, optimized BLAS library should be used whenever
- #  possible.)
- #
--BLASLIB      = ../../librefblas.a
-+BLASLIB      = BLAS_LIBRARY/blas.a
- CBLASLIB     = ../../libcblas.a
- LAPACKLIB    = liblapack.a
- TMGLIB       = libtmglib.a
+ 
+ #  The archiver and the flag(s) to use when building an archive
+@@ -47,7 +47,7 @@
+ #TIMER = EXT_ETIME_
+ #  For gfortran compiler:  SECOND and DSECND will use a call to the
+ #  INTERNAL FUNCTION ETIME
+-TIMER = INT_ETIME
++TIMER = INT_CPU_TIME
+ #  If your Fortran compiler does not provide etime (like Nag Fortran
+ #  Compiler, etc...) SECOND and DSECND will use a call to the
+ #  INTERNAL FUNCTION CPU_TIME
