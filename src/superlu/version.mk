@@ -9,8 +9,8 @@ endif
 MPINAME := $(firstword $(subst /, ,$(ROLLMPI)))
 
 NAME           = sdsc-superlu_$(COMPILERNAME)_$(MPINAME)
-VERSION        = 4.2
-RELEASE        = 4
+VERSION        = 6.0.0
+RELEASE        = 0
 PKGROOT        = /opt/superlu/$(COMPILERNAME)/$(MPINAME)
 
 SRC_SUBDIR     = superlu

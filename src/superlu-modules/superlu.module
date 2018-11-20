@@ -14,7 +14,7 @@ module-whatis "MPI Flavors: $mpinames"
 # module.  Report an error if neither applies.
 if [info exists env(SUPERLUHOME)] {
   foreach {compiler} $compilernames {
-    if {[string first "/$compiler" $::env(SUPERLUHOME)] >= 0} {
+    if {[string first "/$compiler/" $::env(SUPERLUHOME)] >= 0} {
       break
     }
   }
@@ -51,5 +51,6 @@ if [info exists env(SUPERLUHOME)] {
 }
 
 setenv SUPERLUHOME /opt/superlu/$compiler/$mpi
-prepend-path LD_LIBRARY_PATH /opt/superlu/$compiler/$mpi/lib
-prepend-path LIBPATH /opt/superlu/$compiler/$mpi/lib
+prepend-path LD_LIBRARY_PATH /opt/superlu/$compiler/$mpi/lib64
+prepend-path LIBPATH /opt/superlu/$compiler/$mpi/lib64
+module load mkl

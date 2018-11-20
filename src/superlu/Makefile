@@ -67,10 +67,10 @@ PARMETIS_CACHE = $(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(MPIN
 SUPERLU_CACHE = $(REDHAT.ROOT)/cache/build-$(NAME)
 
 CFLAGS = -fPIC -I$(PARMETIS_CACHE)/include
-NOOPTS = -fPIC -O0 -I$(PARMETIS_CACHE)/include
 ifneq ("$(COMPILERNAME)", "pgi")
   CFLAGS += -std=c99
-  NOOPTS += -std=c99
+else
+  CFLAGS += -Mnoopenmp -pgf90libs
 endif
 
 MKLLINK = -Wl,--start-group $${MKLLIB}/libmkl_intel_lp64.a $${MKLLIB}/libmkl_sequential.a $${MKLLIB}/libmkl_core.a -Wl,--end-group -ldl -lpthread -lm
@@ -106,38 +106,43 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
 endif
 
 build: $(SRC_DIRS)
-	patch $(SOURCE_DIR)/make.inc patch-files/make.inc.patch
-	if test "$(COMPILERNAME)" = "intel"; then \
-	  perl -pi -e 's/-openmp/-qopenmp/' $(SOURCE_DIR)/make.inc; \
-	fi
 	( \
+          $(MODULE_LOAD_CMAKE); \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
 	  $(MODULE_LOAD_MKL); \
-	  export MKLLIB=$${MKLHOME}/lib/intel64; \
-	  perl -pi -e "s!ROLL_INSTALL!$(PWD)/$(SOURCE_DIR)!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!ROLL_PARMETIS!$(PARMETIS_CACHE)!" $(SOURCE_DIR)/make.inc; \
-	  perl -pi -e "s!ROLL_MKLLINK!$(MKLLINK)!" $(SOURCE_DIR)/make.inc; \
-	  cd $(SOURCE_DIR); \
-          CFLAGS="$(CFLAGS) $(AVX_FLAG)"; \
-	  $(MAKE) CFLAGS="$(CFLAGS)" NOOPTS="$(NOOPTS)" \
+          export CPP=cpp; \
+          export MKLLIB=$${MKLHOME}/lib/intel64; \
+          cd $(SOURCE_DIR)/build; \
+          export PARMETIS_ROOT=$(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(MPINAME); \
+          export PARMETIS_BUILD_DIR=$(REDHAT.ROOT)/cache/build-sdsc-parmetis_$(COMPILERNAME)_$(MPINAME); \
+          cmake .. \
+          -DCMAKE_INSTALL_PREFIX=$(PKGROOT) \
+          -DTPL_PARMETIS_INCLUDE_DIRS="$${PARMETIS_ROOT}/include" \
+          -DTPL_PARMETIS_LIBRARIES="$${PARMETIS_BUILD_DIR}/lib/libparmetis.a;$${PARMETIS_BUILD_DIR}/lib/libmetis.a" \
+          -DCMAKE_C_FLAGS="$(CFLAGS)" \
+          -DCMAKE_Fortran_COMPILER=mpif90 \
+          -DCMAKE_C_COMPILER=mpicc \
+          -DCMAKE_CXX_COMPILER=mpicxx \
+          -DCMAKE_CXX_FLAGS="$(CFLAGS) -std=c++11" \
+          -DBUILD_SHARED_LIBS=OFF \
+          -DTPL_BLAS_LIBRARIES="$${MKLLINK}"; \
+          make \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
+	mkdir -p -m 755 $(ROOT)/$(PKGROOT)
+	$(PKGROOT_BIND_MOUNT)
 	( \
-	  cd $(SOURCE_DIR); \
-	  $(MAKE) prefix=$(ROOT)/$(PKGROOT) install; \
-	  cp lib/*.a $(ROOT)/$(PKGROOT)/lib/libsuperlu.a; \
-	  cp SRC/*.h $(ROOT)/$(PKGROOT)/include; \
-	  cp CBLAS/*.h $(ROOT)/$(PKGROOT)/include ; \
-	  chmod 0644 $(ROOT)/$(PKGROOT)/include/*; \
-	  cp -r EXAMPLE $(ROOT)/$(PKGROOT); \
-	  chmod go+rx $(ROOT)/$(PKGROOT)/EXAMPLE; \
-	  chmod go+rX $(ROOT)/$(PKGROOT)/EXAMPLE/* \
+          cd $(SOURCE_DIR)/build; \
+          make install; \
+          cp -r ../EXAMPLE $(PKGROOT); \
+          cp -r EXAMPLE $(PKGROOT); \
+          chmod go+rx $(PKGROOT)/EXAMPLE; \
+          chmod go+rX $(PKGROOT)/EXAMPLE/* \
 	)
+	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
 	mkdir $(SUPERLU_CACHE)
 	/bin/cp -r $(ROOT)/$(PKGROOT)/* $(SUPERLU_CACHE)/

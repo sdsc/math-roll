@@ -115,25 +115,25 @@ build: $(SRC_DIRS)
 	  mkdir build_shared; \
 	  cd build_shared; \
 	  cmake .. \
-	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=mpicc \
-	    -DMPI_Fortran_COMPILER=mpif90 \
+	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=`which mpicc` \
+	    -DMPI_Fortran_COMPILER=`which mpif90` \
 	    -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
 	    -DCMAKE_C_FLAGS="$(CFLAGS)" -DCMAKE_Fortran_FLAGS="$(FFLAGS)" \
 	    -DBUILD_SHARED_LIBS=ON \
 	    -DLAPACK_LIBRARIES=$(LAPACK_CACHE)/lib/liblapack.a \
 	    -DBLAS_LIBRARIES=$(LAPACK_CACHE)/lib/libblas.a; \
-	  make; \
+	  make -j 16; \
 	  cd ..; \
 	  mkdir build_static; \
 	  cd build_static; \
 	  cmake .. \
-	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=mpicc \
-	    -DMPI_Fortran_COMPILER=mpif90 \
+	    -DCMAKE_INSTALL_PREFIX=$(ROOT)/$(PKGROOT) -DMPI_C_COMPILER=`which mpicc` \
+	    -DMPI_Fortran_COMPILER=`which mpif90` \
 	    -DCMAKE_C_COMPILER=$(CC) -DCMAKE_Fortran_COMPILER=$(FC) \
 	    -DCMAKE_C_FLAGS="$(CFLAGS) $(AVX_FLAG)" -DCMAKE_Fortran_FLAGS="$(FFLAGS) $(AVX_FLAG)" \
 	    -DLAPACK_LIBRARIES=$(LAPACK_CACHE)/lib/liblapack.a \
 	    -DBLAS_LIBRARIES=$(LAPACK_CACHE)/lib/libblas.a; \
-	  make \
+	  make -j 16 \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 

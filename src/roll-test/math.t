@@ -17,7 +17,7 @@ my $output;
 my @COMPILERS = split(/\s+/, 'ROLLCOMPILER');
 my @MPIS = split(/\s+/, 'ROLLMPI');
 my $TESTFILE = 'tmpmath';
-my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgCC');
+my %CXX = ('gnu' => 'g++', 'intel' => 'icpc', 'pgi' => 'pgc++');
 
 # math-install.xml
 my @compilerNames = map {(split('/', $_))[0]} @COMPILERS;
@@ -107,7 +107,7 @@ mkdir $TESTFILE.gsl.$version.$compilername.dir
 cd $TESTFILE.gsl.$version.$compilername.dir
 /bin/cp -r \$GSLHOME/tests/* .
 for test in *; do
-if test -d \$test; then
+if test -d \$test -a \$test != "poly"; then
   echo === \$test: `\$test/test`
 fi
 done
@@ -210,7 +210,7 @@ echo \$output
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
-      like($output, qr/Number of SNES iterations = 6/,
+      like($output, qr/6 SNES Function norm/,
            "petsc/$compilername/$mpi tutorial run");
        `rm -rf $TESTFILE*`;
     }
