@@ -100,6 +100,9 @@ LICENSE: $(SRC_DIRS)
 
 build: $(SRC_DIRS)
 	( \
+          if test "$(COMPILERNAME)" = "pgi"; then \
+               exit; \
+          fi; \
 	  $(MODULE_LOAD_CC); \
 	  cd $(SOURCE_DIR); \
 	  ./configure CC=$(CC) CFLAGS="$(COMPILE_FLAGS) $(AVX_FLAG)" --prefix=$(PKGROOT); \
@@ -112,6 +115,10 @@ build: $(SRC_DIRS)
 	
 install::
 	( \
+           if test "$(COMPILERNAME)" = "pgi"; then \
+               perl -pi -e '$$_ = "" if m/sdsc-gsl-$(VERSION)_pgi/' $(REDHAT.ROOT)/nodes/math-install.xml; \
+               exit; \
+          fi; \
 	  $(MODULE_LOAD_CC); \
 	  cd $(SOURCE_DIR); \
 	  $(MAKE) prefix=$(ROOT)/$(PKGROOT) install; \
