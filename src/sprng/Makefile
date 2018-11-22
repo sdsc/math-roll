@@ -78,6 +78,15 @@ else ifneq ("$(ROLLOPTS)", "$(subst avx,,$(ROLLOPTS))")
   endif
 endif
 
+CFLAGS=
+CXXFLAGS=
+FFLAGS=
+ifeq ("$(COMPILERNAME)","pgi")
+   CFLAGS = -noswitcherror
+   CXXFLAGS = -noswitcherror
+   FFLAGS = -noswitcherror
+endif
+
 MPIDEF = -DSPRNG_MPI
 
 $(NAME).spec: DESCRIPTION LICENSE
@@ -87,7 +96,6 @@ DESCRIPTION:
 	( \
 	  $(DESCRIBE_PKG); \
 	  $(DESCRIBE_CC); \
-	  $(DESCRIBE_GMP); \
 	  $(DESCRIBE_MPI) \
 	) > $@
 
@@ -97,32 +105,35 @@ LICENSE: $(SRC_DIRS)
 	echo Creative Commons > $@
 
 build: $(SRC_DIRS)
-	cp patch-files/make.GENERIC $(SOURCE_DIR)/SRC/
 	( \
 	  $(MODULE_LOAD_CC); \
-	  $(MODULE_LOAD_GMP); \
 	  $(MODULE_LOAD_MPI); \
-          export CFLAGS=$(AVX_FLAG); \
-          export FFLAGS=$(AVX_FLAG); \
+          export CFLAGS="$(CFLAGS)$(AVX_FLAG)"; \
+          export CXXFLAGS="$(CXXFLAGS) $(AVX_FLAG)"; \
+          export FFLAGS="$(FFLAGS) $(AVX_FLAG)"; \
+          export CC=mpicc; \
+          export CXX=mpicxx; \
+          export F77=mpif77; \
 	  cd $(SOURCE_DIR); \
-	  if test -n "$${GMPHOME}"; then \
-	    export GMPLINK="-L$${GMPHOME}/lib -lgmp"; \
-	  else \
-	    export GMPLINK=""; \
-	  fi; \
-	  $(MAKE) PLAT=GENERIC MPIDEF="$(MPIDEF)" GMPLIB="$${GMPLINK}" \
+          ./configure --prefix=$(ROOT)/$(PKGROOT) --with-mpi;  \
+	  $(MAKE) \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/lib
-	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/include
-	cp $(SOURCE_DIR)/lib/*.a $(ROOT)/$(PKGROOT)/lib
-	cp $(SOURCE_DIR)/include/* $(ROOT)/$(PKGROOT)/include
-	cp -r $(SOURCE_DIR)/EXAMPLES $(ROOT)/$(PKGROOT)/
-	chmod 0755 $(ROOT)/$(PKGROOT)/EXAMPLES
-	chmod 0644 $(ROOT)/$(PKGROOT)/EXAMPLES/*.[cCF]
-	chmod 0644 $(ROOT)/$(PKGROOT)/include/*
+	( \
+	  $(MODULE_LOAD_CC); \
+	  $(MODULE_LOAD_MPI); \
+          export CFLAGS="$(CFLAGS)$(AVX_FLAG)"; \
+          export CXXFLAGS="$(CXXFLAGS) $(AVX_FLAG)"; \
+          export FFLAGS="$(FFLAGS) $(AVX_FLAG)"; \
+          export CC=mpicc; \
+          export CXX=mpicxx; \
+          xport F77=mpif77; \
+          cd $(SOURCE_DIR); \
+          $(MAKE) install; \
+          cp -r TESTS/mpitests/* $(ROOT)/$(PKGROOT)/tests \
+        )
 	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) build complete :::"
 
