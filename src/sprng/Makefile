@@ -115,13 +115,14 @@ build: $(SRC_DIRS)
           export CXX=mpicxx; \
           export F77=mpif77; \
 	  cd $(SOURCE_DIR); \
-          ./configure --prefix=$(ROOT)/$(PKGROOT) --with-mpi;  \
+          ./configure --prefix=$(PKGROOT) --with-mpi;  \
 	  $(MAKE) \
 	)
 	@echo "::: Package $(NAME) build complete :::"
 
 install::
 	mkdir -p -m 755 $(ROOT)/$(PKGROOT)/tests
+	$(PKGROOT_BIND_MOUNT)
 	( \
 	  $(MODULE_LOAD_CC); \
 	  $(MODULE_LOAD_MPI); \
@@ -133,8 +134,9 @@ install::
           xport F77=mpif77; \
           cd $(SOURCE_DIR); \
           $(MAKE) install; \
-          cp -r TESTS/mpitests/* $(ROOT)/$(PKGROOT)/tests \
+          cp -r TESTS/mpitests/* $(PKGROOT)/tests \
         )
+	$(PKGROOT_BIND_UMOUNT)
 	$(INSTALL_LICENSE_FILES)
 	@echo "::: Package $(NAME) build complete :::"
 
