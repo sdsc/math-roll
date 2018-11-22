@@ -353,7 +353,7 @@ if [ ! -e fcvDiag_kry_p.f ]; then
 cp $packageHome/$mpi/examples/cvode/fcmix_parallel/fcvDiag_kry_p.f .
 EOF
 fi
-mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/lib -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
+mpif77 -o $TESTFILE.sundials.exe  fcvDiag_kry_p.f  -L$packageHome/$mpi/lib64 -lsundials_fcvode -lsundials_cvode -lsundials_fnvecparallel -lsundials_nvecparallel
 ls -l *.exe
 output=`mpirun -n 4 ./$TESTFILE.sundials.exe 2>&1`
 if [[ "\$output" =~ "run-as-root" ]]; then
