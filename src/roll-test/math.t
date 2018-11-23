@@ -293,20 +293,6 @@ END
 
         
 # sprng
-open(OUT, ">$TESTFILE.sprng.c");
-print OUT <<END;
-#include <stdio.h>
-#include "sprng.h"
-#define SEED 985456376
-int main(int argc, char** argv) {
-  int *stream = init_sprng(2, 0, 1, SEED, SPRNG_DEFAULT);
-  print_sprng(stream);
-  printf("%f\\n", sprng(stream));
-  free_sprng(stream);
-  return 0;
-}
-END
-close(OUT);
 foreach my $compiler(@COMPILERS) {
   my $compilername = (split('/', $compiler))[0];
   foreach my $mpi(@MPIS) {
@@ -316,26 +302,27 @@ foreach my $compiler(@COMPILERS) {
       open(OUT, ">$TESTFILE.sh");
       print OUT <<END;
 #!/bin/bash
+mkdir $TESTFILE.dir
+cd $TESTFILE.dir
+cp -r $packageHome/$mpi/tests/* .
 module load $compiler $mpi sprng
-mpicc -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe $TESTFILE.sprng.c -L\$SPRNGHOME/lib -lsprng -L\$GMPHOME/lib -lgmp
+mpicxx -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe init_tests.cpp sum.cpp chisquare.cpp -L\$SPRNGHOME/lib -lsprng 
 ls -l *.exe
-output=`mpirun -n 1 ./$TESTFILE.sprng.exe 2>&1`
+output=`mpirun -n 4 ./$TESTFILE.sprng.exe 1  1  1  1  1  1  1  5  1 2>/dev/null`
 if [[ "\$output" =~ "run-as-root" ]]; then
-  output=`mpirun --allow-run-as-root -n 1 ./$TESTFILE.sprng.exe 2>&1`
+  output=`mpirun --allow-run-as-root -n 4 ./$TESTFILE.sprng.exe 1  1  1  1  1  1  1  5  1 2>&1`
 fi
 echo \$output
+cd ..
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
       like($output, qr/$TESTFILE.sprng.exe/,
            "sprng/$compilername/$mpi compilation");
-      ok($? == 0, "sprng/$compilername/$mpi test run");
+      like($output, qr/KS Percent = 32.867748 %/,
+           "sprng/$compilername/$mpi test run");
     }
   }
-  $output = `module load $compiler sprng; echo \$SPRNGHOME 2>&1`;
-  my $firstmpi = $MPIS[0];
-  $firstmpi =~ s#/.*##;
-  like($output, qr#/opt/sprng/$compiler/$firstmpi#, 'sprng modulefile defaults to first mpi');
 }
 
 # sundials
