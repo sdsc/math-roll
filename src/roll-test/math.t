@@ -314,6 +314,7 @@ if [[ "\$output" =~ "run-as-root" ]]; then
 fi
 echo \$output
 cd ..
+rm -rf $TESTFILE.dir
 END
       close(OUT);
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
