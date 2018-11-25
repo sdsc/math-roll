@@ -306,9 +306,9 @@ mkdir $TESTFILE.dir
 cd $TESTFILE.dir
 cp -r $packageHome/$mpi/tests/* .
 module load $compiler $mpi sprng
-mpicxx -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe init_tests.cpp sum.cpp chisquare.cpp -L\$SPRNGHOME/lib -lsprng 
+mpicxx -I \$SPRNGHOME/include -o $TESTFILE.sprng.exe init_tests.cpp sum.cpp chisquare.cpp -L\$SPRNGHOME/lib -lsprng  2>/dev/null
 ls -l *.exe
-output=`mpirun -n 4 ./$TESTFILE.sprng.exe 1  1  1  1  1  1  1  5  1 2>/dev/null`
+output=`mpirun -n 4 ./$TESTFILE.sprng.exe 1  1  1  1  1  1  1  5  1 2>&1`
 if [[ "\$output" =~ "run-as-root" ]]; then
   output=`mpirun --allow-run-as-root -n 4 ./$TESTFILE.sprng.exe 1  1  1  1  1  1  1  5  1 2>&1`
 fi
@@ -320,7 +320,7 @@ END
       $output = `/bin/bash $TESTFILE.sh 2>&1`;
       like($output, qr/$TESTFILE.sprng.exe/,
            "sprng/$compilername/$mpi compilation");
-      like($output, qr/KS Percent = 32.867748 %/,
+      like($output, qr/KS\s+Percent\s+=\s+32.867748\s+%/,
            "sprng/$compilername/$mpi test run");
     }
   }
