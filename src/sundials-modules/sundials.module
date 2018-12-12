@@ -51,5 +51,5 @@ if [info exists env(SUNDIALSHOME)] {
 }
 
 setenv SUNDIALSHOME /opt/sundials/$compiler/$mpi
-prepend-path LD_LIBRARY_PATH /opt/sundials/$compiler/$mpi/lib
-prepend-path LIBPATH /opt/sundials/$compiler/$mpi/lib
+prepend-path LD_LIBRARY_PATH /opt/sundials/$compiler/$mpi/lib64
+prepend-path LIBPATH /opt/sundials/$compiler/$mpi/lib64
