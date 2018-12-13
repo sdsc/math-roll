@@ -142,6 +142,7 @@ install::
 	  cp libblas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
           cd $(SOURCE_DIR); \
 	  cp BLAS/SRC/libblas.so $(ROOT)/$(PKGROOT)/lib; \
+	  cp librefblas.a $(ROOT)/$(PKGROOT)/lib/libblas.a; \
 	  cp CBLAS/src/libcblas.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp liblapack.a $(ROOT)/$(PKGROOT)/lib/liblapack.a; \
 	  cp libtmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
