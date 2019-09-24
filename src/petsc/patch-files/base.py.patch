@@ -1,0 +1,10 @@
+--- petsc-3.10.2/config/BuildSystem/config/base.py	2018-09-12 06:14:52.000000000 -0700
++++ patch-files/base.py	2019-09-20 17:06:41.698856860 -0700
+@@ -612,6 +612,7 @@
+       else:
+         raise ConfigureSetupError('Running executables on this system is not supported')
+     cleanup = cleanup and self.framework.doCleanup
++    executor = 'mpirun -np 1 '
+     if executor:
+       command = executor+' '+self.linkerObj
+     else:

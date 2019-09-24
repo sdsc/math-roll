@@ -200,7 +200,7 @@ cp -r \$PETSCHOME/examples/* .
 cd tutorials
 cat makefile | sed 's/chkopts//' >temp
 mv temp makefile
-make PETSC_ARCH=arch-linux-c-debug PETSC_DIR=\$PETSCHOME ex1
+make MPIEXEC=mpirun PETSC_ARCH=arch-linux-c-debug PETSC_DIR=\$PETSCHOME ex1
 ls -l ex1
 output=`mpirun -n 1 ./ex1 -ksp_gmres_cgs_refinement_type refine_always -snes_monitor_short 2>&1`
 if [[ "\$output" =~ "run-as-root" ]]; then

@@ -129,6 +129,9 @@ build: $(SRC_PKGS)
 	  $(MODULE_LOAD_MPI); \
           $(MODULE_LOAD_HDF5); \
 	  tar -xzf $(SOURCE_PKG); \
+          if [[ "$(ROLLMPI)" == *"mvapich2"* ]]; then \
+              patch $(SOURCE_DIR)/config/BuildSystem/config/base.py patch-files/base.py.patch; \
+          fi; \
 	  cd $(SOURCE_DIR); \
 	  export PETSC_DIR=`pwd`; \
 	  export PETSC_ARCH=$(COMPILERNAME)-$(MPINAME); \
