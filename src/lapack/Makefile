@@ -148,6 +148,8 @@ install::
 	  cp libtmglib.a $(ROOT)/$(PKGROOT)/lib/libtmglib.a; \
 	  cp tmp/liblapack.so $(ROOT)/$(PKGROOT)/lib; \
 	  cp tmp/libtmglib.so $(ROOT)/$(PKGROOT)/lib; \
+          cp CBLAS/include/*.h $(ROOT)/$(PKGROOT)/include; \
+          cp LAPACKE/include/*.h $(ROOT)/$(PKGROOT)/include; \
 	  if test -e TESTING/EIG/xeigtstd; then \
 	    cp TESTING/*.in \
 	       $(ROOT)/$(PKGROOT)/runtests; \

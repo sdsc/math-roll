@@ -5,7 +5,7 @@ COMPILERNAME := $(firstword $(subst /, ,$(ROLLCOMPILER)))
 
 NAME           = sdsc-lapack_$(COMPILERNAME)
 VERSION        = 3.8.0
-RELEASE        = 0
+RELEASE        = 1
 PKGROOT        = /opt/lapack/$(COMPILERNAME)
 
 SRC_SUBDIR     = lapack
